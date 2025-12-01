@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import logo from '../assets/UpCode.png';
 const Navbar: React.FC = () => {
-const navItems: string[] = ['Roadmaps', 'Projects', 'Careers', 'Profile'];
-const [activeItem, setActiveItem] = useState('Roadmaps'); // Default to 'Roadmaps'
+const navItems: string[] = ['Overview','Roadmaps', 'Projects', 'Careers', 'Profile'];
+const [activeItem, setActiveItem] = useState('Overview'); // Default to 'Overview'
 const handleItemClick = (item: string) => {
     setActiveItem(item);
 };
