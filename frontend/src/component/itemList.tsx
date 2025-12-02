@@ -4,13 +4,22 @@ import type{ RoadmapItemCardProps } from "../component/cardDetail";
 
 interface RoadmapItemListProps {
   items: RoadmapItemCardProps[];
+  filterTag?: string; // Optional filter tag
 }
 
-export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items }) => {
+export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterTag }) => {
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
-  const visibleItems = showAll ? items : items.slice(0, MAX_VISIBLE);
-  const remainingCount = items.length - MAX_VISIBLE;
+  // 🔥 Filter by tag for the section
+  const filteredItems = filterTag
+    ? items.filter(item =>
+        item.tags.some(tag => tag.label === filterTag)
+      )
+    : items;
+  const visibleItems = showAll ? filteredItems : filteredItems.slice(0, MAX_VISIBLE);
+  const remainingCount = filteredItems.length - MAX_VISIBLE;
+
+  if (filteredItems.length === 0) return null;
 
   return (
   <div>
@@ -26,7 +35,7 @@ export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items }) => {
       ))}
     </div>
 
-    {items.length > MAX_VISIBLE && (
+    {filteredItems.length > MAX_VISIBLE && (
       <div className="flex justify-center mt-6">
         <button
           className="w-full px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"

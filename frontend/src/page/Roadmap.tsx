@@ -5,6 +5,27 @@ import type {RoadmapItemCardProps } from "../component/cardDetail";
 import javaImage from "../assets/image/java_intro.jpg";
 import pythonImage from "../assets/image/python_intro.jpg";
 import RoadmapItemList from "../component/itemList";
+import SectionBlock from "../component/sectionBlock";
+
+type Section = {
+  id: string;
+  title: string;
+  tag?: string; // undefined means "no tag filter" (e.g. What's New)
+};
+
+const sections: Section[] = [
+  { id: "whats-new", title: "What's New" },
+  { id: "recently-viewed", title: "Recently Viewed" },
+  { id: "java", title: "Java", tag: "Java" },
+  { id: "python", title: "Python", tag: "Python" },
+  { id: "machine-learning", title: "Machine Learning", tag: "Machine Learning" },
+  { id: "devops", title: "DevOps", tag: "DevOps" },
+  { id: "frontend", title: "Frontend", tag: "Frontend" },
+  { id: "backend", title: "Backend", tag: "Backend" },
+  { id: "react", title: "React", tag: "React" },
+  { id: "api", title: "API", tag: "API" },
+  { id: "your-design", title: "Your Design" },
+];
 
 const roadmapData: RoadmapItemCardProps[] = [
   {
@@ -130,39 +151,32 @@ const roadmapData: RoadmapItemCardProps[] = [
 ];
 
 export const Roadmap: React.FC = () => {
+
+    const availableSections = sections.filter((section) => {
+        if (!section.tag) return true; // show "What's New" / "Recently Viewed" even if tag undefined
+        // show section only if there is at least one roadmap item with matching tag label
+        return roadmapData.some((item) => item.tags.some((t) => t.label === section.tag));
+    });
+
+    const visibleSidebarItems = availableSections.map((s) => ({
+        name: s.title,
+        id: s.id,
+    }));
+
     return (
-        <div className="flex" 
+        <div className="flex max-h-screen max-w-screen" 
         style={{ backgroundColor: '#1a202c'}}>
             <Navbar />
             <div className="fixed top-0 left-10 pt-5">
-                <RoadmapSidebar />
+                <RoadmapSidebar visibleSections={visibleSidebarItems} />
             </div>
-            <main className="pl-80 p-10 flex-grow overflow-y-auto h-screen"> 
-                {/* SECTION 1: What's new */}
-                <section id="whats-new" className="pt-20">
-                    <h2 className="text-2xl font-semibold text-white text-left">What's new</h2>
-                    <div className="h-64 bg-gray-100 p-4 rounded mt-2">Latest updates and featured content...</div>
-                </section>
-                
-                {/* SECTION 2: Recently Viewed */}
-                <section id="recently-viewed" className="pt-20">
-                    <h2 className="text-2xl font-semibold text-white text-left">Recently Viewed</h2>
-                    <div className="h-64 bg-gray-100 p-4 rounded mt-2">Your recently viewed items...</div>
-                </section>
-
-                {/* SECTION 3: Java */}
-                <section id="java" className="pt-20">
-                    <h2 className="text-2xl font-semibold text-white text-left">Java</h2>
-                    <RoadmapItemList items={roadmapData} />
-                </section>
-
-                {/* SECTION 4: Python */}
-                <section id="python" className="pt-20">
-                    <h2 className="text-2xl font-semibold text-white text-left">Python</h2>
-                    <div className="h-96 bg-gray-200 p-4 rounded mt-2">Deep dive into Python curriculum...</div>
-                </section>
-
-            </main>
+            <div className="pl-75 p-10 flex-grow overflow-y-auto h-screen"> 
+                {availableSections.map((section) => (
+                    <SectionBlock key={section.id} id={section.id} title={section.title}>
+                        <RoadmapItemList items={roadmapData} filterTag={section.tag} />
+                    </SectionBlock>
+                ))}
+            </div>
         </div>
     );
 };

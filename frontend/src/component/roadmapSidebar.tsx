@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
-const sidebarItems: { name: string, id: string }[] = [
-    // Define both the display name and the corresponding HTML element ID
-    { name: "What's new", id: "whats-new" },
-    { name: "Recently Viewed", id: "recently-viewed" },
-    { name: "Java", id: "java" },
-    { name: "Python", id: "python" },
-    { name: "Machine Learning (ML)", id: "machine-learning" },
-    { name: "Devops", id: "devops" },
-    { name: "Frontend", id: "frontend" },
-    { name: "Backend", id: "backend" },
-    { name: "API", id: "api" },
-    { name: "Your Design", id: "your-design" }
-];
+// Accept visibleSections from parent (Roadmap page)
+type SidebarItem = { name: string; id: string };
+type Props = {
+    visibleSections: SidebarItem[]; // only show these items
+};
 
-const RoadmapSidebar: React.FC = () => {
-    const [activeId, setActiveId] = useState(sidebarItems[0].id);
+const RoadmapSidebar: React.FC<Props> = ({ visibleSections }) => {
+    const [activeId, setActiveId] = useState(visibleSections.length > 0 ? visibleSections[0].id : "");
 
     const handleScrollTo = (id: string) => {
         // Find the element on the page with the matching ID
@@ -36,7 +28,7 @@ const RoadmapSidebar: React.FC = () => {
         <div className="w-64 p-4 text-white min-h-screen bg-cover bg-center">
             <div className="relative h-full flex flex-col justify-start">
                 <div className="flex flex-col pt-10">
-                    {sidebarItems.map((item) => (
+                    {visibleSections.map((item) => (
                         <a 
                             key={item.id}
                             href={`#${item.id}`} // Standard anchor link for fallback/accessibility
@@ -60,7 +52,7 @@ const RoadmapSidebar: React.FC = () => {
                 </div>
 
                 {/* Vertical white line on the right */}
-                <div className="absolute right-0 top-0 h-full w-0.5 bg-white opacity-50"></div>
+                <div className="absolute right-0 top-0 h-100vh w-0.5 bg-white opacity-50"></div>
             </div>
         </div>
     );
