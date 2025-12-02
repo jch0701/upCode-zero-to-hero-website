@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import logo from '../assets/UpCode.png';
+import { Link, useLocation } from 'react-router-dom';
 const Navbar: React.FC = () => {
-const navItems: string[] = ['Overview','Roadmaps', 'Projects', 'Careers', 'Profile'];
-const [activeItem, setActiveItem] = useState('Overview'); // Default to 'Overview'
-const handleItemClick = (item: string) => {
-    setActiveItem(item);
-};
+const navItems: string[] = ['Overview','Roadmap', 'Project', 'Career', 'Profile'];
+// const [activeItem, setActiveItem] = useState('Overview'); // Default to 'Overview'
+const location = useLocation();
+const currentPath = location.pathname.replace("/", "");
 
 return (
     <nav className="bg-indigo-950 backdrop-blur-sm p-4 text-white flex justify-between items-center fixed top-0 left-0 right-0 z-10">
@@ -18,15 +18,15 @@ return (
     {/* Navigation Links */}
     <div className="flex space-x-6">
         {navItems.map((item) => (
-        <a 
+        <Link 
             key={item} 
-            href={`/${item}`} 
-            onClick={() => handleItemClick(item)}
+            to={`/${item}`} 
+            // onClick={() => handleItemClick(item)}
             className={`py-1 px-3 rounded-md transition duration-200 
-                      ${item === activeItem ? 'bg-indigo-600 font-semibold' : 'hover:bg-blue-500'}`}
+                      ${item === currentPath ? 'bg-indigo-600 font-semibold' : 'hover:bg-blue-500'}`}
         >
             {item}
-        </a>
+        </Link>
         ))}
     </div>
     </nav>
