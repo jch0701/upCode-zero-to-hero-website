@@ -11,7 +11,7 @@ export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterT
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
   // reorder items by date descending
-  const sortedItems = [...items].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const sortedItems = [...items].sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
 
   // 🔥 Filter by tag for the section
   const filteredItems = filterTag
@@ -32,10 +32,13 @@ export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterT
           key={index}
           id={item.id}
           slug={item.slug}
+          creator={item.creator}
           imageSrc={item.imageSrc}
           title={item.title}
           description={item.description}
-          date={item.date}
+          createdDate={item.createdDate}
+          modifiedDate={item.modifiedDate}
+          isFavourite={item.isFavourite}
           tags={item.tags}
         />
       ))}

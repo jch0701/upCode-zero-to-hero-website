@@ -10,7 +10,9 @@ export interface RoadmapItemCardProps {
     imageSrc: string; // URL for the image
     title: string;
     description: string;
-    date: string;
+    createdDate: string;
+    modifiedDate: string;
+    isFavourite: boolean;
     tags: Tag[];
 }
 
@@ -19,7 +21,7 @@ const MAX_VISIBLE_TAGS = 4;
 // --- Main Card Component ---
 
 export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
-    id, slug, imageSrc, title, date, tags,
+    id, slug, imageSrc, title, createdDate, tags,
 }) => {
   // Logic to determine which tags to show and if "More..." is needed
   const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS);
@@ -48,7 +50,7 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
 
       {/* 3. Date */}
       <p className="text-sm text-left text-gray-400 mb-4">
-        Created: <span className="font-medium">{date}</span>
+        Created: <span className="font-medium">{createdDate}</span>
       </p>
 
       {/* 4. Tags Section */}

@@ -4,14 +4,9 @@ import { TagPill } from "../constant";
 import type { RoadmapItemCardProps } from "./cardDetail";
 import { Heart, X } from 'lucide-react';
 
-export interface FeaturedRoadmapCardProps extends RoadmapItemCardProps {
-    dateModified: string;
-    isFavourite: boolean;
-}
-
-const RoadmapDescription: React.FC<FeaturedRoadmapCardProps> = ({
-    creator,imageSrc, title, description, date, tags,
-    dateModified, isFavourite}) => {
+const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
+    creator,imageSrc, title, description, createdDate, tags,
+    modifiedDate, isFavourite}) => {
     
     const [isFavouriteState, setIsFavourite] = useState(isFavourite);
     const navigate = useNavigate();
@@ -80,11 +75,11 @@ const RoadmapDescription: React.FC<FeaturedRoadmapCardProps> = ({
                         <br></br>
                         <div>
                             <h3 className="font-semibold text-left">Created On</h3>
-                            <p className="mt-1 text-gray-300">{date}</p>
+                            <p className="mt-1 text-gray-300">{createdDate}</p>
                         </div>
                         <div>
                             <h3 className="font-semibold text-left">Last Modified</h3>
-                            <p className="mt-1 text-gray-300">{dateModified}</p>
+                            <p className="mt-1 text-gray-300">{modifiedDate}</p>
                         </div>
                     </div>
                     {/* Description Section */}
