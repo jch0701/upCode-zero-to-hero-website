@@ -90,6 +90,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                     </p>
                 </div>
             </div>
+            <hr className="border-t border-gray-600 my-4" />
         </div>
     );
 }
