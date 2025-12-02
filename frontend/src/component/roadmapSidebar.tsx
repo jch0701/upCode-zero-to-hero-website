@@ -52,7 +52,7 @@ const RoadmapSidebar: React.FC<Props> = ({ visibleSections }) => {
                 </div>
 
                 {/* Vertical white line on the right */}
-                <div className="absolute right-0 top-0 h-100vh w-0.5 bg-white opacity-50"></div>
+                <div className="absolute right-0 top-0 h-[100vh] w-0.5 bg-white opacity-80"></div>
             </div>
         </div>
     );

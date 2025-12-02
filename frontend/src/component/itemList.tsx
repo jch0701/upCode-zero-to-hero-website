@@ -10,12 +10,15 @@ interface RoadmapItemListProps {
 export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterTag }) => {
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
+  // reorder items by date descending
+  const sortedItems = [...items].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   // 🔥 Filter by tag for the section
   const filteredItems = filterTag
-    ? items.filter(item =>
+    ? sortedItems.filter(item =>
         item.tags.some(tag => tag.label === filterTag)
       )
-    : items;
+    : sortedItems;
   const visibleItems = showAll ? filteredItems : filteredItems.slice(0, MAX_VISIBLE);
   const remainingCount = filteredItems.length - MAX_VISIBLE;
 

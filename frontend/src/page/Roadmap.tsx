@@ -164,13 +164,12 @@ export const Roadmap: React.FC = () => {
     }));
 
     return (
-        <div className="flex max-h-screen max-w-screen" 
-        style={{ backgroundColor: '#1a202c'}}>
+        <div style={{ backgroundColor: '#1a202c'}}>
             <Navbar />
             <div className="fixed top-0 left-10 pt-5">
                 <RoadmapSidebar visibleSections={visibleSidebarItems} />
             </div>
-            <div className="pl-75 p-10 flex-grow overflow-y-auto h-screen"> 
+            <div className="pl-78 p-10 flex-grow overflow-y-auto h-screen"> 
                 {availableSections.map((section) => (
                     <SectionBlock key={section.id} id={section.id} title={section.title}>
                         <RoadmapItemList items={roadmapData} filterTag={section.tag} />

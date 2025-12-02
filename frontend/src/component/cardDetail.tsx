@@ -59,7 +59,7 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
   const showMoreButton = remainingTagsCount > 0;
 
   return (
-    <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col h-full">
+    <div className="bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col h-full hover:scale-105 transform transition duration-300">
       {/* 1. Image Placeholder/Container */}
       <div className="w-full h-32 bg-gray-700 rounded-md mb-3 overflow-hidden">
         {/* Replace with a proper image component if you load actual images */}
