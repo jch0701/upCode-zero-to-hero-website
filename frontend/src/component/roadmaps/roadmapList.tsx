@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { RoadmapItemCard } from "./cardDetail.tsx";
-import type{ RoadmapItemCardProps } from "./cardDetail.tsx"; 
+import { RoadmapItemCard } from "./roadmapCard.tsx";
+import type{ RoadmapItemCardProps } from "./roadmapCard.tsx"; 
 
 interface RoadmapItemListProps {
   items: RoadmapItemCardProps[];

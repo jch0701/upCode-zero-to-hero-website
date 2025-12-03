@@ -31,3 +31,13 @@ html, body, #root {
   object-fit: cover;
 }
 */
+
+.bg-fixed {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url('./assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

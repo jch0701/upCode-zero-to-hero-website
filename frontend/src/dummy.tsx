@@ -1,4 +1,4 @@
-import type{ RoadmapItemCardProps} from "./component/roadmaps/cardDetail";
+import type{ RoadmapItemCardProps} from "./component/roadmaps/roadmapCard";
 import javaImage from "./assets/image/java_intro.jpg";
 import pythonImage from "./assets/image/python_intro.jpg";
 import type { PillarCardProps } from "./component/roadmaps/pillarCard";
