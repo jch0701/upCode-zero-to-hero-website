@@ -10,7 +10,7 @@ export const RoadmapDetails: React.FC = () => {
 
     if (!roadmapItem) return <p className="text-white text-center mt-10">Roadmap not found</p>;
     return (
-        <div className="pt-6" style={{ backgroundColor: '#1a202c', minHeight: '100vh' }}>
+        <div className="pt-6">
                 <RoadmapDescription {...roadmapItem} />
                 <PillarList selectedRoadmapId={roadmapItem.roadmapID} />
         </div>
