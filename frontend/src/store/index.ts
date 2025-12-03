@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import exampleSliceReducer from "./exampleSlice";
 // Import your reducers here
 // Example: import userReducer from "./slices/userSlice";
 
@@ -29,7 +30,8 @@ export const store = configureStore({
     reducer: {
         // Add your reducers here
         // Example: user: userReducer,
-    },
+        example: exampleSliceReducer,
+    } as any,
     preloadedState,
 });
 
