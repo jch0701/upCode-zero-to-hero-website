@@ -1,6 +1,7 @@
 import type{ RoadmapItemCardProps} from "./component/cardDetail";
 import javaImage from "./assets/image/java_intro.jpg";
 import pythonImage from "./assets/image/python_intro.jpg";
+import type { PillarCardProps } from "./component/pillarCard";
 
 export const roadmapData: RoadmapItemCardProps[] = [
   {
@@ -198,4 +199,114 @@ export const roadmapData: RoadmapItemCardProps[] = [
       { type: "Prerequisite", label: "React for Beginners" },
     ],
   },
+];
+
+
+export const pillarsData: PillarCardProps[] = [
+    {
+        id: 100001,
+        slug: "introduction-to-programming",
+        roadmapid: 100001,
+        title: "Introduction to Programming",
+        description: "Learn the basics of programming, including variables, data types, and control structures.",
+        modifiedDate: "2023-10-01",
+        tags: [],
+        order: 1,
+        isViewed: false
+    },
+    {
+        id: 100002,
+        slug: "object-oriented-programming",
+        roadmapid: 100001,
+        title: "Object-Oriented Programming",
+        description: "Understand the principles of OOP, including classes, objects, inheritance, and polymorphism.", 
+        modifiedDate: "2023-10-05",
+        tags: [],
+        order: 2,
+        isViewed: false
+    },
+    {   id: 100003,
+        slug: "data-structures-and-algorithms",
+        roadmapid: 100001,
+        title: "Data Structures and Algorithms",
+        description: "Explore common data structures and algorithms used in programming.",
+        modifiedDate: "2023-10-10",
+        tags: [],
+        order: 3,
+        isViewed: false
+    },
+    {  id: 100004,
+        slug: "error-handling-and-exceptions",
+        roadmapid: 100001,
+        title: "Error Handling and Exceptions",
+        description: "Learn how to handle errors and exceptions in your code effectively.",
+        modifiedDate: "2023-10-15",
+        tags: [],
+        order: 4,
+        isViewed: false
+    },
+    {  id: 100005,
+        slug: "java-collections-framework",
+        roadmapid: 100001, 
+        title: "Java Collections Framework",
+        description: "Dive into the Java Collections Framework, including lists, sets, maps, and queues.",
+        modifiedDate: "2023-10-20",
+        tags: [],
+        order: 5,
+        isViewed: false
+    },
+    {  id: 100006,
+        slug: "functional-programming-in-python",
+        roadmapid: 100002,
+        title: "Functional Programming in Python",
+        description: "Learn about functional programming concepts in Python, including lambda functions, map, filter, and reduce.",
+        modifiedDate: "2023-11-01",
+        tags: [],
+        order: 1,
+        isViewed: false
+      },
+      {
+        id: 100007,
+        slug: "file-handling-in-python",
+        roadmapid: 100002,
+        title: "File Handling in Python",
+        description: "Understand how to read from and write to files using Python.",
+        modifiedDate: "2023-11-05",
+        tags: [],
+        order: 2,
+        isViewed: false
+      },
+      {
+        id: 100008,
+        slug: "modules-and-packages",
+        roadmapid: 100002,
+        title: "Modules and Packages",
+        description: "Learn how to create and use modules and packages in Python for better code organization.",
+        modifiedDate: "2023-11-10",
+        tags: [],
+        order: 3,
+        isViewed: false
+      },
+      {
+        id: 100009,
+        slug: "error-and-exception-handling",
+        roadmapid: 100002,
+        title: "Error and Exception Handling",
+        description: "Learn how to handle errors and exceptions in Python effectively.",
+        modifiedDate: "2023-11-15",
+        tags: [],
+        order: 4,
+        isViewed: false
+      },
+      {  
+        id: 100010,
+        slug: "working-with-databases",
+        roadmapid: 100002,  
+        title: "Working with Databases",
+        description: "Understand how to connect to and interact with databases using Python.",
+        modifiedDate: "2023-11-20",
+        tags: [],
+        order: 5,
+        isViewed: false
+      }
 ];

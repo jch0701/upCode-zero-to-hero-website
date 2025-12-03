@@ -1,7 +1,8 @@
 import React from "react";
 import RoadmapDescription from "../component/roadmapDesciption";
-import { roadmapData } from "../dummy";
+import { roadmapData} from "../dummy";
 import { useParams } from "react-router-dom";
+import PillarList from "@/component/pillarList";
 
 export const RoadmapDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>(); // get id from URL
@@ -11,6 +12,7 @@ export const RoadmapDetails: React.FC = () => {
     return (
         <div className="pt-6" style={{ backgroundColor: '#1a202c', minHeight: '100vh' }}>
                 <RoadmapDescription {...roadmapItem} />
+                <PillarList selectedRoadmapId={roadmapItem.id} />
         </div>
     );
 };
