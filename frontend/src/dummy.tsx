@@ -75,7 +75,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
   {
     roadmapID: 100005,
     roadmapSlug: "nodejs-fundamentals",
-    creator: 5,
+    creator: 100001,
     imageSrc: pythonImage,
     title: "Node.js Fundamentals",
     description: "Node.js Fundamentals guides you into the world of backend JavaScript development. You will learn how Node.js works, how to use built-in modules, and how to create simple servers. The roadmap also covers asynchronous programming, callbacks, promises, and using npm packages. By understanding the Node.js runtime environment and event loop, you will be prepared to build APIs or move into full-stack development using frameworks like Express.js.",
