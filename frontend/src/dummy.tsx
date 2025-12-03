@@ -221,7 +221,10 @@ export const pillarsData: PillarCardProps[] = [
         title: "Object-Oriented Programming",
         description: "Understand the principles of OOP, including classes, objects, inheritance, and polymorphism.", 
         modifiedDate: "2023-10-05",
-        tags: [],
+        tags: [
+          { type: "Difficulty", label: "Advanced" },
+          { type: "Category", label: "OOP" },
+        ],
         order: 2,
         isViewed: false
     },
