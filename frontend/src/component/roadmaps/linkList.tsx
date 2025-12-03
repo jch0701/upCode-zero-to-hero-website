@@ -16,10 +16,10 @@ filteredLinks.sort((a, b) => a.order - b.order);
 return (
     <div className="w-full mx-auto">
             <h3 className="text-3xl font-semibold text-white mb-6 border-b border-gray-700 pb-2 text-left">
-                Chapters for {chapterTitle}
+                Links for {chapterTitle}
             </h3>
             {filteredLinks.length === 0 ? (
-                <p className="text-gray-400 text-center mt-10">No chapters found for this roadmap.</p>
+                <p className="text-gray-400 text-center mt-10">No links found for this chapter.</p>
             ) : (filteredLinks.map((links) => (
                 <LinkCard 
                     key={links.chapterID}

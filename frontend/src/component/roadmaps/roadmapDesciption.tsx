@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TagPill } from "./tag";
-import type { RoadmapItemCardProps } from "./cardDetail";
+import type { RoadmapItemCardProps } from "./roadmapCard";
 import { Heart, X } from 'lucide-react';
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({

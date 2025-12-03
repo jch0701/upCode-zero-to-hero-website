@@ -13,6 +13,7 @@ import { RoadmapChapter } from "./page/RoadmapChapter";
 function App() {
   return (
     <>
+    <div className="bg-fixed"></div>
     <Router>
       <Routes>
         <Route path="/" element={<RootLayout />}>
