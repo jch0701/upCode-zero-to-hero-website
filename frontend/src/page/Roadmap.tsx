@@ -2,7 +2,7 @@ import React from "react";
 import RoadmapSidebar from "../component/roadmaps/roadmapSidebar";
 import RoadmapItemList from "../component/roadmaps/itemList";
 import SectionBlock from "../component/roadmaps/sectionBlock";
-import SearchBar from "../component/roadmaps/searchBar";
+import SearchBar from "../component/searchBar";
 import { useState } from "react";
 import { roadmapData } from "../dummy";
 

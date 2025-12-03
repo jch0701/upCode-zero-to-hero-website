@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import type { Tag } from './tag';
+import type { Tag } from './tag.tsx';
 
 // Type and data structure
 export interface PillarCardProps {
