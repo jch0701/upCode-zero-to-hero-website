@@ -8,7 +8,7 @@ const location = useLocation();
 const currentPath = location.pathname.replace("/", "");
 
 return (
-    <nav className="bg-indigo-950 backdrop-blur-sm p-4 text-white flex justify-between items-center fixed top-0 left-0 right-0 z-10">
+    <nav className="bg-indigo-950 backdrop-blur-sm text-white flex justify-between items-center fixed top-0 left-0 right-0 z-10 h-16 px-4">
     {/* Placeholder for a Logo/Title */}
     <div className="flex items-center">
         <img src={logo} alt="Logo" className="h-10 w-10 mr-2" />

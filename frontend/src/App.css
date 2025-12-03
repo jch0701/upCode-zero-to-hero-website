@@ -1,42 +1,32 @@
+/* Full-viewport background for the app root */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  /* Background image: scales to fill the viewport while preserving aspect ratio */
+  background-image: url('./assets/background.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; /* use 'contain' if you prefer the whole image visible with letterboxing */
+  /* background-attachment: fixed; */
+  /* Note: `background-attachment: fixed` can cause performance or rendering issues on some mobile browsers. */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* Optional: if you'd rather use an <img> element for the background (good for responsive art direction),
+   create a wrapper with an absolutely positioned image and use object-fit: cover on the img. */
+/*
+.bg-image-cover {
+  position: fixed;
+  inset: 0; 
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+*/

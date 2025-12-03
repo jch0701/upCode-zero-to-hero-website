@@ -27,46 +27,46 @@ const sections: Section[] = [
 ];
 
 export const Roadmap: React.FC = () => {
-    const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");
 
-    const availableSections = sections.filter((section) => {
-        if (!section.tag) return true; // show "What's New" / "Recently Viewed" even if tag undefined
-        // show section only if there is at least one roadmap item with matching tag label
-        return roadmapData.some((item) => {
-            const matchesTag = item.tags.some((t: any) => t.label === section.tag);
-            const matchesQuery =
-              item.title.toLowerCase().includes(query.toLowerCase()) ||
-              item.tags.some((t: any) => t.label.toLowerCase().includes(query.toLowerCase()));
-            return matchesTag && matchesQuery;
+  const availableSections = sections.filter((section) => {
+    if (!section.tag) return true; // show "What's New" / "Recently Viewed" even if tag undefined
+    // show section only if there is at least one roadmap item with matching tag label
+    return roadmapData.some((item) => {
+      const matchesTag = item.tags.some((t: any) => t.label === section.tag);
+      const matchesQuery =
+        item.title.toLowerCase().includes(query.toLowerCase()) ||
+        item.tags.some((t: any) => t.label.toLowerCase().includes(query.toLowerCase()));
+      return matchesTag && matchesQuery;
+    });
   });
-    });
 
-    const visibleSidebarItems = availableSections.map((s) => ({
-        name: s.title,
-        id: s.id,
-    }));
+  const visibleSidebarItems = availableSections.map((s) => ({
+    name: s.title,
+    id: s.id,
+  }));
 
-      const filteredRoadmapData = roadmapData.filter((item) => {
-      const q = query.toLowerCase();
-      return (
-        item.title.toLowerCase().includes(q) ||
-        item.tags.some((t: any) => t.label.toLowerCase().includes(q))
-      );
-    });
-
+  const filteredRoadmapData = roadmapData.filter((item) => {
+    const q = query.toLowerCase();
     return (
-        <div className="pt-6" style={{ backgroundColor: '#1a202c'}}>
-        <div className="fixed top-16 left-10 pt-5">
-                <RoadmapSidebar visibleSections={visibleSidebarItems} />
-            </div>
-            <div className="pl-78 p-10 flex-grow overflow-y-auto h-screen"> 
-                <SearchBar query={query} setQuery={setQuery} placeholder="Enter a roadmap title / category to see what other people saying about" />
-                {availableSections.map((section) => (
-                    <SectionBlock key={section.id} id={section.id} title={section.title}>
-                        <RoadmapItemList items={filteredRoadmapData} filterTag={section.tag} />
-                    </SectionBlock>
-                ))}
-            </div>
-        </div>
+      item.title.toLowerCase().includes(q) ||
+      item.tags.some((t: any) => t.label.toLowerCase().includes(q))
     );
+  });
+
+  return (
+    <div>
+      <div className="fixed pt-5">
+        <RoadmapSidebar visibleSections={visibleSidebarItems} />
+      </div>
+      <div className="pl-78 p-10 flex-grow overflow-y-auto h-screen">
+        <SearchBar query={query} setQuery={setQuery} placeholder="Enter a roadmap title / category to see what other people saying about" />
+        {availableSections.map((section) => (
+          <SectionBlock key={section.id} id={section.id} title={section.title}>
+            <RoadmapItemList items={filteredRoadmapData} filterTag={section.tag} />
+          </SectionBlock>
+        ))}
+      </div>
+    </div>
+  );
 };
