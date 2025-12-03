@@ -1,19 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css'
-import { Overview } from "./page/Overview";
-import { Roadmap } from "./page/Roadmap";
-import { RoadmapDetails } from "./page/RoadmapDetails";
-import { Project } from "./page/Project";
-import { Career } from "./page/Career";
-import { Profile } from "./page/Profile";
-import RootLayout from './layouts/RootLayout';
-import { RoadmapChapter } from "./page/RoadmapChapter";
+import { Overview } from "./page/Overview.tsx";
+import { Roadmap } from "./page/Roadmap.tsx";
+import { RoadmapDetails } from "./page/RoadmapDetails.tsx";
+import { Project } from "./page/Project.tsx";
+import { Career } from "./page/Career.tsx";
+import { Profile } from "./page/Profile.tsx";
+import RootLayout from './layouts/RootLayout.tsx';
+import { RoadmapChapter } from "./page/RoadmapChapter.tsx";
 
 
 function App() {
+  console.log("App component rendered");
   return (
     <>
-    <div className="bg-fixed"></div>
     <Router>
       <Routes>
         <Route path="/" element={<RootLayout />}>
@@ -31,4 +31,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
