@@ -10,13 +10,6 @@ html, body, #root {
   width: 100%;
   min-height: 100vh;
   height: max(100%, 100vh);
-  /* Background image: scales to fill the viewport while preserving aspect ratio */
-  background-image: url('./assets/background.jpg');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover; /* use 'contain' if you prefer the whole image visible with letterboxing */
-  /* background-attachment: fixed; */
-  /* Note: `background-attachment: fixed` can cause performance or rendering issues on some mobile browsers. */
 }
 
 /* Optional: if you'd rather use an <img> element for the background (good for responsive art direction),
