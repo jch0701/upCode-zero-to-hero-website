@@ -19,7 +19,7 @@ const FormBar: React.FC<FormBarProps> = ({ query, setQuery, placeholder, classNa
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder || "Enter description..."}
-          className="flex-grow h-40 text-white placeholder-white bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          className="flex-grow h-50 text-white placeholder-white bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
         />
       ) : (
         /** Normal single-line input */

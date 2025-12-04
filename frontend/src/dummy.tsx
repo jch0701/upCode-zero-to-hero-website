@@ -255,7 +255,10 @@ export const pillarsData: PillarCardProps[] = [
         title: "Java Collections Framework",
         description: "Dive into the Java Collections Framework, including lists, sets, maps, and queues.",
         modifiedDate: "2023-10-20",
-        tags: [],
+        tags: [
+          { type: "Difficulty", label: "Intermediate" },
+          { type: "Category", label: "Java" }
+        ],
         order: 5,
         isViewed: false
     },

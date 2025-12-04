@@ -41,7 +41,7 @@ const RoadmapDescriptionEdit: React.FC<RoadmapDescriptionEditProps> = ({
                                 />
                             </div>
                             <button 
-                                className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"
+                                className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl"
                                 onClick={() => navigate(-1)}
                             >
                                 Apply Change
