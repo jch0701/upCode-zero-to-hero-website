@@ -1,8 +1,8 @@
 import React from "react";
-import RoadmapDescription from "../component/roadmaps/roadmapDesciption";
-import { roadmapData} from "../dummy";
+import RoadmapDescription from "../../component/roadmaps/roadmapDesciption";
+import { roadmapData} from "../../dummy";
 import { useParams } from "react-router-dom";
-import PillarList from "../component/roadmaps/pillarList";
+import PillarList from "../../component/roadmaps/pillarList";
 
 export const RoadmapDetails: React.FC = () => {
     const { roadmapID } = useParams<{ roadmapID: string }>(); // get id from URL

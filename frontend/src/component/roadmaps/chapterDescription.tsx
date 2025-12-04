@@ -1,16 +1,18 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { TagPill } from "../tag";
 import type { PillarCardProps } from "./pillarCard";
 import { X } from 'lucide-react';
 import { roadmapData } from "@/dummy";
 
 const ChapterDescription: React.FC<PillarCardProps> = ({
-    title, description, modifiedDate, tags, roadmapID
+    chapterID, chapterSlug, title, description, modifiedDate, tags, roadmapID
 }) => {
     const navigate = useNavigate();
+    const userID = localStorage.getItem("userID");
     const imageSrc = roadmapData.find(r => r.roadmapID === roadmapID)?.imageSrc || 'placeholder-image.jpg';
     const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creator || 'Unknown Creator';
+    const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
 
     // Get image source and creator based on roadmapID
     return (
@@ -38,6 +40,14 @@ const ChapterDescription: React.FC<PillarCardProps> = ({
                             }}
                         />
                     </div>
+                    {(Number(userID) === creator) && 
+                    (<Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/edit`}>
+                            <button 
+                                className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"
+                            >
+                                Edit
+                            </button>
+                    </Link>)}
                 </div>
                 {/* Details */}
                 <div className="w-full md:w-[60%]">
@@ -51,10 +61,11 @@ const ChapterDescription: React.FC<PillarCardProps> = ({
                     <h2 className="text-3xl font-bold mb-4 text-left">{title}</h2>
                     {/* Creator and  Modified date info */}
                     <div className="grid grid-cols-2 gap-4 mb-6 text-left">
+                        {((Number(userID) !== creator) && 
                         <div>
                             <h3 className="font-semibold text-left">Creator</h3>
                             <p className="mt-1 text-gray-300">{creator}</p>
-                        </div>
+                        </div>)}
                         <div>
                             <h3 className="font-semibold text-left">Last Modified</h3>
                             <p className="mt-1 text-gray-300">{modifiedDate}</p>

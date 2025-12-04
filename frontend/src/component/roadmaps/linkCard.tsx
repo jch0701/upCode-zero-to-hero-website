@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import { roadmapData, pillarsData } from '@/dummy';
+import { Link, useLocation } from 'react-router-dom';
 // Type and data structure
 export interface LinkCardProps {
     nodeID: number;
@@ -11,15 +13,20 @@ export interface LinkCardProps {
 }
 
 const LinkCard : React.FC<LinkCardProps> = ({
-    title, order, link, isViewed,
+    nodeID, chapterID, title, order, link, isViewed,
 }) => {
     //toggle // toggleViewed indicator
     const [viewed, setViewed] = useState(isViewed);
     const handleToggleViewed = () => {
         setViewed(!viewed);
     };
-    return (
-        <div onClick={() => window.open(link, "_blank")}>
+    const chapterSlug = pillarsData.find(p => p.chapterID === chapterID)?.chapterSlug || 'Unknown Chapter Slug';
+    const roadmapID = pillarsData.find(p => p.chapterID === chapterID)?.roadmapID || 'Unknown Roadmap ID';
+    const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
+    const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creator || 'Unknown creator';
+    const userID = localStorage.getItem("userID");
+
+    const CardContent = (
         <div className={`
         flex items-center p-4 m-2 rounded-xl shadow-lg transition-all duration-300 
         bg-pink-100/70 border-2 border-opacity-70 border-pink-300
@@ -48,7 +55,24 @@ const LinkCard : React.FC<LinkCardProps> = ({
                     <div className="w-6 h-6 border-2 border-gray-400 rounded-full"></div>}
             </div>
         </div>
-        </div>
+    );
+    const location = useLocation();
+    return (
+        <>
+        {creator == userID ? (
+            // If creator → internal edit link
+                <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${nodeID}/edit`}
+                state={{ backgroundLocation: location }}
+                >
+                    {CardContent}
+                </Link>
+        ):(
+            // Not creator → open external resource
+                <div onClick={() => window.open(link, "_blank")}>
+                    {CardContent}
+                </div>
+        )}
+        </>
     )
 }
 

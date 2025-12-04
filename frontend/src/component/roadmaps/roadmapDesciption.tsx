@@ -82,11 +82,14 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                     {/* Creator / Date Info */} 
                     {/*Show like grid with 3 columns*/}
                     <div className="grid grid-cols-2 gap-4 mb-6 text-left">
-                        <div>
-                            <h3 className="font-semibold text-left">Creator</h3>
-                            <p className="mt-1 text-gray-300">{creator}</p>
-                        </div>
-                        <br></br>
+                        {(Number(userID) !== creator) && (
+                        <>
+                            <div>
+                                <h3 className="font-semibold text-left">Creator</h3>
+                                <p className="mt-1 text-gray-300">{creator}</p>
+                            </div>
+                            <br></br>
+                        </>)}
                         <div>
                             <h3 className="font-semibold text-left">Created On</h3>
                             <p className="mt-1 text-gray-300">{createdDate}</p>

@@ -1,10 +1,10 @@
 import React from "react";
-import RoadmapSidebar from "../component/roadmaps/roadmapSidebar";
-import RoadmapItemList from "../component/roadmaps/roadmapList";
-import SectionBlock from "../component/roadmaps/sectionBlock";
-import SearchBar from "../component/searchBar";
+import RoadmapSidebar from "../../component/roadmaps/roadmapSidebar";
+import RoadmapItemList from "../../component/roadmaps/roadmapList";
+import SectionBlock from "../../component/roadmaps/sectionBlock";
+import SearchBar from "../../component/searchBar";
 import { useState } from "react";
-import { roadmapData } from "../dummy";
+import { roadmapData } from "../../dummy";
 
 type Section = {
   id: string;
