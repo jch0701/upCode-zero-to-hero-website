@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import { Validate_Email } from "@/component/Signup_Login/Validate_Signup_Login";
 import TextInput from "@/component/Signup_Login/TextInput";
-import email_icon from "../assets/signuplogin/email.png";
-import "../component/Signup_Login/Fotgot_Reset.css";
+import email_icon from "@/assets/signuplogin/email.png";
+import "@/component/Signup_Login/Fotgot_Reset.css";
 
 const ForgotPassword_Pg = () => {
   const [email, setEmail] = useState("");
