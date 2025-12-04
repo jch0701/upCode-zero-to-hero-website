@@ -27,7 +27,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
             setViewed(!viewed);
         };
     return (
-        <Link to={`/Roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}`}>
+        <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}`}>
         <div className={`
         flex items-center p-4 m-2 rounded-xl shadow-lg transition-all duration-300 
         bg-pink-100/70 border-2 border-opacity-70 border-pink-300

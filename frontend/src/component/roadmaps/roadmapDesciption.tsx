@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { TagPill } from "../tag";
 import type { RoadmapItemCardProps } from "./roadmapCard";
 import { Heart, X } from 'lucide-react';
@@ -10,6 +10,8 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     
     const [isFavouriteState, setIsFavourite] = useState(isFavourite);
     const navigate = useNavigate();
+    const userID = localStorage.getItem("userID");
+    const { roadmapID, roadmapSlug } = useParams<{ roadmapID: string, roadmapSlug: string }>();
 
     return (
         <div className=" max-w-5xl mx-auto text-white">
@@ -36,6 +38,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                                 e.currentTarget.src = 'placeholder-image.jpg'; 
                             }}
                         />
+                        {(Number(userID) !== creator) && (
                         <button 
                             className="absolute top-3 left-3 p-2 bg-black/40 rounded-full cursor-pointer hover:bg-black/60 transition"
                             onClick={() => setIsFavourite(!isFavouriteState)}
@@ -46,16 +49,27 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                                 fill={isFavouriteState ? '#f80b0bff' : 'transparent'}
                                 stroke="white" 
                             />
-                        </button>
+                        </button>)}
                     </div>
                     <h2 className="text-3xl font-bold mb-4 text-left">{title}</h2>
                     {/* Save as Favourite Button */}
-                    <button 
-                        className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"
-                        onClick={() => setIsFavourite(!isFavouriteState)}
-                    >
-                        {isFavouriteState ? "Unfavourite" : "Save as Favourite"}
-                    </button>
+                    {(Number(userID) !== creator)
+                        ?
+                        <button 
+                            className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"
+                            onClick={() => setIsFavourite(!isFavouriteState)}
+                        >
+                            {isFavouriteState ? "Unfavourite" : "Save as Favourite"}
+                        </button>
+                        :
+                        <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/edit`}>
+                            <button 
+                                className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"
+                            >
+                                Edit
+                            </button>
+                        </Link>
+                        }
                 </div>
                 {/* Right Section: Tags */}
                 <div className="w-full md:w-[60%]">
@@ -68,11 +82,14 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                     {/* Creator / Date Info */} 
                     {/*Show like grid with 3 columns*/}
                     <div className="grid grid-cols-2 gap-4 mb-6 text-left">
-                        <div>
-                            <h3 className="font-semibold text-left">Creator</h3>
-                            <p className="mt-1 text-gray-300">{creator}</p>
-                        </div>
-                        <br></br>
+                        {(Number(userID) !== creator) && (
+                        <>
+                            <div>
+                                <h3 className="font-semibold text-left">Creator</h3>
+                                <p className="mt-1 text-gray-300">{creator}</p>
+                            </div>
+                            <br></br>
+                        </>)}
                         <div>
                             <h3 className="font-semibold text-left">Created On</h3>
                             <p className="mt-1 text-gray-300">{createdDate}</p>

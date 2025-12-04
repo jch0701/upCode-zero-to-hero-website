@@ -77,6 +77,9 @@ export const Roadmap: React.FC = () => {
           if (section.id === "your-design" && isLoggedIn && userID) {
             itemsToShow = filteredRoadmapData.filter((item) => item.creator === Number(userID));
           }
+          if (section.id === "whats-new" && isLoggedIn && userID) {
+            itemsToShow = filteredRoadmapData.filter((item) => item.creator !== Number(userID));
+          }
           return(
           <SectionBlock key={section.id} id={section.id} title={section.title}>
             <RoadmapItemList items={itemsToShow} filterTag={section.tag} />

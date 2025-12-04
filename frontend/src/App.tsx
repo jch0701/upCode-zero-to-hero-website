@@ -10,6 +10,7 @@ import { Login } from "./page/Login.tsx";
 import { ProjectDetails } from "./page/projects/ProjectDetails.tsx";
 import RootLayout from './layouts/RootLayout.tsx';
 import { RoadmapChapter } from "./page/roadmaps/RoadmapChapter.tsx";
+import { RoadmapDetailEdit } from "./page/RoadmapDetailEdit.tsx";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="roadmap" element={<Roadmap />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug" element={<RoadmapDetails />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug" element={<RoadmapChapter />} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/edit" element={<RoadmapDetailEdit/>} />
           <Route path="project" element={<Project />} />
           <Route path="project/:projectId" element={<ProjectDetails />} />
           <Route path="career" element={<Career />} />
