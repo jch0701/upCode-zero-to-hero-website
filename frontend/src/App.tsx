@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import './App.css'
 import { Overview } from "./page/Overview.tsx";
 import { Roadmap } from "./page/roadmaps/Roadmap.tsx";
@@ -15,11 +15,13 @@ import { RoadmapChapterNode } from "./page/roadmaps/RoadmapChapterNode.tsx";
 import { RoadmapChapterEdit } from "./page/roadmaps/RoadmapChapterEdit.tsx";
 
 
-function App() {
+function AppRoutes() {
+  const location = useLocation();
+  const state = location.state as { backgroundLocation?: Location };
+
   return (
     <>
-    <Router>
-      <Routes>
+      <Routes location={state?.backgroundLocation || location}>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Overview />} />
           <Route path="login" element={<Login />} />
@@ -28,13 +30,36 @@ function App() {
           <Route path="roadmap/:roadmapID/:roadmapSlug/edit" element={<RoadmapDetailEdit/>} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug" element={<RoadmapChapter />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/edit" element={<RoadmapChapterEdit />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<RoadmapChapterNode/>} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<RoadmapChapterNode />} />
           <Route path="project" element={<Project />} />
           <Route path="project/:projectId" element={<ProjectDetails />} />
           <Route path="career" element={<Career />} />
           <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
+
+      {state?.backgroundLocation && (
+        <Routes>
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" 
+                 element={
+                  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+                    <div className="bg-pink-300/70 w-full max-w-2xl rounded-xl shadow-2xl p-6">
+                        <RoadmapChapterNode />
+                    </div>
+                  </div>
+                 } />
+        </Routes>
+      )}
+    </>
+  );
+}
+
+
+function App() {
+  return (
+    <>
+    <Router>
+      <AppRoutes />
     </Router>
     </>
   )

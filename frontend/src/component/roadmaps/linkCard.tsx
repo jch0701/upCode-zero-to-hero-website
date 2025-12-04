@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { roadmapData, pillarsData } from '@/dummy';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router-dom';
 // Type and data structure
 export interface LinkCardProps {
     nodeID: number;
@@ -56,12 +56,14 @@ const LinkCard : React.FC<LinkCardProps> = ({
             </div>
         </div>
     );
-
+    const location = useLocation();
     return (
         <>
         {creator == userID ? (
             // If creator → internal edit link
-                <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${nodeID}/edit`}>
+                <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${nodeID}/edit`}
+                state={{ backgroundLocation: location }}
+                >
                     {CardContent}
                 </Link>
         ):(
