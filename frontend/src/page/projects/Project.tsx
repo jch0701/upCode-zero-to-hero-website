@@ -2,19 +2,28 @@ import React from "react";
 import SearchBar from "@/component/searchBar";
 import { Button } from "@/component/shadcn/button";
 import { useState } from "react";
-import dice_icon from "../assets/projects/dice_icon.png";
-import folder_icon from "../assets/projects/folder_icon.png";
-import VerticalRadio from "../component/projects/verticalRadio";
-import type { ProjectType } from "../store/projectsSlice";
+import dice_icon from "../../assets/projects/dice_icon.png";
+import folder_icon from "../../assets/projects/folder_icon.png";
+import RadioGroup from "../../component/projects/radioGroup.tsx";
+import type { ProjectType } from "../../store/projectsSlice.ts";
 import { useSelector } from "react-redux";
-import type { Category } from "@/lib/types.ts";
-import { commonButtonStyles, commonIconStyles } from "../lib/styles.ts";
-import ProjectCard from "../component/projects/projectCard";
+import { categoryList } from "@/lib/types.ts";
+import { commonButtonStyles, commonIconStyles } from "../../lib/styles.ts";
+import { useNavigate } from "react-router";
+import ProjectCard from "../../component/projects/projectCard.tsx";
 
 export const Project: React.FC = () => {
+    const selections = ["All", ...categoryList];
     const [query, setQuery] = useState("");
-    const [category, setCategory] = useState("All");
+    const [category, setCategory] = useState(selections[0]);
     const projects = useSelector((state: any) => state.projects.projectsList);
+    const navigate = useNavigate();
+    function handleCategoryChange(value: string) {
+        setCategory(value);
+    }
+    function navigateToProjectDetails(projectId: string) {
+        navigate(`/project/${projectId}`);
+    }
     return (
         <div className="pt-6 w-[90%] mx-auto">
             <h1 className="text-3xl font-bold text-white">Browse the latest trending project ideas here!</h1>
@@ -37,14 +46,21 @@ export const Project: React.FC = () => {
                 </div>
             </div>
             <div className="h-full backdrop-blur-sm bg-white/10 rounded-md p-6 mt-6 grid grid-cols-[2fr_8fr] gap-4">
-                <VerticalRadio
-                    options={["All", "Web Development", "Mobile Apps", "Machine Learning", "Game Development", "Data Science"]}
-                    onClick={(value) => console.log("Selected category:", value)}
+                <RadioGroup
+                    options={selections}
+                    selected={category}
+                    onClick={handleCategoryChange}
+                    isHorizontal={false}
                 />
                 <div className="grid grid-cols-3 gap-2">
-                    {projects.map((project: ProjectType) => (
-                        <ProjectCard key={project.projectId} project={project} />
-                    ))}
+                    {projects.map((project: ProjectType) => {
+                        if (category !== "All" && project.category !== category) return null;
+                        return (
+                            <ProjectCard key={project.projectId} project={project}
+                                onClick={() => navigateToProjectDetails(project.projectId)}
+                            />
+                        );
+                    })}
                 </div>
             </div>
         </div>
