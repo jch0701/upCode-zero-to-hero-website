@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from 'lucide-react';
+import FormBar from "./formBox";
 
 interface RoadmapDescriptionEditProps{
     imageSrc : string;
@@ -12,6 +13,8 @@ interface RoadmapDescriptionEditProps{
 const RoadmapDescriptionEdit: React.FC<RoadmapDescriptionEditProps> = ({
     imageSrc, title, description}) => {
         const navigate = useNavigate();
+        const [queryTitle, setQueryTitle] = useState(title);
+        const [queryDescription, setQueryDescription] = useState(description)
         return (
                 <div className=" max-w-5xl mx-auto text-white">
                     {/* Top Right Icon */}
@@ -37,17 +40,23 @@ const RoadmapDescriptionEdit: React.FC<RoadmapDescriptionEditProps> = ({
                                     }}
                                 />
                             </div>
-                            <h3 className="text-xl font-bold mb-2 text-left">title</h3>
-                            <h2 className="text-3xl font-bold mb-4 text-left">{title}</h2>
+                            <button 
+                                className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"
+                                onClick={() => navigate(-1)}
+                            >
+                                Apply Change
+                            </button>
                         </div>
                         {/* Right Section: Tags */}
                         <div className="w-full md:w-[60%]">
+                            {/* Title Section */}
+                            <h3 className="text-xl font-bold mb-2 text-left">Title</h3>
+                            <FormBar query={queryTitle} setQuery={setQueryTitle} placeholder="Enter a title" />
+                            <br></br>
                             {/* Description Section */}
                             <h3 className="text-xl font-bold mb-2 text-left">Description</h3>
                             {/* Description Text */}
-                            <p className="text-gray-300 leading-relaxed text-base whitespace-pre-wrap text-justify">
-                                {description}
-                            </p>
+                            <FormBar query={queryDescription} setQuery={setQueryDescription} isDescription={true} />
                         </div>
                     </div>
                 </div>
