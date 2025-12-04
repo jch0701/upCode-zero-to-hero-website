@@ -10,7 +10,7 @@ import { Login } from "./page/Login.tsx";
 import { ProjectDetails } from "./page/projects/ProjectDetails.tsx";
 import RootLayout from './layouts/RootLayout.tsx';
 import { RoadmapChapter } from "./page/roadmaps/RoadmapChapter.tsx";
-import { RoadmapDetailEdit } from "./page/RoadmapDetailEdit.tsx";
+import { RoadmapDetailEdit } from "./page/roadmaps/RoadmapDetailEdit.tsx";
 
 
 function App() {
