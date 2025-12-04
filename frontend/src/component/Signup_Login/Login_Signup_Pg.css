@@ -1,0 +1,215 @@
+.container-wrapper {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  position: relative;
+  margin-top: 120px;
+}
+
+.tab-wrapper{
+  position: fixed;
+  top: 137px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  
+}
+
+.tab-button {
+  padding: 10px 36px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 20px;
+  cursor: pointer;
+  border: none;
+  background: #C562FF;
+  color: white;
+  backdrop-filter: blur(10px);
+  gap: 20px;
+}
+
+.tab-button:hover {
+  background: #3B82F6;
+}
+
+.tab-button-active {
+  padding: 1px 38px;
+  font-size: 18px;
+  font-weight: 1000;
+  border-radius: 20px;
+  cursor: pointer;
+  border: none;
+  background: #7C3AED;
+  color: rgb(255, 255, 255);
+  gap: 20px;
+}
+
+.image-container {
+  width: 420px;
+  display: flex;
+  background-image: url('../../assets/signuplogin/mentor.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 20px;
+  gap: 10px;
+}
+
+.signup-login-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px);
+  display: flex;
+  flex-direction: column;
+  padding: 35px 45px;
+  border-radius: 20px;
+  width: 420px;
+  gap: 10px;
+}
+
+.signup-login-text{
+  text-align: left;
+  display: block;
+  color: white;
+  font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.input-container {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  border-radius: 25px;
+  border: 1.5px solid rgba(255, 255, 255, 1);
+  background: transparent;
+  color: white;
+  font-size: 11px;
+  box-sizing: border-box;
+}
+
+.input-container::placeholder {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.icon {
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.9;
+}
+
+.input-wrapper{
+  position: relative;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.eye-icon {
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.checkbox-container {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.button-container {
+  margin-top: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 30px;
+  background: white;
+  color: black;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.button-container:hover {
+  background: #3B82F6;
+}
+
+.login-text{
+  color: white;
+  text-align: center;
+  margin-top: 20px;
+  font-size:  14px;
+}
+
+.signup-login-link{
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.forgotpass-text{
+  color: white;
+  text-align: right;
+  margin: 7px 0px;
+  
+  font-size:  14px;
+}
+
+.forgot-link {
+  display: inline-block;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.signup-login-link:hover, 
+.forgot-link:hover {
+  color: #3B82F6;
+}
+
+.header-text {
+  margin: auto;
+  font-size: 34px;
+  font-weight: bold;;
+  color: rgba(12,1,135,1);
+
+}
+
+.subheader-text {
+  text-align: left;
+  font-size: 25px;
+  font-weight: bold;
+  color: rgba(5,53,199,1);
+  margin-bottom: 3px;
+  margin: auto;
+}
+
+.hero-image {
+  width: 250px;
+  height: auto;
+  padding-left: 100px;
+
+}
+
+.error-box {
+  min-height: 15px;
+  margin-top: -25px;
+  text-align: left;
+  color: rgb(246, 1, 1);
+  font-size: 12px;
+}
