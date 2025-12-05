@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { RoadmapItemCard } from "./roadmapCard.tsx";
 import type{ RoadmapItemCardProps } from "./roadmapCard.tsx"; 
+import { generateTags } from './groupTag';
+import { pillarsData } from '../../dummy';
 
 interface RoadmapItemListProps {
   items: RoadmapItemCardProps[];
@@ -13,11 +15,12 @@ export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterT
   // reorder items by date descending
   const sortedItems = [...items].sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
 
-  // 🔥 Filter by tag for the section
+  // 🔥 Filter by tag for the section (derive tags when missing)
   const filteredItems = filterTag
-    ? sortedItems.filter(item =>
-        item.tags.some(tag => tag.label === filterTag)
-      )
+    ? sortedItems.filter(item => {
+        const effectiveTags = (item.tags && item.tags.length) ? item.tags : generateTags(item.roadmapID, pillarsData);
+        return effectiveTags.some(tag => tag.label === filterTag);
+      })
     : sortedItems;
   const visibleItems = showAll ? filteredItems : filteredItems.slice(0, MAX_VISIBLE);
   const remainingCount = filteredItems.length - MAX_VISIBLE;

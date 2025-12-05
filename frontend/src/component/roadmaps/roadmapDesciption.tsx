@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { TagPill } from "../tag";
 import type { RoadmapItemCardProps } from "./roadmapCard";
+import { generateTags } from './groupTag';
+import { pillarsData } from '../../dummy';
 import { Heart, X } from 'lucide-react';
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     creator,imageSrc, title, description, createdDate, tags,
-    modifiedDate, isFavourite}) => {
+    modifiedDate, isFavourite, roadmapID: roadmapIDProp}) => {
     
     const [isFavouriteState, setIsFavourite] = useState(isFavourite);
     const navigate = useNavigate();
@@ -75,9 +77,12 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                 <div className="w-full md:w-[60%]">
                     {/* Tags Section */}
                     <div className="flex flex-wrap gap-2 down mb-6 text-black">
-                        {tags.map((tag, index) => (
+                        {((tags && tags.length)
+                            ? tags
+                            : generateTags(Number(roadmapIDProp ?? roadmapID), pillarsData)
+                        ).map((tag, index) => (
                                 <TagPill key={index} tag={tag} />
-                    ))}
+                        ))}
                     </div>
                     {/* Creator / Date Info */} 
                     {/*Show like grid with 3 columns*/}

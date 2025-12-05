@@ -15,14 +15,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-10-20",
     modifiedDate: "2025-10-20",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Beginner" },
-      { type: "Category", label: "Java" },
-      { type: "Prerequisite", label: "None" },
-      { type: "Difficulty", label: "Intermediate" },
-      { type: "Category", label: "Python" },
-      { type: "Prerequisite", label: "Basic Programming" },
-    ],
+    
   },
   {
     roadmapID: 100002,
@@ -34,11 +27,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-11-05",
     modifiedDate: "2025-11-05",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Intermediate" },
-      { type: "Category", label: "Python" },
-      { type: "Prerequisite", label: "Basic Programming" },
-    ],
+    
   },
   {
     roadmapID: 100003,
@@ -50,11 +39,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-08-15",
     modifiedDate: "2025-11-15",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Beginner" },
-      { type: "Category", label: "JavaScript" },
-      { type: "Prerequisite", label: "None" },
-    ],
+    
   },
   {
     roadmapID: 100004,
@@ -66,11 +51,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-09-25",
     modifiedDate: "2025-11-25",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Intermediate" },
-      { type: "Category", label: "React" },
-      { type: "Prerequisite", label: "JavaScript Basics" },
-    ],
+    
   },
   {
     roadmapID: 100005,
@@ -82,11 +63,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-11-09",
     modifiedDate: "2025-12-05",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Intermediate" },
-      { type: "Category", label: "Node.js" },
-      { type: "Prerequisite", label: "JavaScript Basics" },
-    ],
+    
   },
   {
     roadmapID: 100006,
@@ -98,11 +75,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-12-15",
     modifiedDate: "2025-12-15",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Beginner" },
-      { type: "Category", label: "Database" },
-      { type: "Prerequisite", label: "None" },
-    ],
+    
   },
   {
     roadmapID: 100007,
@@ -114,11 +87,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-11-11",
     modifiedDate: "2025-12-20",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Beginner" },
-      { type: "Category", label: "Web Development" },
-      { type: "Prerequisite", label: "None" },
-    ],
+    
   },
   {
     roadmapID: 100008,
@@ -130,11 +99,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-12-05",
     modifiedDate: "2026-01-05",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Intermediate" },
-      { type: "Category", label: "TypeScript" },
-      { type: "Prerequisite", label: "JavaScript Basics" },
-    ],
+    
   },
   {
     roadmapID: 100009,
@@ -146,11 +111,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-01-15",
     modifiedDate: "2026-01-15",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Advanced" },
-      { type: "Category", label: "Angular" },
-      { type: "Prerequisite", label: "TypeScript Basics" },
-    ],
+    
   },
   {
     roadmapID: 100010,
@@ -162,11 +123,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2026-01-25",
     modifiedDate: "2026-02-25",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Advanced" },
-      { type: "Category", label: "Python" },
-      { type: "Prerequisite", label: "Python Basics" },
-    ],
+    
   },
   {
     roadmapID: 100011,
@@ -178,11 +135,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2026-01-05",
     modifiedDate: "2026-02-05",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Advanced" },
-      { type: "Category", label: "Java" },
-      { type: "Prerequisite", label: "Java Fundamentals" },
-    ],
+    
   },
   {
     roadmapID: 100012,
@@ -194,11 +147,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     createdDate: "2025-02-15",
     modifiedDate: "2026-02-15",
     isFavourite: false,
-    tags: [
-      { type: "Difficulty", label: "Advanced" },
-      { type: "Category", label: "React" },
-      { type: "Prerequisite", label: "React for Beginners" },
-    ],
+    
   },
 ];
 

@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import type { Tag } from '../tag.tsx';
 import { TagPill } from '../tag.tsx';
+import { generateTags } from './groupTag';
+import { pillarsData } from '../../dummy';
 // Type and data structure
 export interface RoadmapItemCardProps {
     roadmapID: number;
@@ -13,7 +15,7 @@ export interface RoadmapItemCardProps {
     createdDate: string;
     modifiedDate: string;
     isFavourite: boolean;
-    tags: Tag[];
+  tags?: Tag[];
 }
 
 const MAX_VISIBLE_TAGS = 4;
@@ -23,9 +25,11 @@ const MAX_VISIBLE_TAGS = 4;
 export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
     roadmapID, roadmapSlug, imageSrc, title, createdDate, tags,
 }) => {
+  // Compute tags from pillarsData when not provided
+  const effectiveTags = (tags && tags.length) ? tags : generateTags(roadmapID, pillarsData);
   // Logic to determine which tags to show and if "More..." is needed
-  const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS);
-  const remainingTagsCount = tags.length - MAX_VISIBLE_TAGS;
+  const visibleTags = effectiveTags.slice(0, MAX_VISIBLE_TAGS);
+  const remainingTagsCount = effectiveTags.length - MAX_VISIBLE_TAGS;
   const showMoreButton = remainingTagsCount > 0;
 
   return (
