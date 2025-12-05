@@ -4,7 +4,8 @@ import RoadmapItemList from "../../component/roadmaps/roadmapList";
 import SectionBlock from "../../component/roadmaps/sectionBlock";
 import SearchBar from "../../component/searchBar";
 import { useState } from "react";
-import { roadmapData } from "../../dummy";
+import { roadmapData, pillarsData } from "../../dummy";
+import { generateTags } from "../../component/roadmaps/groupTag";
 
 type Section = {
   id: string;
@@ -43,10 +44,11 @@ export const Roadmap: React.FC = () => {
 
     // show section only if there is at least one roadmap item with matching tag label
     return roadmapData.some((item) => {
-      const matchesTag = item.tags.some((t: any) => t.label === section.tag);
+      const effectiveTags = (item.tags && item.tags.length) ? item.tags : generateTags(item.roadmapID, pillarsData);
+      const matchesTag = effectiveTags.some((t: any) => t.label === section.tag);
       const matchesQuery =
         item.title.toLowerCase().includes(query.toLowerCase()) ||
-        item.tags.some((t: any) => t.label.toLowerCase().includes(query.toLowerCase()));
+        effectiveTags.some((t: any) => t.label.toLowerCase().includes(query.toLowerCase()));
       return matchesTag && matchesQuery;
     });
   });
@@ -58,9 +60,10 @@ export const Roadmap: React.FC = () => {
 
   const filteredRoadmapData = roadmapData.filter((item) => {
     const q = query.toLowerCase();
+    const effectiveTags = (item.tags && item.tags.length) ? item.tags : generateTags(item.roadmapID, pillarsData);
     return (
       item.title.toLowerCase().includes(q) ||
-      item.tags.some((t: any) => t.label.toLowerCase().includes(q))
+      effectiveTags.some((t: any) => t.label.toLowerCase().includes(q))
     );
   });
 
