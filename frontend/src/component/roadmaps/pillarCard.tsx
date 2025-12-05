@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import type { Tag } from '../tag.tsx';
 import { Link, useParams } from 'react-router';
 
 // Type and data structure
@@ -10,7 +9,9 @@ export interface PillarCardProps {
     title: string;
     description?: string;
     modifiedDate: string;
-    tags: Tag[];
+    difficulty: string;
+    category: string;
+    prerequisite: string;
     order: number;
     isViewed: boolean;
 }

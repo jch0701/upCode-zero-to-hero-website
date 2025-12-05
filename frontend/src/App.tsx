@@ -48,14 +48,7 @@ function AppRoutes() {
 
       {state?.backgroundLocation && (
         <Routes>
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" 
-                 element={
-                  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
-                    <div className="bg-pink-300/70 w-full max-w-2xl rounded-xl shadow-2xl p-6">
-                        <RoadmapChapterNode />
-                    </div>
-                  </div>
-                 } />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<RoadmapChapterNode />} />
         </Routes>
       )}
     </>

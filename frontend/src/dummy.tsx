@@ -211,7 +211,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Introduction to Programming",
         description: "Learn the basics of programming, including variables, data types, and control structures.",
         modifiedDate: "2023-10-01",
-        tags: [],
+        difficulty: "Intermediate",
+        category: "Java",
+        prerequisite: "None",
         order: 1,
         isViewed: false
     },
@@ -222,10 +224,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Object-Oriented Programming",
         description: "Understand the principles of OOP, including classes, objects, inheritance, and polymorphism.", 
         modifiedDate: "2023-10-05",
-        tags: [
-          { type: "Difficulty", label: "Advanced" },
-          { type: "Category", label: "OOP" },
-        ],
+        difficulty: "Advanced",
+        category: "OOP",
+        prerequisite: "None",
         order: 2,
         isViewed: false
     },
@@ -235,7 +236,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Data Structures and Algorithms",
         description: "Explore common data structures and algorithms used in programming.",
         modifiedDate: "2023-10-10",
-        tags: [],
+        difficulty: "Advanced",
+        category: "OOP",
+        prerequisite: "None",
         order: 3,
         isViewed: false
     },
@@ -245,7 +248,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Error Handling and Exceptions",
         description: "Learn how to handle errors and exceptions in your code effectively.",
         modifiedDate: "2023-10-15",
-        tags: [],
+        difficulty: "Advanced",
+        category: "OOP",
+        prerequisite: "None",
         order: 4,
         isViewed: false
     },
@@ -255,10 +260,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Java Collections Framework",
         description: "Dive into the Java Collections Framework, including lists, sets, maps, and queues.",
         modifiedDate: "2023-10-20",
-        tags: [
-          { type: "Difficulty", label: "Intermediate" },
-          { type: "Category", label: "Java" }
-        ],
+        difficulty: "Intermediate",
+        category: "Java",
+        prerequisite: "None",
         order: 5,
         isViewed: false
     },
@@ -268,7 +272,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Functional Programming in Python",
         description: "Learn about functional programming concepts in Python, including lambda functions, map, filter, and reduce.",
         modifiedDate: "2023-11-01",
-        tags: [],
+        difficulty: "Intermediate",
+        category: "OOP",
+        prerequisite: "None",
         order: 1,
         isViewed: false
       },
@@ -279,7 +285,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "File Handling in Python",
         description: "Understand how to read from and write to files using Python.",
         modifiedDate: "2023-11-05",
-        tags: [],
+        difficulty: "Beginner",
+        category: "OOP",
+        prerequisite: "None",
         order: 2,
         isViewed: false
       },
@@ -290,7 +298,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Modules and Packages",
         description: "Learn how to create and use modules and packages in Python for better code organization.",
         modifiedDate: "2023-11-10",
-        tags: [],
+        difficulty: "Advanced",
+        category: "OOP",
+        prerequisite: "Python",
         order: 3,
         isViewed: false
       },
@@ -301,7 +311,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Error and Exception Handling",
         description: "Learn how to handle errors and exceptions in Python effectively.",
         modifiedDate: "2023-11-15",
-        tags: [],
+        difficulty: "Beginner",
+        category: "OOP",
+        prerequisite: "Python",
         order: 4,
         isViewed: false
       },
@@ -312,7 +324,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Working with Databases",
         description: "Understand how to connect to and interact with databases using Python.",
         modifiedDate: "2023-11-20",
-        tags: [],
+        difficulty: "Advanced",
+        category: "OOP",
+        prerequisite: "None",
         order: 5,
         isViewed: false
       },
@@ -323,10 +337,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Java Stream API",
         description: "Learn how to use Java Stream API for functional-style operations on collections.",
         modifiedDate: "2023-10-25",
-        tags: [
-          { type: "Difficulty", label: "Intermediate" },
-          { type: "Category", label: "Java" },
-        ],
+        difficulty: "Intermediate",
+        category: "Java",
+        prerequisite: "None",
         order: 6,
         isViewed: false
       },
@@ -337,10 +350,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Lambda Expressions",
         description: "Understand lambda expressions and how they introduce functional programming in Java.",
         modifiedDate: "2023-10-30",
-        tags: [
-          { type: "Difficulty", label: "Intermediate" },
-          { type: "Category", label: "Java" },
-        ],
+        difficulty: "Advanced",
+        category: "Java",
+        prerequisite: "None",
         order: 7,
         isViewed: false
       },
@@ -351,10 +363,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Python Data Structures",
         description: "Learn about Python lists, dictionaries, tuples, and sets in depth.",
         modifiedDate: "2023-11-25",
-        tags: [
-          { type: "Difficulty", label: "Beginner" },
-          { type: "Category", label: "Python" }
-        ],
+        difficulty: "Beginner",
+        category: "Java",
+        prerequisite: "None",
         order: 6,
         isViewed: false
       },
@@ -365,10 +376,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Functions Deep Dive",
         description: "Master Python functions, including scope, arguments, recursion, and best practices.",
         modifiedDate: "2023-11-28",
-        tags: [
-          { type: "Difficulty", label: "Intermediate" },
-          { type: "Category", label: "Python" }
-        ],
+        difficulty: "Intermediate",
+        category: "Java",
+        prerequisite: "None",
         order: 7,
         isViewed: false
       },
@@ -379,10 +389,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "DOM Manipulation",
         description: "Learn how JavaScript interacts with the Document Object Model (DOM).",
         modifiedDate: "2023-08-25",
-        tags: [
-          { type: "Difficulty", label: "Beginner" },
-          { type: "Category", label: "JavaScript" }
-        ],
+        difficulty: "Beginner",
+        category: "JavaScript",
+        prerequisite: "None",
         order: 1,
         isViewed: false
       },
@@ -393,10 +402,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "ES6 Modern JavaScript Features",
         description: "Learn ES6 features including let/const, arrow functions, classes, and modules.",
         modifiedDate: "2023-09-10",
-        tags: [
-          { type: "Difficulty", label: "Intermediate" },
-          { type: "Category", label: "JavaScript" }
-        ],
+        difficulty: "Advanced",
+        category: "JavaScript",
+        prerequisite: "None",
         order: 2,
         isViewed: false
       },
@@ -407,10 +415,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "React Hooks Basics",
         description: "Learn essential React hooks such as useState and useEffect.",
         modifiedDate: "2023-10-12",
-        tags: [
-          { type: "Difficulty", label: "Intermediate" },
-          { type: "Category", label: "React" }
-        ],
+        difficulty: "Intermediate",
+        category: "React",
+        prerequisite: "None",
         order: 1,
         isViewed: false
       },
@@ -421,10 +428,9 @@ export const pillarsData: PillarCardProps[] = [
         title: "Component Lifecycle",
         description: "Understand how React components render and update throughout their lifecycle.",
         modifiedDate: "2023-10-20",
-        tags: [
-          { type: "Difficulty", label: "Intermediate" },
-          { type: "Category", label: "React" }
-        ],
+        difficulty: "Intermediate",
+        category: "React",
+        prerequisite: "None",
         order: 2,
         isViewed: false
       }
