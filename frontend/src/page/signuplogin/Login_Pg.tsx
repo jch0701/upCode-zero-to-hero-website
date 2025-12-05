@@ -32,7 +32,7 @@ const Login_Pg: FC = () => {
       alert(
         "Login Successfully.\n" + `Email: ${email}\n`
       );
-      localStorage.setItem("userID", "12345"); // Simulate setting userID on login
+      localStorage.setItem("userID", "100001"); // Simulate setting userID on login
       navigate("/");
     }
   };
