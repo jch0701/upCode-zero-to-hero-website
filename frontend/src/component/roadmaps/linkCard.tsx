@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 export interface LinkCardProps {
     nodeID: number;
     chapterID: number;
-    title: String;
+    title: string;
     modifiedDate: String;
     order: number;
     link: string;

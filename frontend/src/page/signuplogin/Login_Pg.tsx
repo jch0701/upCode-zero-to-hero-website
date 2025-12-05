@@ -7,8 +7,8 @@ import { Validate_Email, Validate_Password } from "@/component/Signup_Login/Vali
 import TextInput from "@/component/Signup_Login/TextInput";
 import PasswordInput from "@/component/Signup_Login/PasswordInput";
 
-import email_icon from "../assets/signuplogin/email.png";
-import hero_img from "../assets/signuplogin/Hero.png";
+import email_icon from "@/assets/signuplogin/email.png";
+import hero_img from "@/assets/signuplogin/Hero.png";
 
 const Login_Pg: FC = () => {
   const [email, setEmail] = React.useState("");
@@ -32,6 +32,7 @@ const Login_Pg: FC = () => {
       alert(
         "Login Successfully.\n" + `Email: ${email}\n`
       );
+      localStorage.setItem("userID", "12345"); // Simulate setting userID on login
       navigate("/");
     }
   };

@@ -5,11 +5,11 @@ import { Roadmap } from "./page/roadmaps/Roadmap.tsx";
 import { RoadmapDetails } from "./page/roadmaps/RoadmapDetails.tsx";
 import { Project } from "./page/projects/Project.tsx";
 import { Career } from "./page/Career.tsx";
-import { Profile } from "./page/Profile.tsx";
-import  Login_Pg  from "./page/Login_Pg.tsx";
-import Signup_Pg from "./page/Signup_Pg.tsx";
-import ForgotPassword_Pg from "./page/ForgotPassword_Pg.tsx";
-import ResetPassword_Pg from "./page/ResetPassword_Pg.tsx";
+import { Profile } from "./page/profile/Profile.tsx";
+import  Login_Pg  from "./page/signuplogin/Login_Pg.tsx";
+import Signup_Pg from "./page/signuplogin/Signup_Pg.tsx";
+import ForgotPassword_Pg from "./page/signuplogin/ForgotPassword_Pg.tsx";
+import ResetPassword_Pg from "./page/signuplogin/ResetPassword_Pg.tsx";
 import { ProjectDetails } from "./page/projects/ProjectDetails.tsx";
 import { MyProjects } from "./page/projects/MyProjects.tsx";
 import RootLayout from './layouts/RootLayout.tsx';
@@ -50,14 +50,7 @@ function AppRoutes() {
 
       {state?.backgroundLocation && (
         <Routes>
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" 
-                 element={
-                  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
-                    <div className="bg-pink-300/70 w-full max-w-2xl rounded-xl shadow-2xl p-6">
-                        <RoadmapChapterNode />
-                    </div>
-                  </div>
-                 } />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<RoadmapChapterNode />} />
         </Routes>
       )}
     </>

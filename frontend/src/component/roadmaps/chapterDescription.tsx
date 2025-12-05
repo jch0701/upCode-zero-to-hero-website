@@ -1,19 +1,24 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { TagPill } from "../tag";
+import type { Tag } from "../tag";
 import type { PillarCardProps } from "./pillarCard";
 import { X } from 'lucide-react';
 import { roadmapData } from "@/dummy";
 
 const ChapterDescription: React.FC<PillarCardProps> = ({
-    chapterID, chapterSlug, title, description, modifiedDate, tags, roadmapID
+    chapterID, chapterSlug, title, description, modifiedDate, difficulty, category, prerequisite, roadmapID
 }) => {
     const navigate = useNavigate();
     const userID = localStorage.getItem("userID");
     const imageSrc = roadmapData.find(r => r.roadmapID === roadmapID)?.imageSrc || 'placeholder-image.jpg';
     const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creator || 'Unknown Creator';
     const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
-
+    const tags: Tag[] = [
+        { type: 'Difficulty', label: difficulty },
+        { type: 'Category', label: category },
+        { type: 'Prerequisite', label: prerequisite },
+    ];
     // Get image source and creator based on roadmapID
     return (
         <div className="max-w-5xl mx-auto text-white">
@@ -53,7 +58,8 @@ const ChapterDescription: React.FC<PillarCardProps> = ({
                 <div className="w-full md:w-[60%]">
                     {/* Tags Section */}
                     <div className="flex flex-wrap gap-2 down mb-6 text-black">
-                        {tags.map((tag, index) => (
+                        {tags.filter(tag => tag.label.trim() !== "")
+                             .map((tag, index) => (
                             <TagPill key={index} tag={tag} />
                         ))}
                     </div>

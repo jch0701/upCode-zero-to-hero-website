@@ -9,12 +9,12 @@ import {
   Validate_Role 
 } from "@/component/Signup_Login/Validate_Signup_Login";
 
-import "../component/Signup_Login/Login_Signup_Pg.css";
+import "@/component/Signup_Login/Login_Signup_Pg.css";
 import TextInput from "@/component/Signup_Login/TextInput";
 import PasswordInput from "@/component/Signup_Login/PasswordInput";
 
-import user_icon from "../assets/signuplogin/user.png";
-import email_icon from "../assets/signuplogin/email.png";
+import user_icon from "@/assets/signuplogin/user.png";
+import email_icon from "@/assets/signuplogin/email.png";
 
 const Signup_Pg: FC = () => {
   const [username, setUsername] = React.useState("");
