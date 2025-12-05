@@ -1,19 +1,8 @@
 import type{ RoadmapItemCardProps} from "./component/roadmaps/roadmapCard";
-import javaImage from "./assets/image/java_intro.jpg";
-import pythonImage from "./assets/image/python_intro.jpg";
-import defaultImageSrc from "./assets/image/placeholder_image.jpg";
-import javaScriptImage from "./assets/image/javascript_intro.jpg"
-import cImage from "./assets/image/c++_intro.jpg"
-import machinelearningImage from "./assets/image/machine_learning_intro.jpg"
-import devopsImage from "./assets/image/devop_intro.jpg"
-import frontendImage from "./assets/image/frontend_intro.jpg"
-import backendImage from "./assets/image/backend_intro.jpg"
-import reactImage from "./assets/image/react_intro.jpg"
-import apiImage from "./assets/image/api_intro.jpg"
-import angularImage from "./assets/image/angular_intro.jpg"
-import typeScriptImage from "./assets/image/typescript_intro.png"
-import htmlcssImage from "./assets/image/html_css_intro.jpg"
-import sqlIntro from "./assets/image/sql_intro.png"
+import { defaultImageSrc, javaImage, pythonImage, javaScriptImage, cImage, machinelearningImage,
+         devopsImage, frontendImage, backendImage, reactImage, apiImage, angularImage,
+         typeScriptImage, htmlcssImage, sqlImage
+ } from "./component/roadmaps/image";
 import type { PillarCardProps } from "./component/roadmaps/pillarCard";
 import type { LinkCardProps } from "./component/roadmaps/linkCard";
 
@@ -82,7 +71,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
     roadmapID: 100006,
     roadmapSlug: "sql-basics",
     creator: 100007,
-    imageSrc: sqlIntro,
+    imageSrc: sqlImage,
     title: "SQL Basics",
     description: "SQL Basics provides a foundational understanding of relational databases and the SQL language. You will learn how to create, read, update, and delete data using SQL queries. The roadmap covers essential concepts such as database design, normalization, joins, and indexing. By mastering SQL, you will be equipped to work with popular database systems like MySQL, PostgreSQL, and SQLite, which are crucial for backend development and data management.",
     createdDate: "2025-12-15",
