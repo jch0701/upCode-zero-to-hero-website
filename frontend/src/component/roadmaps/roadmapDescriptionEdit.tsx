@@ -1,7 +1,3 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { X } from 'lucide-react';
-import FormBar from "./formBox";
 import defaultImageSrc from "../../assets/image/placeholder_image.jpg";
 import javaImage from "../../assets/image/java_intro.jpg";
 import pythonImage from "../../assets/image/python_intro.jpg"
@@ -17,6 +13,14 @@ import angularImage from "../../assets/image/angular_intro.jpg"
 import typeScriptImage from "../../assets/image/typescript_intro.png"
 import htmlcssImage from "../../assets/image/html_css_intro.jpg"
 import sqlImage from "../../assets/image/sql_intro.png"
+
+
+
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { X } from 'lucide-react';
+import FormBar from "./formBox";
+import { validateDescription, validateTitle } from "./validateFormBox";
 
 interface RoadmapDescriptionEditProps{
     imageSrc : string;
@@ -49,6 +53,7 @@ const RoadmapDescriptionEdit: React.FC<RoadmapDescriptionEditProps> = ({
         const [queryTitle, setQueryTitle] = useState(title);
         const [queryDescription, setQueryDescription] = useState(description)
         const [currentImageSrc, setCurrentImageSrc] = useState(imageSrc);
+        const [errors, setErrors] = React.useState<string[]>([]);
         // Function to find the image URL based on the title keyword
         const getDynamicImageSrc = (inputTitle: string): string => {
             const lowerTitle = inputTitle.toLowerCase();
@@ -71,6 +76,20 @@ const RoadmapDescriptionEdit: React.FC<RoadmapDescriptionEditProps> = ({
                 
         }, [queryTitle, defaultImageSrc]);
 
+        const handleSubmit = (e: React.FormEvent) => {
+            e.preventDefault()
+            // validate title
+            const titleErrors = validateTitle(queryTitle)
+            const descriptionErrors = validateDescription(queryDescription)
+            const errormsg = [...titleErrors, ...descriptionErrors]
+            setErrors(errormsg);
+            if (errormsg.length > 0) {
+                return;
+                } else {
+                navigate(-1)
+                }
+        }
+
         return (
                 <div className=" max-w-5xl mx-auto text-white">
                     {/* Top Right Icon */}
@@ -83,6 +102,7 @@ const RoadmapDescriptionEdit: React.FC<RoadmapDescriptionEditProps> = ({
                             <X size={20} />
                         </button>
                     </div>
+                    <form onSubmit={handleSubmit}>
                     <div className="flex flex-col md:flex-row gap-8">
                         {/* Left Section: Image and Basic Info */}
                         <div className="w-full md:w-[40%]">
@@ -98,7 +118,7 @@ const RoadmapDescriptionEdit: React.FC<RoadmapDescriptionEditProps> = ({
                             </div>
                             <button 
                                 className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl"
-                                onClick={() => navigate(-1)}
+                                onClick={handleSubmit}
                             >
                                 Apply Change
                             </button>
@@ -107,14 +127,20 @@ const RoadmapDescriptionEdit: React.FC<RoadmapDescriptionEditProps> = ({
                         <div className="w-full md:w-[60%]">
                             {/* Title Section */}
                             <h3 className="text-xl font-bold mb-2 text-left">Title</h3>
-                            <FormBar query={queryTitle} setQuery={setQueryTitle} placeholder="Enter a title" />
-                            <br></br>
-                            {/* Description Section */}
-                            <h3 className="text-xl font-bold mb-2 text-left">Description</h3>
-                            {/* Description Text */}
-                            <FormBar query={queryDescription} setQuery={setQueryDescription} isDescription={true} />
+                                <FormBar query={queryTitle} setQuery={setQueryTitle} placeholder="Enter a title" />
+                                <p className="min-h-3 text-left text-[#f60101] text-[12px]" >
+                                    {errors.find((e) => e.startsWith("- Title"))}
+                                </p>
+                                {/* Description Section */}
+                                <h3 className="text-xl font-bold mb-2 text-left">Description</h3>
+                                {/* Description Text */}
+                                <FormBar query={queryDescription} setQuery={setQueryDescription} isDescription={true} />
+                                <p className="min-h-3 text-left text-[#f60101] text-[12px]" >
+                                    {errors.find((e) => e.startsWith("- Description"))}
+                                </p>
                         </div>
                     </div>
+                    </form>
                 </div>
         );
     }

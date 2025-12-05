@@ -8,7 +8,7 @@ export const RoadmapDetailEdit: React.FC = () => {
     const roadmapItem = roadmapData.find(r => r.roadmapID === Number(roadmapID));
     if (!roadmapItem) return <p className="text-white text-center mt-10">Roadmap not found</p>;
     return (
-        <div className="pt-6 p-6 bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl max-w-5xl mx-auto">
+        <div className="pt-6 p-6 bg-gray-800/70 backdrop-blur-lg rounded-2xl shadow-2xl max-w-5xl mx-auto">
             <RoadmapDescriptionEdit 
                 imageSrc={roadmapItem.imageSrc} 
                 title={roadmapItem.title}
