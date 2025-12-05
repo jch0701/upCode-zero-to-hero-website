@@ -5,7 +5,7 @@ import { Roadmap } from "./page/roadmaps/Roadmap.tsx";
 import { RoadmapDetails } from "./page/roadmaps/RoadmapDetails.tsx";
 import { Project } from "./page/projects/Project.tsx";
 import { Career } from "./page/Career.tsx";
-import { Profile } from "./page/Profile.tsx";
+import { Profile } from "./page/profile/Profile.tsx";
 import  Login_Pg  from "./page/signuplogin/Login_Pg.tsx";
 import Signup_Pg from "./page/signuplogin/Signup_Pg.tsx";
 import ForgotPassword_Pg from "./page/signuplogin/ForgotPassword_Pg.tsx";
