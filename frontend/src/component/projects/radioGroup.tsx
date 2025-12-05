@@ -13,7 +13,7 @@ const RadioGroup: React.FC<RadioProps> = ({ onClick, options, isHorizontal = tru
     onClick(options[key]);
   }
   return (
-    <div className={`flex ${isHorizontal ? "border-b-2" : "h-full flex-col border-r-2"}  border-white ${className}`}>
+    <div className={`flex ${isHorizontal ? "border-b-2" : "h-full flex-col border-r-2"} pt-5 border-white ${className}`}>
       {options.map((option, index) => (
         <button
           key={index}

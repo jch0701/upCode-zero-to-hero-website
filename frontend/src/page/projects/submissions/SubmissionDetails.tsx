@@ -1,9 +1,11 @@
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import { formatDate } from "@/lib/utils";
 import RadioGroup from "@/component/projects/radioGroup";
 import github_icon from "../../../assets/projects/github_icon.png";
+import ReactMarkdown from "react-markdown";
+import { Button } from "../../../component/shadcn/button";
 import { commonIconStyles } from "@/lib/styles";
 
 const SubmissionDetails: React.FC = () => {
@@ -15,6 +17,7 @@ const SubmissionDetails: React.FC = () => {
   //   state.users.usersList.find((user: any) => user.userId === creatorId)
   // )?.name;
   const creatorName = "Alice"; // Placeholder for current user name
+  const userName = "Alice"; // Placeholder for current user name
   const projectId = submission?.projectId;
   const projectTitle = useSelector((state: any) =>
     state.projects.projectsList.find((proj: any) => proj.projectId === projectId)
@@ -31,7 +34,7 @@ const SubmissionDetails: React.FC = () => {
       <h1 className="text-left mt-2 text-4xl font-extralight text-white">{submission?.title}</h1>
       <p className="text-white text-[1.5rem] font-light">Submission by: {creatorName}</p>
       <p className="text-white text-[1.2rem]">
-        Project: {projectTitle} | Created By: {submission?.creator} 
+        Project: {projectTitle} | Created By: {submission?.creator}
       </p>
       <p className="text-white text-[1rem]">
         Submitted On: {submission?.postedOn && formatDate(new Date(submission.postedOn))}
@@ -42,9 +45,7 @@ const SubmissionDetails: React.FC = () => {
         <div className="bg-gray-700 w-full text-white pl-5 p-1 py-2 flex items-center gap-2">
           <span className="text-sm font-semibold">GitHub Repository Link</span>
         </div>
-
         <div className="bg-white flex items-center pl-5 p-1 gap-2">
-          {/* Placeholder for GitHub Icon */}
           <img
             src={github_icon}
             alt="GitHub Link: "
@@ -71,6 +72,29 @@ const SubmissionDetails: React.FC = () => {
           // rounded upper borders
           buttonClassName="rounded-t-lg"
         />
+        {
+          creatorName === userName && 
+        <Button className="cursor-pointer mt-6" variant="outline">
+          Edit Submission
+        </Button>
+        }
+      </div>
+
+      <div className="text-white mt-4 mb-10">
+        {displaySection === "Commits History" && (
+          <div>
+            <div className="prose prose-invert max-w-none mt-4 text-white text-left">
+              Git commit extracts to come in the future
+            </div>
+          </div>
+        )}
+        {displaySection === "Rationale File" && (
+          <div className="prose prose-invert max-w-none mt-4 text-white text-left">
+            <ReactMarkdown>
+            Rationale file content appears here in markdown format.
+            </ReactMarkdown>
+          </div>
+        )}
       </div>
     </div>
   );
