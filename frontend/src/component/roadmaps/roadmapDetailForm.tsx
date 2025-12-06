@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { X } from 'lucide-react';
 import FormBar from "./formBox";
 import { validateDescription, validateTitle } from "./validateFormBox";
-import { defaultImageSrc, IMAGE_KEYWORD_MAP} from "./image";
+import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "./image";
 
 interface RoadmapDetailFormProps{
     mode: "add" | "edit";
@@ -57,8 +57,21 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
 
         return (
                 <div className=" max-w-5xl mx-auto text-white">
-                    {/* Top Right Icon */}
-                    <div className="flex justify-end">
+                    <div className={`w-full flex items-center ${mode === "edit" ? "justify-between" : "justify-end"}`}>
+                        {/* Top Left Icon */}
+                        {mode==="edit" && (
+                        <div className="h-7 w-7">
+                            <img
+                                src={bin}
+                                alt="delete-button"
+                                className="w-full h-full object-cover" 
+                                onClick={() => navigate(-1)}
+                                onError={(e) => {
+                                    e.currentTarget.src = defaultImageSrc; 
+                                }}
+                            />
+                        </div>)}
+                        {/* Top Right Icon */}
                         <button
                             className="text-white hover:text-gray-400 p-1"
                             aria-label={ mode === "add" ? "Cancel" : "Close Featured Roadmap" }

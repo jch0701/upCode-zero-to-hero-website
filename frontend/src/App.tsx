@@ -13,9 +13,9 @@ import ResetPassword_Pg from "./page/signuplogin/ResetPassword_Pg.tsx";
 import { ProjectDetails } from "./page/projects/ProjectDetails.tsx";
 import { MyProjects } from "./page/projects/MyProjects.tsx";
 import RootLayout from './layouts/RootLayout.tsx';
-import { RoadmapChapter } from "./page/roadmaps/RoadmapChapter.tsx";
+import { ChapterDetails} from "./page/roadmaps/ChapterDetails.tsx";
 import { EditRoadmap } from "./page/roadmaps/EditRoadmap.tsx";
-import { RoadmapChapterNode } from "./page/roadmaps/RoadmapChapterNode.tsx";
+import { EditNode } from "./page/roadmaps/EditNode.tsx";
 import { EditChapter } from "./page/roadmaps/EditChapter.tsx";
 import { AddRoadmap } from "./page/roadmaps/AddRoadmap.tsx";
 import SubmissionDetails from "./page/projects/submissions/SubmissionDetails.tsx";
@@ -38,10 +38,10 @@ function AppRoutes() {
           <Route path="roadmap/:roadmapID/:roadmapSlug" element={<RoadmapDetails />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/edit" element={<EditRoadmap/>} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/add-chapter" element={<AddChapter />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug" element={<RoadmapChapter />} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug" element={<ChapterDetails />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/edit" element={<EditChapter />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/add-node" element={<AddNode />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<RoadmapChapterNode />} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<EditNode />} />
           <Route path="project" element={<Project />} />
           <Route path="project/:projectId" element={<ProjectDetails />} />
           <Route path="project/myProjects" element={<MyProjects />} />
@@ -57,7 +57,7 @@ function AppRoutes() {
       {state?.backgroundLocation && (
         <Routes>
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/add-node" element={<AddNode />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<RoadmapChapterNode />} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<EditNode />} />
         </Routes>
       )}
     </>

@@ -4,7 +4,7 @@ import { pillarsData } from '@/dummy';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-export const RoadmapChapter: React.FC = () => {
+export const ChapterDetails: React.FC = () => {
     const { chapterID } = useParams<{ chapterID: string }>();
     const chapterItem = pillarsData.find(pillar => pillar.chapterID === Number(chapterID));
     if (!chapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;

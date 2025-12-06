@@ -18,7 +18,7 @@ export const generateTags = (roadmapID: number, pillarsData: PillarCardProps[]):
   };
 
   const getDifficultyLabel = (arr: string[]) => {
-    if (!arr.length) return 'Beginner';
+    if (!arr.length) return 'Unknown';
     const avg = arr.reduce((sum, d) => sum + difficultyScore(d), 0) / arr.length;
     if (avg <= 1) return 'Beginner';
     if (avg <= 2) return 'Intermediate';

@@ -1,0 +1,23 @@
+import React from "react";
+import {  useParams } from "react-router-dom";
+import { linksData } from "@/dummy";
+import LinkDetailForm from "@/component/roadmaps/linkDetailForm";
+
+export const EditNode: React.FC = () => {
+    const { nodeID } = useParams<{ nodeID: string }>();
+    const nodeItem = linksData.find(r => r.nodeID === Number(nodeID));
+    if (!nodeItem) return <p className="text-white text-center mt-10">Link not found</p>;
+    
+    return (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+            <div className="bg-gray-700/70 w-full max-w-2xl rounded-xl shadow-2xl p-6">
+                <LinkDetailForm 
+                    mode="edit"
+                    title={nodeItem.title} 
+                    order={nodeItem.order} 
+                    link={nodeItem.link}
+                />
+            </div>
+        </div>
+    );
+};
