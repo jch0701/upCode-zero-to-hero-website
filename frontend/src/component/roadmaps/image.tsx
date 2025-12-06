@@ -13,6 +13,7 @@ import angularImage from "../../assets/image/angular_intro.jpg"
 import typeScriptImage from "../../assets/image/typescript_intro.png"
 import htmlcssImage from "../../assets/image/html_css_intro.jpg"
 import sqlImage from "../../assets/image/sql_intro.png"
+import bin from "../../assets/image/bin.png"
 
 const IMAGE_KEYWORD_MAP: { [key: string]: string } = {
     // IMPORTANT: Replace these with the actual public/absolute URLs for your images
@@ -49,5 +50,6 @@ export {
     typeScriptImage,
     htmlcssImage,
     sqlImage,
+    bin,
     IMAGE_KEYWORD_MAP
 };
