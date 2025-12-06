@@ -3,13 +3,15 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { TagPill } from "../tag";
 import type { RoadmapItemCardProps } from "./roadmapCard";
 import { generateTags } from './groupTag';
-import { pillarsData } from '../../dummy';
+import { useSelector } from "react-redux";
 import { Heart, X } from 'lucide-react';
+import type { PillarCardProps } from "./pillarCard";
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     creator,imageSrc, title, description, createdDate, tags,
     modifiedDate, isFavourite, roadmapID: roadmapIDProp}) => {
     
+    const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
     const [isFavouriteState, setIsFavourite] = useState(isFavourite);
     const navigate = useNavigate();
     const userID = localStorage.getItem("userID");

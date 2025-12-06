@@ -1,7 +1,8 @@
 import React from 'react';
-import PillarCard from './pillarCard.tsx';
-import { roadmapData, pillarsData } from '../../dummy.tsx';
+import PillarCard, { type PillarCardProps } from './pillarCard.tsx';
+import { useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
+import type { RoadmapItemCardProps } from './roadmapCard.tsx';
 
 interface PillarListProps {
     selectedRoadmapId: number; 
@@ -9,6 +10,8 @@ interface PillarListProps {
 
 const PillarList: React.FC<PillarListProps> = ({ selectedRoadmapId }) => {
 // Filter pillars based on selectedRoadmapId
+const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
+const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
 const filteredPillars = pillarsData.filter(pillar => pillar.roadmapID === selectedRoadmapId);
 const roadmapSlug = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.roadmapSlug || 'Unknown Roadmap Slug';
 const roadmapTitle = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.title || 'Unknown Roadmap';

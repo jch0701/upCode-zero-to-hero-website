@@ -4,13 +4,15 @@ import { TagPill } from "../tag";
 import type { Tag } from "../tag";
 import type { PillarCardProps } from "./pillarCard";
 import { X } from 'lucide-react';
-import { roadmapData } from "@/dummy";
+import { useSelector } from "react-redux";
+import type { RoadmapItemCardProps } from "./roadmapCard";
 
 const ChapterDescription: React.FC<PillarCardProps> = ({
     chapterID, chapterSlug, title, description, modifiedDate, difficulty, category, prerequisite, roadmapID
 }) => {
     const navigate = useNavigate();
     const userID = localStorage.getItem("userID");
+    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
     const imageSrc = roadmapData.find(r => r.roadmapID === roadmapID)?.imageSrc || 'placeholder-image.jpg';
     const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creator || 'Unknown Creator';
     const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';

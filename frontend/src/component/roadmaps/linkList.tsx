@@ -1,7 +1,9 @@
 import React from 'react';
-import LinkCard from './linkCard';
-import { roadmapData, pillarsData, linksData } from '@/dummy';
+import LinkCard, { type LinkCardProps } from './linkCard';
+import { useSelector } from "react-redux";
 import { Link, useLocation } from 'react-router-dom';
+import type { RoadmapItemCardProps } from './roadmapCard';
+import type { PillarCardProps } from './pillarCard';
 
 interface linkListProps{
     selectedChapterId: number
@@ -9,6 +11,9 @@ interface linkListProps{
 
 const LinkList: React.FC<linkListProps> = ({ selectedChapterId }) => {
 // Filter pillars based on selectedRoadmapId
+const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
+const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
+const linksData = useSelector((state: any) => state.link.linkList) as LinkCardProps[];
 const filteredLinks = linksData.filter(links => links.chapterID === selectedChapterId);
 const chapterSlug = pillarsData.find(p => p.chapterID === selectedChapterId)?.chapterSlug || 'Unknown Chapter Slug';
 const chapterTitle = pillarsData.find(p => p.chapterID === selectedChapterId)?.title || 'Unknown Chapter';

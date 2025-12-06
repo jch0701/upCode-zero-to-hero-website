@@ -60,6 +60,7 @@ const pillarSlice = createSlice({
                 state.pillarList[index] = {
                     ...action.payload,
                     modifiedDate: new Date().toISOString(),
+                    chapterSlug: generateSlug(action.payload.title)
                 };
             }
         },

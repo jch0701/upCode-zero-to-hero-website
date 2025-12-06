@@ -1,10 +1,12 @@
 import React from "react";
 import RoadmapDescription from "../../component/roadmaps/roadmapDesciption";
-import { roadmapData} from "../../dummy";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import PillarList from "../../component/roadmaps/pillarList";
+import type { RoadmapItemCardProps } from "@/component/roadmaps/roadmapCard";
 
 export const RoadmapDetails: React.FC = () => {
+    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
     const { roadmapID } = useParams<{ roadmapID: string }>(); // get id from URL
     const roadmapItem = roadmapData.find(r => r.roadmapID === Number(roadmapID)); // find the data by id
 

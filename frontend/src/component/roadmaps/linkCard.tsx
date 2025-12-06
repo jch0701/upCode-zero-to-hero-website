@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
-import { roadmapData, pillarsData } from '@/dummy';
+import { useSelector } from "react-redux";
 import { Link, useLocation } from 'react-router-dom';
+import type { RoadmapItemCardProps } from './roadmapCard';
+import type { PillarCardProps } from './pillarCard';
 // Type and data structure
 export interface LinkCardProps {
     nodeID: number;
@@ -20,6 +22,8 @@ const LinkCard : React.FC<LinkCardProps> = ({
     const handleToggleViewed = () => {
         setViewed(!viewed);
     };
+    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
+    const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
     const chapterSlug = pillarsData.find(p => p.chapterID === chapterID)?.chapterSlug || 'Unknown Chapter Slug';
     const roadmapID = pillarsData.find(p => p.chapterID === chapterID)?.roadmapID || 'Unknown Roadmap ID';
     const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';

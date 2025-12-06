@@ -59,6 +59,7 @@ const roadmapSlice = createSlice({
             if (index !== -1){
                 state.roadmapList[index] = {
                     ...action.payload,
+                    roadmapSlug: generateSlug(action.payload.title),
                     modifiedDate: new Date().toISOString(),
                 };
             }

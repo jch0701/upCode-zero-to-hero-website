@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import type { Tag } from '../tag.tsx';
 import { TagPill } from '../tag.tsx';
 import { generateTags } from './groupTag';
-import { pillarsData } from '../../dummy';
+import { useSelector } from "react-redux";
+import type { PillarCardProps } from './pillarCard.tsx';
 // Type and data structure
 export interface RoadmapItemCardProps {
     roadmapID: number;
@@ -26,6 +27,7 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
     roadmapID, roadmapSlug, imageSrc, title, createdDate, tags,
 }) => {
   // Compute tags from pillarsData when not provided
+  const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
   const effectiveTags = (tags && tags.length) ? tags : generateTags(roadmapID, pillarsData);
   // Logic to determine which tags to show and if "More..." is needed
   const visibleTags = effectiveTags.slice(0, MAX_VISIBLE_TAGS);
