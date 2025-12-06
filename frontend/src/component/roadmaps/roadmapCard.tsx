@@ -18,7 +18,7 @@ export interface RoadmapItemCardProps {
   tags?: Tag[];
 }
 
-const MAX_VISIBLE_TAGS = 4;
+const MAX_VISIBLE_TAGS = 3;
 
 // --- Main Card Component ---
 
