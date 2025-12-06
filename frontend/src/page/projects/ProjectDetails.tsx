@@ -11,12 +11,15 @@ import { Toggle } from "@/component/shadcn/toggle";
 import { Button } from "@/component/shadcn/button";
 import alert_icon from "../../assets/projects/alert_icon.png";
 import SubmissionCard from "@/component/projects/submissionCard";
-import { Dialog, DialogTrigger} from "@/component/shadcn/dialog";
+import { Dialog, DialogTrigger } from "@/component/shadcn/dialog";
 import { ProjectForm } from "./projectForm";
+import { SubmissionForm } from "./submissionForm";
+import { useDispatch } from "react-redux";
 // import projectDetailsMD from "../../store/mdexample.md?raw";
 
 export const ProjectDetails: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { projectId } = useParams<{ projectId: string }>();
   const project = useSelector((state: any) =>
     state.projects.projectsList.find((proj: any) => proj.projectId === projectId)
@@ -87,14 +90,7 @@ export const ProjectDetails: React.FC = () => {
                 >Edit Project</Button>
               </DialogTrigger>
               <ProjectForm
-                onSubmit={(data) => {
-                  // Handle project editing logic here
-                  console.log("Edited project data:", data);
-                }}
-                onClose={() => {
-                  // Handle dialog close logic here
-                  console.log("Dialog closed");
-                }}
+                onSubmit={(payload) => { dispatch({ type: "projects/editProject", payload }); }}
                 openAsCreateForm={false}
                 initialData={project}
               />
@@ -110,12 +106,20 @@ export const ProjectDetails: React.FC = () => {
         >
           Share This Project
         </Button>
-        <Button
-          variant="outline"
-          className="rounded-2xl cursor-pointer"
-        >
-          + Add a Submission
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              className="rounded-2xl cursor-pointer"
+            >+ Add a Submission</Button>
+          </DialogTrigger>
+          <SubmissionForm
+            onSubmit={(payload) => { dispatch({ type: "projects/addSubmission", payload }); }}
+            openAsCreateForm={true}
+            initialData={project}
+          />
+        </Dialog>
+
         <Toggle
           pressed={false} //later dynamically determine if user is tracking this project
           onPressedChange={() => { }} //handle tracking logic here
@@ -127,7 +131,7 @@ export const ProjectDetails: React.FC = () => {
           pressed={false} //later dynamically determine if user has done this project
           onPressedChange={() => { }} //handle marking logic here
           className="text-white cursor-pointer">
-            Mark as Done
+          Mark as Done
         </Toggle>
       </div>
 

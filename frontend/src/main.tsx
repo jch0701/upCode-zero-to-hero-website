@@ -4,11 +4,14 @@ import { Provider } from 'react-redux'
 import { store } from './store/index.ts'
 import './index.css'
 import App from './App.tsx'
-console.log("Rendering the application...");
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from "./api/index.ts";
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </QueryClientProvider>
   </StrictMode>,
 )

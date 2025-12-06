@@ -34,7 +34,7 @@ const dummyState: SubmissionsSlice = {
       lastUpdated: new Date("2024-03-05"),
       title: "AI Chatbot v1",
       tag: "Machine Learning",
-      repoLink: "https://github.com/alice/ai-chatbot-v1",
+      repoLink: "https://github.com/xinsheng04/memory-card-game.git",
     },
     {
       submissionId: "2",
@@ -44,7 +44,7 @@ const dummyState: SubmissionsSlice = {
       lastUpdated: new Date("2024-03-12"),
       title: "E-commerce Platform v1",
       tag: "Web Development",
-      repoLink: "https://github.com/bob/e-commerce-platform-v1",
+      repoLink: "https://github.com/kyle-bdvl/Notes-App.git",
     },
   ],
 };
@@ -67,7 +67,17 @@ const submissionsSlice = createSlice({
       };
       state.submissionsList.push(newSubmission);
     },
-    // resubmit submission if update
+    editSubmission: (state, action: PayloadAction<SubmissionType>) => {
+      const index = state.submissionsList.findIndex(
+        (submission) => submission.submissionId === action.payload.submissionId
+      );
+      if (index !== -1) {
+        state.submissionsList[index] = {
+          ...action.payload,
+          lastUpdated: new Date(),
+        };
+      }
+    },
     deleteSubmission: (state, action: PayloadAction<string>) => {
       state.submissionsList = state.submissionsList.filter(
         (submission) => submission.submissionId !== action.payload

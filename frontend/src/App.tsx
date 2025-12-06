@@ -18,7 +18,7 @@ import { EditRoadmap } from "./page/roadmaps/EditRoadmap.tsx";
 import { EditNode } from "./page/roadmaps/EditNode.tsx";
 import { EditChapter } from "./page/roadmaps/EditChapter.tsx";
 import { AddRoadmap } from "./page/roadmaps/AddRoadmap.tsx";
-import SubmissionDetails from "./page/projects/submissions/SubmissionDetails.tsx";
+import SubmissionDetails from "./page/projects/SubmissionDetails.tsx";
 import { AddChapter } from "./page/roadmaps/AddChapter.tsx";
 import { AddNode } from "./page/roadmaps/AddNode.tsx";
 

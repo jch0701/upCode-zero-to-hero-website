@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { categoryList } from "@/lib/types.ts";
 import { commonButtonStyles, commonIconStyles } from "../../lib/styles.ts";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
 import ProjectCard from "../../component/projects/projectCard.tsx";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { ProjectForm } from "./projectForm.tsx";
@@ -21,6 +22,7 @@ export const Project: React.FC = () => {
     const [category, setCategory] = useState(selections[0]);
     const projects = useSelector((state: any) => state.projects.projectsList);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     function handleCategoryChange(value: string) {
         setCategory(value);
@@ -72,10 +74,7 @@ export const Project: React.FC = () => {
                                     <Button className={`${commonButtonStyles} h-10`}>+ Add a project</Button>
                                 </DialogTrigger>
                                 <ProjectForm
-                                    onSubmit={
-                                        (data) => console.log("Submitted data:", data)
-                                    }
-                                    onClose={() => { }}
+                                    onSubmit={ (payload) => {dispatch({ type: "projects/addProject", payload});} }
                                     openAsCreateForm={true}
                                 />
                             </Dialog>

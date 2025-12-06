@@ -11,9 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/component/shadcn/dialog";
+import { useRef } from "react";
 
 import { Input } from "@/component/shadcn/input";
-import RadioGroup from "@/component/projects/radioGroup";
 import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from "@/component/shadcn/select";
 import { Textarea } from "@/component/shadcn/textarea";
 import { Button } from "@/component/shadcn/button";
@@ -22,16 +22,18 @@ import { useState } from "react";
 
 type ProjectFormProps = {
   onSubmit: (data: any) => void;
-  onClose: () => void;
+  onClose?: () => void;
   openAsCreateForm: boolean;
   initialData?: any;
 }
 
 export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onClose, openAsCreateForm, initialData }) => {
+  const commonBackgroundClass = "bg-gray-800 text-white border-0";
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(initialData?.title || "");
   const [difficulty, setDifficulty] = useState(initialData?.difficulty || "Beginner");
   const [category, setCategory] = useState(initialData?.category || categoryList[0]);
-  const [thumbnailDesc, setThumbnailDesc] = useState(initialData?.thumbnailDescription || "");
+  const [thumbnailDesc, setThumbnailDesc] = useState(initialData?.shortDescription || "");
   const [requirementFile, setRequirementFile] = useState<File | null>(null);
   const [startingRepoLink, setStartingRepoLink] = useState(initialData?.startingRepoLink || "");
 
@@ -40,29 +42,30 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onClose, ope
       title,
       difficulty,
       category,
-      thumbnailDescription: thumbnailDesc,
+      shortDescription: thumbnailDesc,
       requirementFile,
       startingRepoLink,
     };
     onSubmit(formData);
+    onClose && onClose();
   }
 
   function handleClose() {
-    onClose();
+    onClose && onClose();
   }
 
   return (
-    <DialogContent className="sm:max-w-lg">
+    <DialogContent className={commonBackgroundClass}>
       <DialogHeader>
         <DialogTitle>{openAsCreateForm ? "Create New Project" : "Edit Project"}</DialogTitle>
         <DialogDescription>
           Please {openAsCreateForm ? "fill in" : "update"} the project details as below
         </DialogDescription>
       </DialogHeader>
-      <DialogDescription>
-        <form action="">
-          <FieldGroup className="mt-4">
-            <FieldSet>
+      <FieldGroup className={commonBackgroundClass}>
+        <form>
+          <FieldGroup>
+            <FieldSet className="gap-3">
               <FieldLabel>Project Title</FieldLabel>
               <FieldContent>
                 <Input
@@ -75,12 +78,18 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onClose, ope
                 <Field>
                   <FieldLabel>Difficulty</FieldLabel>
                   <FieldContent>
-                    <RadioGroup
-                      options={["Beginner", "Intermediate", "Advanced"]}
-                      selected={difficulty}
-                      onClick={(value) => setDifficulty(value)}
-                      isHorizontal={true}
-                    />
+                    <Select value={difficulty} onValueChange={(value) => setDifficulty(value)}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select difficulty" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["Beginner", "Intermediate", "Advanced"].map((level) => (
+                          <SelectItem key={level} value={level}>
+                            {level}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FieldContent>
                 </Field>
                 <Field>
@@ -107,11 +116,23 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onClose, ope
                   value={thumbnailDesc}
                   placeholder="Enter thumbnail description"
                   onChange={(e) => setThumbnailDesc(e.target.value)}
-                />
+                >
+                  {thumbnailDesc}
+                </Textarea>
               </FieldContent>
               <FieldLabel>Requirement File</FieldLabel>
               <FieldContent>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="text-black w-fit cursor-pointer"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {requirementFile ? requirementFile.name : "Upload File"}
+                </Button>
                 <Input
+                  hidden
+                  ref={fileInputRef}
                   type="file"
                   onChange={(e) => setRequirementFile(e.target.files?.[0] || null)}
                 />
@@ -127,16 +148,16 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onClose, ope
               </FieldContent>
             </FieldSet>
           </FieldGroup>
-          <FieldGroup className="mt-4 flex justify-end space-x-2">
-            <Button variant="outline" onClick={handleClose}>
+          <FieldGroup className="mt-4 flex flex-row justify-end gap-3">
+            <Button variant="outline" onClick={handleClose} className="text-black w-fit cursor-pointer">
               Cancel
             </Button>
-            <Button onClick={handleSubmit}>
+            <Button onClick={handleSubmit} className="w-fit bg-green-400 hover:bg-green-500 cursor-pointer">
               {openAsCreateForm ? "Create" : "Update"}
             </Button>
           </FieldGroup>
         </form>
-      </DialogDescription>
+      </FieldGroup>
     </DialogContent>
   )
 }

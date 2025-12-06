@@ -9,12 +9,12 @@ const RootLayout: React.FC = () => {
     <>
     <div className="relative flex flex-col min-h-screen">
       <img
-        className='fixed top-0 left-0 w-full h-full -z-10 bg-no-repeat bg-center bg-fixed bg-cover'
+        className='fixed top-0 left-0 w-full h-full -z-10 object-cover'
         src={background}
         alt="Background"
       />
       <Navbar />
-      <main className="pt-16 flex-1">
+      <main className="flex-1 pt-16 pb-20">
         <Outlet />
       </main>
       <Footer/>

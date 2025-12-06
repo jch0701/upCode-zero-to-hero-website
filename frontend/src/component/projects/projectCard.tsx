@@ -5,6 +5,7 @@ import { TagPill } from "@/component/tag";
 import { commonIconStyles } from "@/lib/styles";
 import type { ProjectType } from "@/store/projectsSlice";
 import { ellipsifyText } from "@/lib/utils";
+import { useSelector } from "react-redux";
 
 type ProjectCardProps = {
   project: ProjectType
@@ -13,6 +14,10 @@ type ProjectCardProps = {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   const customIconStyles = `${commonIconStyles} inline-block mr-1`;
+  const creator = useSelector((state: any) => {
+    const user = state.userList.userList.find((u: any) => u.userId === project.creatorId);
+    return user ? user.username : "Unknown";
+  });
   return (
     <Card
       key={project.projectId}
@@ -25,7 +30,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
       </CardTitle>
       <CardDescription className="text-gray-300/80 mb-2">
         <div>
-          <p className="text-left mb-3 text-[1rem]">Created by: <span className="italic">{project.creator}</span></p>
+          <p className="text-left mb-3 text-[1rem]">Created by: <span className="italic">{creator}</span></p>
           <ul className="flex gap-2 mb-2 list-none text-black">
             <li><TagPill tag={{ label: project.difficulty, type: "Difficulty" }} /></li>
             <li><TagPill tag={{ label: project.category, type: "Category" }} /></li>
