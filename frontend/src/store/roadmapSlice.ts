@@ -74,6 +74,14 @@ const roadmapSlice = createSlice({
                 (submission) => submission.roadmapID !== action.payload
             );
         },
+        toggleFavourite: (state, action: PayloadAction<number>) => {
+            const index = state.roadmapList.findIndex(
+                (submission) => submission.roadmapID === action.payload
+            );
+            if (index !== -1){
+                state.roadmapList[index].isFavourite = !state.roadmapList[index].isFavourite;
+            }
+        }
     },
     extraReducers: (builder) => {
     builder.addCase(touchRoadmap, (state,action) => {
@@ -83,7 +91,7 @@ const roadmapSlice = createSlice({
     }
 });
 
-export const { addRoadmap, editRoadmap, deleteRoadmap } = roadmapSlice.actions;
+export const { addRoadmap, editRoadmap, deleteRoadmap, toggleFavourite } = roadmapSlice.actions;
 export default roadmapSlice.reducer;
 
 // Delete roadmap and cascade delete chapters and links belonging to it

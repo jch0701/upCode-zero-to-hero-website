@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router';
+import { toggleView } from '@/store/pillarsSlice';
 
 // Type and data structure
 export interface PillarCardProps {
@@ -22,10 +24,12 @@ const PillarCard : React.FC<PillarCardProps> = ({
 }) => {
     // use link to get roadmap slug
     const { roadmapSlug } = useParams<{ roadmapSlug: string }>();
+    const dispatch = useDispatch();
     // toggleViewed indicator
-    const [viewed, setViewed] = useState(isViewed);
-    const handleToggleViewed = () => {
-            setViewed(!viewed);
+    const handleToggleViewed = (e: React.MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault();
+            dispatch(toggleView(chapterID))
         };
     return (
         <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}`}>
@@ -49,7 +53,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
 
             {/* Viewed Indicator */}
             <div onClick={handleToggleViewed} className="ml-4 cursor-pointer">
-                {viewed ? (
+                {isViewed ? (
                     <svg className={"w-6 h-6 text-green-800"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>)

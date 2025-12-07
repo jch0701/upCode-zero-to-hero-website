@@ -71,6 +71,14 @@ const pillarSlice = createSlice({
                 (submission) => submission.chapterID !== action.payload
             );
         },
+        toggleView: (state, action: PayloadAction<number>) => {
+            const index = state.pillarList.findIndex(
+                (submission) => submission.chapterID === action.payload
+            );
+            if (index !== -1){
+                state.pillarList[index].isViewed = !state.pillarList[index].isViewed;
+            }
+        }
     },
     extraReducers: (builder) => {
     builder.addCase(touchPillar, (state, action) => {
@@ -80,7 +88,7 @@ const pillarSlice = createSlice({
     }
 });
 
-export const { addChapter, editChapter, deleteChapter } = pillarSlice.actions;
+export const { addChapter, editChapter, deleteChapter, toggleView } = pillarSlice.actions;
 export default pillarSlice.reducer;
 
 // Thunks that update the related roadmap's modified date after chapter changes

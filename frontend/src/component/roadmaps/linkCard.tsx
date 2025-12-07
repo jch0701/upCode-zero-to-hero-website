@@ -1,8 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { useSelector } from "react-redux";
 import { Link, useLocation } from 'react-router-dom';
 import type { RoadmapItemCardProps } from './roadmapCard';
 import type { PillarCardProps } from './pillarCard';
+import { useDispatch } from 'react-redux';
+import { toggleView } from '@/store/linksSlice';
+
+
 // Type and data structure
 export interface LinkCardProps {
     nodeID: number;
@@ -17,10 +21,12 @@ export interface LinkCardProps {
 const LinkCard : React.FC<LinkCardProps> = ({
     nodeID, chapterID, title, order, link, isViewed,
 }) => {
-    //toggle // toggleViewed indicator
-    const [viewed, setViewed] = useState(isViewed);
-    const handleToggleViewed = () => {
-        setViewed(!viewed);
+    const dispatch = useDispatch();
+    // toggleViewed indicator
+    const handleToggleViewed = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        dispatch(toggleView(nodeID))
     };
     const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
     const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
@@ -51,7 +57,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
 
             {/* Viewed Indicator */}
             <div onClick={handleToggleViewed} className="ml-4 cursor-pointer">
-                {viewed ? (
+                {isViewed ? (
                     <svg className={"w-6 h-6 text-green-800"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>)

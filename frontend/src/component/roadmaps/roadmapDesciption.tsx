@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { TagPill } from "../tag";
 import type { RoadmapItemCardProps } from "./roadmapCard";
@@ -6,13 +6,19 @@ import { generateTags } from './groupTag';
 import { useSelector } from "react-redux";
 import { Heart, X } from 'lucide-react';
 import type { PillarCardProps } from "./pillarCard";
+import { useDispatch } from 'react-redux';
+import { toggleFavourite } from "@/store/roadmapSlice";
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     creator,imageSrc, title, description, createdDate, tags,
     modifiedDate, isFavourite, roadmapID: roadmapIDProp}) => {
     
     const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
-    const [isFavouriteState, setIsFavourite] = useState(isFavourite);
+    const dispatch = useDispatch();
+    const handleToggleFavourite = () => {
+        dispatch(toggleFavourite(Number(roadmapID)))
+    };
+
     const navigate = useNavigate();
     const userID = localStorage.getItem("userID");
     const { roadmapID, roadmapSlug } = useParams<{ roadmapID: string, roadmapSlug: string }>();
@@ -45,12 +51,12 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                         {(Number(userID) !== creator) && (
                         <button 
                             className="absolute top-3 left-3 p-2 bg-black/40 rounded-full cursor-pointer hover:bg-black/60 transition"
-                            onClick={() => setIsFavourite(!isFavouriteState)}
-                            aria-label={isFavouriteState ? "Remove from favourites" : "Add to favourites"}
+                            onClick={handleToggleFavourite}
+                            aria-label={isFavourite ? "Remove from favourites" : "Add to favourites"}
                         >
                             <Heart 
                                 size={20} 
-                                fill={isFavouriteState ? '#f80b0bff' : 'transparent'}
+                                fill={isFavourite ? '#f80b0bff' : 'transparent'}
                                 stroke="white" 
                             />
                         </button>)}
@@ -61,9 +67,9 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                         ?
                         <button 
                             className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"
-                            onClick={() => setIsFavourite(!isFavouriteState)}
+                            onClick={handleToggleFavourite}
                         >
-                            {isFavouriteState ? "Unfavourite" : "Save as Favourite"}
+                            {isFavourite ? "Unfavourite" : "Save as Favourite"}
                         </button>
                         :
                         <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/edit`}>
