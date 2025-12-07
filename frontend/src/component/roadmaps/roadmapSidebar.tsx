@@ -54,7 +54,7 @@ const RoadmapSidebar: React.FC<Props> = ({ visibleSections }) => {
     }, [visibleSections]);
 
     return (
-        <nav className="w-64 text-white fixed overflow-y-auto top-16 bottom-0 pb-20" role="navigation">
+        <nav className="w-64 text-white fixed overflow-y-auto top-16 bottom-0 pb-20 border-r-2" role="navigation">
             <div className="flex flex-col border-white">
                 {visibleSections.map((item) => (
                     <a 

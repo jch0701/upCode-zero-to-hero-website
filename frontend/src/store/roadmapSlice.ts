@@ -57,9 +57,11 @@ const roadmapSlice = createSlice({
                 (submission) => submission.roadmapID === action.payload.roadmapID
             );
             if (index !== -1){
+                const existing = state.roadmapList[index];
                 state.roadmapList[index] = {
                     ...action.payload,
                     roadmapSlug: generateSlug(action.payload.title),
+                    createdDate: existing.createdDate,
                     modifiedDate: new Date().toISOString(),
                 };
             }

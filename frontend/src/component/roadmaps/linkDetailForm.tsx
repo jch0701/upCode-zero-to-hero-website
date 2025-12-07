@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { X } from 'lucide-react';
 import FormBar from "./formBox";
 import { validateTitle, validateOrder, validateLink } from "@/component/roadmaps/validateFormBox";
 import { defaultImageSrc, bin } from "./image";
+import { useDispatch } from "react-redux";
+import { addLink, editLink, deleteLink } from "@/store/linksSlice";
 
 interface LinkDetailFormProps{
     mode: "add" | "edit";
@@ -15,6 +17,8 @@ interface LinkDetailFormProps{
 const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
     mode, title, order, link}) => {
         const navigate = useNavigate();
+        const dispatch = useDispatch();
+        const { chapterID, nodeID } = useParams<{ chapterID: string, nodeID: string }>();
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
         const [queryOrder, setQueryOrder] = useState(mode === "edit" && order !== undefined ? String(order) : "");
         const [queryLink, setQueryLink] = useState(mode === "edit" ? link ?? "" : "");
@@ -30,10 +34,38 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
             if (errormsg.length > 0) {
                 return;
             } 
-            else {
-                navigate(-1)
+            if (mode === "add"){
+                dispatch(
+                    addLink({
+                        chapterID: Number(chapterID),
+                        title: queryTitle,
+                        order: Number(queryOrder),
+                        link: queryLink,
+                    })
+                )
             }
+            if (mode === "edit"){
+                dispatch(
+                    editLink({
+                        nodeID: Number(nodeID),
+                        chapterID: Number(chapterID),
+                        title: queryTitle,
+                        order: Number(queryOrder),
+                        link: queryLink,
+                        isViewed: false,
+                        modifiedDate: "",
+                    })
+                )
+            }
+            navigate(-1);
         }
+
+        const handleDelete = () => {
+        if (nodeID) {
+            dispatch(deleteLink(Number(nodeID)));
+        }
+        navigate(-1);
+        };
     
         return (
         <div className=" max-w-5xl mx-auto text-white">
@@ -45,7 +77,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
                         src={bin}
                         alt="delete-button"
                         className="w-full h-full object-cover" 
-                        onClick={() => navigate(-1)}
+                        onClick={handleDelete}
                         onError={(e) => {
                             e.currentTarget.src = defaultImageSrc; 
                         }}

@@ -16,7 +16,7 @@ export interface RoadmapItemCardProps {
     createdDate: string;
     modifiedDate: string;
     isFavourite: boolean;
-  tags?: Tag[];
+    tags?: Tag[];
 }
 
 const MAX_VISIBLE_TAGS = 3;

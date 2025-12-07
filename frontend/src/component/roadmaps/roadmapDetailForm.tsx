@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { X } from 'lucide-react';
 import FormBar from "./formBox";
 import { validateDescription, validateTitle } from "./validateFormBox";
 import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "./image";
+import { useDispatch } from "react-redux";
+import { addRoadmap, editRoadmap, deleteRoadmap } from "@/store/roadmapSlice";
 
 interface RoadmapDetailFormProps{
     mode: "add" | "edit";
@@ -15,6 +17,9 @@ interface RoadmapDetailFormProps{
 const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
     mode, imageSrc, title, description}) => {
         const navigate = useNavigate();
+        const dispatch = useDispatch();
+        const userID = localStorage.getItem("userID");
+        const {roadmapID} = useParams<{ roadmapID: string}>();
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
         const [queryDescription, setQueryDescription] = useState( mode === "edit" ? description ?? "" : "")
         const [currentImageSrc, setCurrentImageSrc] = useState(mode === "edit" ? (imageSrc ?? defaultImageSrc) : defaultImageSrc);
@@ -50,10 +55,42 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
             if (errormsg.length > 0) {
                 return;
             } 
-            else {
-                navigate(-1)
+            if (mode === 'add'){
+                dispatch(
+                    addRoadmap({
+                        creator: Number(userID),
+                        imageSrc:currentImageSrc,
+                        title: queryTitle,
+                        description: queryDescription,
+                        isFavourite: false,
+                    })
+                )
             }
+            if (mode === 'edit'){
+                dispatch(
+                    editRoadmap({
+                        roadmapID: Number(roadmapID),
+                        roadmapSlug: "",
+                        creator: Number(userID),
+                        imageSrc:currentImageSrc,
+                        title: queryTitle,
+                        description: queryDescription,
+                        createdDate: "",
+                        modifiedDate: "",
+                        isFavourite: false,
+                    })
+                )
+            }
+            navigate(-1);
         }
+
+        const handleDelete = () => {
+            if (roadmapID) {
+            dispatch(deleteRoadmap(Number(roadmapID)));
+        }
+        navigate(-2);
+        };
+        
 
         return (
                 <div className=" max-w-5xl mx-auto text-white">
@@ -65,7 +102,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                                 src={bin}
                                 alt="delete-button"
                                 className="w-full h-full object-cover" 
-                                onClick={() => navigate(-1)}
+                                onClick={handleDelete}
                                 onError={(e) => {
                                     e.currentTarget.src = defaultImageSrc; 
                                 }}

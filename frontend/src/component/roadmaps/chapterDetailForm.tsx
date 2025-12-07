@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { X } from 'lucide-react';
 import FormBar from "./formBox";
 import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "./validateFormBox";
 import { defaultImageSrc, bin } from "./image";
+import { useDispatch } from "react-redux";
+import { addChapter, editChapter, deleteChapter } from "@/store/pillarsSlice";
 
 interface ChapterDetailFormProps{
     mode: "add" | "edit";
@@ -18,6 +20,8 @@ interface ChapterDetailFormProps{
 const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
     mode, title, description, difficulty, order, category, prerequisite}) => {
         const navigate = useNavigate();
+        const dispatch = useDispatch();
+        const {roadmapID, chapterID} = useParams<{ roadmapID: string, chapterID: string}>();
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
         const [queryDescription, setQueryDescription] = useState(mode === "edit" ? description ?? "" : "")
         const [queryDifficulty, setQueryDifficulty] = useState(mode === "edit" ? difficulty ?? "" : "")
@@ -37,10 +41,47 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
             setErrors(errormsg);
             if (errormsg.length > 0) {
                 return;
-            } else {
-                navigate(-1)
+            } 
+            if (mode === 'add'){
+                dispatch(
+                    addChapter({
+                        roadmapID: Number(roadmapID),
+                        title: queryTitle,
+                        description: queryDescription,
+                        difficulty: queryDifficulty,
+                        category: queryCategory,
+                        prerequisite: queryPrerequisite,
+                        order: Number(queryOrder)
+                    })
+                )
             }
+            if (mode === 'edit'){
+                dispatch(
+                    editChapter({
+                        chapterID: Number(chapterID),
+                        chapterSlug: "",
+                        roadmapID: Number(roadmapID),
+                        title: queryTitle,
+                        description: queryDescription,
+                        modifiedDate: "",
+                        difficulty: queryDifficulty,
+                        category: queryCategory,
+                        prerequisite: queryPrerequisite,
+                        order: Number(queryOrder),
+                        isViewed:false,
+                    })
+                )
+            }
+            navigate(-1)
         }
+
+        const handleDelete = () => {
+        if (chapterID) {
+            dispatch(deleteChapter(Number(chapterID)));
+        }
+        navigate(-2);
+        };
+
         return(
 
             <div className=" max-w-5xl mx-auto text-white">
@@ -52,7 +93,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                             src={bin}
                             alt="delete-button"
                             className="w-full h-full object-cover" 
-                            onClick={() => navigate(-1)}
+                            onClick={handleDelete}
                             onError={(e) => {
                                 e.currentTarget.src = defaultImageSrc; 
                             }}
