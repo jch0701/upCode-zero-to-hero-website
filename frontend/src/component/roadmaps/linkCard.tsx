@@ -1,12 +1,18 @@
-import React, {useState} from 'react';
-import { roadmapData, pillarsData } from '@/dummy';
+import React from 'react';
+import { useSelector } from "react-redux";
 import { Link, useLocation } from 'react-router-dom';
+import type { RoadmapItemCardProps } from './roadmapCard';
+import type { PillarCardProps } from './pillarCard';
+import { useDispatch } from 'react-redux';
+import { toggleView, autosetViewTrue } from '@/store/linksSlice';
+
+
 // Type and data structure
 export interface LinkCardProps {
     nodeID: number;
     chapterID: number;
     title: string;
-    modifiedDate: String;
+    modifiedDate: string;
     order: number;
     link: string;
     isViewed: boolean;
@@ -15,11 +21,22 @@ export interface LinkCardProps {
 const LinkCard : React.FC<LinkCardProps> = ({
     nodeID, chapterID, title, order, link, isViewed,
 }) => {
-    //toggle // toggleViewed indicator
-    const [viewed, setViewed] = useState(isViewed);
-    const handleToggleViewed = () => {
-        setViewed(!viewed);
+    const dispatch = useDispatch();
+    // seperate click
+    const directLink = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        dispatch(autosetViewTrue(nodeID));
+        window.open(link, "_blank")
+    }
+    // toggleViewed indicator
+    const handleToggleViewed = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        dispatch(toggleView(nodeID))
     };
+    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
+    const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
     const chapterSlug = pillarsData.find(p => p.chapterID === chapterID)?.chapterSlug || 'Unknown Chapter Slug';
     const roadmapID = pillarsData.find(p => p.chapterID === chapterID)?.roadmapID || 'Unknown Roadmap ID';
     const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
@@ -44,16 +61,25 @@ const LinkCard : React.FC<LinkCardProps> = ({
             <div className="flex-grow text-lg font-medium text-gray-900 text-left">
                 {title}
             </div>
-
-            {/* Viewed Indicator */}
+            
+            {creator != userID ? (
+            // Viewed Indicator
             <div onClick={handleToggleViewed} className="ml-4 cursor-pointer">
-                {viewed ? (
+                {isViewed ? (
                     <svg className={"w-6 h-6 text-green-800"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>)
                     :
                     <div className="w-6 h-6 border-2 border-gray-400 rounded-full"></div>}
             </div>
+            ):(
+            // Button
+            <Link to ={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${nodeID}/edit`}>
+                <button onClick={directLink}
+                        className=" px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 transition">
+                    Link
+                </button>
+            </Link>)}
         </div>
     );
     const location = useLocation();
@@ -68,7 +94,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
                 </Link>
         ):(
             // Not creator → open external resource
-                <div onClick={() => window.open(link, "_blank")}>
+                <div onClick={directLink}>
                     {CardContent}
                 </div>
         )}

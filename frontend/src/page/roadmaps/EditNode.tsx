@@ -1,10 +1,12 @@
 import React from "react";
-import {  useParams } from "react-router-dom";
-import { linksData } from "@/dummy";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import LinkDetailForm from "@/component/roadmaps/linkDetailForm";
+import type { LinkCardProps } from "@/component/roadmaps/linkCard";
 
 export const EditNode: React.FC = () => {
     const { nodeID } = useParams<{ nodeID: string }>();
+    const linksData = useSelector((state: any) => state.link.linkList) as LinkCardProps[];
     const nodeItem = linksData.find(r => r.nodeID === Number(nodeID));
     if (!nodeItem) return <p className="text-white text-center mt-10">Link not found</p>;
     

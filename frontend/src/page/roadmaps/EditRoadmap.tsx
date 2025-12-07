@@ -1,9 +1,11 @@
 import React from "react";
 import { useParams } from "react-router";
-import { roadmapData } from "@/dummy";
+import { useSelector } from "react-redux";
 import RoadmapDetailForm from "@/component/roadmaps/roadmapDetailForm";
+import type { RoadmapItemCardProps } from "@/component/roadmaps/roadmapCard";
 
 export const EditRoadmap: React.FC = () => {
+    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
     const { roadmapID } = useParams<{ roadmapID: string }>();
     const roadmapItem = roadmapData.find(r => r.roadmapID === Number(roadmapID));
     if (!roadmapItem) return <p className="text-white text-center mt-10">Roadmap not found</p>;

@@ -10,29 +10,49 @@ import PasswordInput from "@/component/Signup_Login/PasswordInput";
 import email_icon from "@/assets/signuplogin/email.png";
 import hero_img from "@/assets/signuplogin/Hero.png";
 
+import { useSelector } from "react-redux";
+import type { UserListType } from "@/store/userListSlice";
+
 const Login_Pg: FC = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errors, setErrors] = React.useState<string[]>([]);
   const navigate = useNavigate();
 
+  const userData = useSelector((state: any) => state.userList.userList) as UserListType[];
+
+  const handleLogin = (email: string, password: string) => {
+    const userDetail = userData.find(user => user.email === email);
+
+    if (!userDetail) {
+      alert("User not found");
+      return false;
+    }
+
+    if (userDetail.password !== password) {
+      alert("Wrong password");
+      return false;
+    }
+
+    localStorage.setItem("userID", userDetail.userId);
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-  // validate email & password separately
+    e.preventDefault();
+
+    // Validation
     const emailErrors = Validate_Email(email);
     const passwordErrors = Validate_Password(password);
-    // combine
     const errormsg = [...emailErrors, ...passwordErrors];
-    
+
     setErrors(errormsg);
 
-    if (errormsg.length > 0) {
-      return;
-    } else {
-      alert(
-        "Login Successfully.\n" + `Email: ${email}\n`
-      );
-      localStorage.setItem("userID", "100001"); // Simulate setting userID on login
+    if (errormsg.length > 0) return;
+
+    // Login logic
+    if (handleLogin(email, password)) {
+      alert(`Login Successfully.\nEmail: ${email}`);
       navigate("/");
     }
   };

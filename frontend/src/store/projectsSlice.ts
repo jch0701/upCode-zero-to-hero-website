@@ -29,9 +29,9 @@ function generateProjectId() {
   return nextProjectId++;
 }
 
-const initialState: ProjectSlice = {
-  projectsList: [],
-};
+// const initialState: ProjectSlice = {
+//   projectsList: [],
+// };
 
 const dummyState: ProjectSlice = {
   projectsList: [

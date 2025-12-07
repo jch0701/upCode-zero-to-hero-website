@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import RoadmapSidebar from "../../component/roadmaps/roadmapSidebar";
 import RoadmapItemList from "../../component/roadmaps/roadmapList";
 import SectionBlock from "../../component/roadmaps/sectionBlock";
 import SearchBar from "../../component/searchBar";
-import { useState } from "react";
-import { roadmapData, pillarsData } from "../../dummy";
 import { generateTags } from "../../component/roadmaps/groupTag";
+import { useSelector } from "react-redux";
 
 type Section = {
   id: string;
@@ -37,6 +36,9 @@ export const Roadmap: React.FC = () => {
   const userID = localStorage.getItem("userID");
   const isLoggedIn = userID && userID !== "0";
 
+  const roadmapData = useSelector((state: any) => state.roadmap.roadmapList);
+  const pillarsData = useSelector((state: any) => state.chapter.pillarList);
+
   const availableSections = sections.filter((section) => {
     // if not Login, recent viewed and your design section will hide
     if (!isLoggedIn && (section.id === "recently-viewed" || section.id === "your-design")) {
@@ -48,7 +50,7 @@ export const Roadmap: React.FC = () => {
     if (!section.tag) return true;
 
     // show section only if there is at least one roadmap item with matching tag label
-    return roadmapData.some((item) => {
+    return roadmapData.some((item: any) => {
       const effectiveTags = (item.tags && item.tags.length) ? item.tags : generateTags(item.roadmapID, pillarsData);
       const matchesTag = effectiveTags.some((t: any) => t.label === section.tag);
       const matchesQuery =
@@ -63,7 +65,7 @@ export const Roadmap: React.FC = () => {
     id: s.id,
   }));
 
-  const filteredRoadmapData = roadmapData.filter((item) => {
+  const filteredRoadmapData = roadmapData.filter((item: any) => {
     const q = query.toLowerCase();
     const effectiveTags = (item.tags && item.tags.length) ? item.tags : generateTags(item.roadmapID, pillarsData);
     return (
@@ -83,10 +85,10 @@ export const Roadmap: React.FC = () => {
           let itemsToShow = filteredRoadmapData;
           // Special filter for "Your Design" section
           if (section.id === "your-design" && isLoggedIn && userID) {
-            itemsToShow = filteredRoadmapData.filter((item) => item.creator === Number(userID));
+            itemsToShow = filteredRoadmapData.filter((item: any) => item.creator === Number(userID));
           }
           if (section.id === "whats-new" && isLoggedIn && userID) {
-            itemsToShow = filteredRoadmapData.filter((item) => item.creator !== Number(userID));
+            itemsToShow = filteredRoadmapData.filter((item: any) => item.creator !== Number(userID));
           }
           return(
           <SectionBlock key={section.id} id={section.id} title={section.title}>

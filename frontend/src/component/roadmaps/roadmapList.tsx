@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { RoadmapItemCard } from "./roadmapCard.tsx";
 import type{ RoadmapItemCardProps } from "./roadmapCard.tsx"; 
 import { generateTags } from './groupTag';
-import { pillarsData } from '../../dummy';
+import { useSelector } from "react-redux";
+import type { PillarCardProps } from "./pillarCard.tsx";
 
 interface RoadmapItemListProps {
   items: RoadmapItemCardProps[];
@@ -12,6 +13,7 @@ interface RoadmapItemListProps {
 export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterTag }) => {
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
+  const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
   // reorder items by date descending
   const sortedItems = [...items].sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
 
