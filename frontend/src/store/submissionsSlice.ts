@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 export type SubmissionType = {
-  submissionId: string;
+  submissionId: number;
   projectId: string;
   creatorId: string;
   postedOn: Date;
@@ -27,7 +27,7 @@ const initialState: SubmissionsSlice = {
 const dummyState: SubmissionsSlice = {
   submissionsList: [
     {
-      submissionId: "1",
+      submissionId: 1,
       projectId: "1",
       creatorId: "1",
       postedOn: new Date("2024-03-01"),
@@ -37,7 +37,7 @@ const dummyState: SubmissionsSlice = {
       repoLink: "https://github.com/xinsheng04/memory-card-game.git",
     },
     {
-      submissionId: "2",
+      submissionId: 2,
       projectId: "2",
       creatorId: "2",
       postedOn: new Date("2024-03-10"),
@@ -51,7 +51,7 @@ const dummyState: SubmissionsSlice = {
 
 let nextSubmissionId = 3;
 function generateSubmissionId() {
-  return (nextSubmissionId++).toString();
+  return nextSubmissionId++;
 }
 
 const submissionsSlice = createSlice({
@@ -78,7 +78,7 @@ const submissionsSlice = createSlice({
         };
       }
     },
-    deleteSubmission: (state, action: PayloadAction<string>) => {
+    deleteSubmission: (state, action: PayloadAction<number>) => {
       state.submissionsList = state.submissionsList.filter(
         (submission) => submission.submissionId !== action.payload
       );

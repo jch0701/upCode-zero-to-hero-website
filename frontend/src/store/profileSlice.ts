@@ -2,13 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 type profileType = {
-  userId: string;
+  userId: number;
   username: string;
   token?: string; //to come in the future
 }
 
 const initialState: profileType = {
-  userId: "1", //default for testing
+  userId: 1, //default for testing
   username: "Alice", //default for testing
   token: "",
 };

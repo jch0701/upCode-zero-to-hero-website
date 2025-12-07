@@ -3,12 +3,12 @@ import type { Difficulty, Category } from "../lib/types";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 export type ProjectType = {
-  projectId: string;
+  projectId: number;
   title: string;
   shortDescription: string;
   difficulty: Difficulty;
   category: Category;
-  creatorId: string;
+  creatorId: number;
   lastUpdated: Date;
   startingRepoLink?: string;
   details: string;
@@ -26,7 +26,7 @@ interface ProjectSlice{
 
 let nextProjectId = 4;
 function generateProjectId() {
-  return (nextProjectId++).toString();
+  return nextProjectId++;
 }
 
 const initialState: ProjectSlice = {
@@ -36,11 +36,11 @@ const initialState: ProjectSlice = {
 const dummyState: ProjectSlice = {
   projectsList: [
     {
-      projectId: "1",
+      projectId: 1,
       title: "AI-Powered Chatbot",
       shortDescription: "A chatbot that uses AI to provide customer support.",
       category: "Machine Learning",
-      creatorId: "1",
+      creatorId: 1,
       difficulty: "Intermediate",
       lastUpdated: new Date("2024-01-15"),
       startingRepoLink: "https://github.com/alice/ai-chatbot",
@@ -49,11 +49,11 @@ const dummyState: ProjectSlice = {
       submissionCount: 12
     },
     {
-      projectId: "2",
+      projectId: 2,
       title: "E-commerce Website",
       shortDescription: "A full-featured e-commerce platform for online shopping.",
       category: "Web Development",
-      creatorId: "2",
+      creatorId: 2,
       difficulty: "Advanced",
       lastUpdated: new Date("2024-02-10"),
       startingRepoLink: "https://github.com/bob/ecommerce-website",
@@ -62,11 +62,11 @@ const dummyState: ProjectSlice = {
       submissionCount: 20
     },
     {
-      projectId: "3",
+      projectId: 3,
       title: "Fitness Tracker App",
       shortDescription: "A mobile app to track fitness activities and health metrics.",
       category: "Mobile Apps",
-      creatorId: "3",
+      creatorId: 3,
       difficulty: "Beginner",
       lastUpdated: new Date("2024-03-05"),
       startingRepoLink: "https://github.com/charlie/fitness-tracker-app",
@@ -100,7 +100,7 @@ const projectsSlice = createSlice({
         state.projectsList[index] = action.payload;
       }
     },
-    deleteProject: (state, action: PayloadAction<string>) => {
+    deleteProject: (state, action: PayloadAction<number>) => {
       state.projectsList = state.projectsList.filter(
         (project: ProjectType) => project.projectId !== action.payload
       );

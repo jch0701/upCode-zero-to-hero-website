@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 type UserListType = {
-  userId: string;
+  userId: number;
   username: string;
   email: string;
 }
@@ -20,17 +20,17 @@ const initialState: UserSlice = {
 const dummyState: UserSlice = {
   userList: [
     {
-      userId: "1",
+      userId: 1,
       username: "Alice",
       email: "alice@example.com"
     },
     {
-      userId: "2",
+      userId: 2,
       username: "Bob",
       email: "bob@example.com"
     },
     {
-      userId: "3",
+      userId: 3,
       username: "Charlie",
       email: "charlie@example.com"
     }
@@ -50,8 +50,8 @@ const userListSlice = createSlice({
         state.userList[index] = { ...state.userList[index], ...action.payload };
       }
     },
-    deleteUser(state, action: PayloadAction<string>) {
-      state.userList = state.userList?.filter(user => user.username !== action.payload) || null;
+    deleteUser(state, action: PayloadAction<number>) {
+      state.userList = state.userList?.filter(user => user.userId !== action.payload) || null;
     }
   },
 });

@@ -28,7 +28,7 @@ export const Project: React.FC = () => {
         setCategory(value);
     }
 
-    function navigateToProjectDetails(projectId: string) {
+    function navigateToProjectDetails(projectId: number) {
         navigate(`/project/${projectId}`);
     }
 

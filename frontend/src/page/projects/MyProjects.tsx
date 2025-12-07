@@ -25,7 +25,7 @@ export const MyProjects: React.FC = () => {
     setCategory(value);
   }
 
-  function navigateToDetails(path: string, destId: string) {
+  function navigateToDetails(path: string, destId: number) {
     navigate(`/${path}/${destId}`);
   }
   
