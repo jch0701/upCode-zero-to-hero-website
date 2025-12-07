@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { pillarsData } from "@/dummy";
 import { generateSlug } from "@/lib/utils";
+import { touchPillar, touchRoadmap } from "./action";
 
 export interface PillarType{
     chapterID: number;
@@ -47,7 +48,7 @@ const pillarSlice = createSlice({
                 ...action.payload,
                 chapterID: generateChapterID(),
                 chapterSlug: generateSlug(action.payload.title),
-                modifiedDate: new Date().toISOString(),
+                modifiedDate: new Date().toISOString().slice(0, 10),
                 isViewed: false
             }
             state.pillarList.push(newPillar);
@@ -59,7 +60,7 @@ const pillarSlice = createSlice({
             if (index !== -1){
                 state.pillarList[index] = {
                     ...action.payload,
-                    modifiedDate: new Date().toISOString(),
+                    modifiedDate: new Date().toISOString().slice(0, 10),
                     chapterSlug: generateSlug(action.payload.title)
                 };
             }
@@ -70,8 +71,34 @@ const pillarSlice = createSlice({
             );
         },
     },
+    extraReducers: (builder) => {
+    builder.addCase(touchPillar, (state, action) => {
+      const idx = state.pillarList.findIndex(p => p.chapterID === action.payload);
+      if (idx !== -1) state.pillarList[idx].modifiedDate = new Date().toISOString().slice(0, 10);
+    });
+    }
 });
 
 export const { addChapter, editChapter, deleteChapter } = pillarSlice.actions;
 export default pillarSlice.reducer;
+
+// Thunks that update the related roadmap's modified date after chapter changes
+export const addChapterAndTouch = (payload: InitialPillarType) => (dispatch: any) => {
+    dispatch(addChapter(payload));
+    dispatch(touchRoadmap(payload.roadmapID));
+};
+
+export const editChapterAndTouch = (payload: PillarType) => (dispatch: any) => {
+    dispatch(editChapter(payload));
+    dispatch(touchRoadmap(payload.roadmapID));
+};
+
+export const deleteChapterAndTouch = (chapterID: number) => (dispatch: any, getState: any) => {
+    // find pillar to get roadmapID before deletion
+    const state: any = getState();
+    const pillar = state.chapter?.pillarList?.find((p: any) => p.chapterID === chapterID);
+    const roadmapID = pillar?.roadmapID;
+    dispatch(deleteChapter(chapterID));
+    if (roadmapID !== undefined) dispatch(touchRoadmap(roadmapID));
+};
 

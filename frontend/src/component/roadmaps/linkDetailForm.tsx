@@ -5,7 +5,8 @@ import FormBar from "./formBox";
 import { validateTitle, validateOrder, validateLink } from "@/component/roadmaps/validateFormBox";
 import { defaultImageSrc, bin } from "./image";
 import { useDispatch } from "react-redux";
-import { addLink, editLink, deleteLink } from "@/store/linksSlice";
+import type { AppDispatch } from "@/store";
+import { addLinkAndTouch, editLinkAndTouch, deleteLinkAndTouch } from "@/store/linksSlice";
 
 interface LinkDetailFormProps{
     mode: "add" | "edit";
@@ -17,7 +18,7 @@ interface LinkDetailFormProps{
 const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
     mode, title, order, link}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch();
+        const dispatch = useDispatch<AppDispatch>();
         const { chapterID, nodeID } = useParams<{ chapterID: string, nodeID: string }>();
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
         const [queryOrder, setQueryOrder] = useState(mode === "edit" && order !== undefined ? String(order) : "");
@@ -36,7 +37,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
             } 
             if (mode === "add"){
                 dispatch(
-                    addLink({
+                    addLinkAndTouch({
                         chapterID: Number(chapterID),
                         title: queryTitle,
                         order: Number(queryOrder),
@@ -46,7 +47,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
             }
             if (mode === "edit"){
                 dispatch(
-                    editLink({
+                    editLinkAndTouch({
                         nodeID: Number(nodeID),
                         chapterID: Number(chapterID),
                         title: queryTitle,
@@ -62,7 +63,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
 
         const handleDelete = () => {
         if (nodeID) {
-            dispatch(deleteLink(Number(nodeID)));
+            dispatch(deleteLinkAndTouch(Number(nodeID)));
         }
         navigate(-1);
         };

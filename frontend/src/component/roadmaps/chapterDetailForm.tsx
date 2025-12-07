@@ -5,7 +5,8 @@ import FormBar from "./formBox";
 import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "./validateFormBox";
 import { defaultImageSrc, bin } from "./image";
 import { useDispatch } from "react-redux";
-import { addChapter, editChapter, deleteChapter } from "@/store/pillarsSlice";
+import type { AppDispatch } from "@/store";
+import { addChapterAndTouch, editChapterAndTouch, deleteChapterAndTouch } from "@/store/pillarsSlice";
 
 interface ChapterDetailFormProps{
     mode: "add" | "edit";
@@ -20,7 +21,7 @@ interface ChapterDetailFormProps{
 const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
     mode, title, description, difficulty, order, category, prerequisite}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch();
+        const dispatch = useDispatch<AppDispatch>();
         const {roadmapID, chapterID} = useParams<{ roadmapID: string, chapterID: string}>();
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
         const [queryDescription, setQueryDescription] = useState(mode === "edit" ? description ?? "" : "")
@@ -44,7 +45,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
             } 
             if (mode === 'add'){
                 dispatch(
-                    addChapter({
+                    addChapterAndTouch({
                         roadmapID: Number(roadmapID),
                         title: queryTitle,
                         description: queryDescription,
@@ -57,7 +58,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
             }
             if (mode === 'edit'){
                 dispatch(
-                    editChapter({
+                    editChapterAndTouch({
                         chapterID: Number(chapterID),
                         chapterSlug: "",
                         roadmapID: Number(roadmapID),
@@ -77,7 +78,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
 
         const handleDelete = () => {
         if (chapterID) {
-            dispatch(deleteChapter(Number(chapterID)));
+            dispatch(deleteChapterAndTouch(Number(chapterID)));
         }
         navigate(-2);
         };

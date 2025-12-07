@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { roadmapData } from "@/dummy";
 import { generateSlug } from "@/lib/utils";
+import { touchRoadmap } from "./action";
 
 export interface RoadmapType {
     roadmapID: number;
@@ -47,8 +48,8 @@ const roadmapSlice = createSlice({
                 ...action.payload,
                 roadmapID: generateRoadmapID(),
                 roadmapSlug: generateSlug(action.payload.title),
-                createdDate: new Date().toISOString(),
-                modifiedDate: new Date().toISOString(),
+                createdDate: new Date().toISOString().slice(0, 10),
+                modifiedDate: new Date().toISOString().slice(0, 10),
             }
             state.roadmapList.push(newRoadmap);
         },
@@ -62,7 +63,7 @@ const roadmapSlice = createSlice({
                     ...action.payload,
                     roadmapSlug: generateSlug(action.payload.title),
                     createdDate: existing.createdDate,
-                    modifiedDate: new Date().toISOString(),
+                    modifiedDate: new Date().toISOString().slice(0, 10),
                 };
             }
         },
@@ -72,6 +73,12 @@ const roadmapSlice = createSlice({
             );
         },
     },
+    extraReducers: (builder) => {
+    builder.addCase(touchRoadmap, (state,action) => {
+        const idx = state.roadmapList.findIndex(r => r.roadmapID === action.payload);
+        if (idx !== -1) state.roadmapList[idx].modifiedDate = new Date().toISOString().slice(0, 10);
+        });
+    }
 });
 
 export const { addRoadmap, editRoadmap, deleteRoadmap } = roadmapSlice.actions;
