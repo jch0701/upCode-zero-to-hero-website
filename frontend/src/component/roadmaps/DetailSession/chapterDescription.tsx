@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { TagPill } from "../tag";
-import type { Tag } from "../tag";
-import type { PillarCardProps } from "./pillarCard";
+import { TagPill } from "../../tag";
+import type { Tag } from "../../tag";
+import type { PillarCardProps } from "../Selector/pillarCard";
 import { X } from 'lucide-react';
 import { useSelector } from "react-redux";
-import type { RoadmapItemCardProps } from "./roadmapCard";
+import type { RoadmapItemCardProps } from "../Selector/roadmapCard";
 import type { UserListType } from "@/store/userListSlice";
 
 const ChapterDescription: React.FC<PillarCardProps> = ({

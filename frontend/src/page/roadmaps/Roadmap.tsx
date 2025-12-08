@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import RoadmapSidebar from "../../component/roadmaps/roadmapSidebar";
-import RoadmapItemList from "../../component/roadmaps/roadmapList";
+import RoadmapSidebar from "../../component/roadmaps/sidebar";
+import RoadmapItemList from "../../component/roadmaps/Selector/roadmapList";
 import SectionBlock from "../../component/roadmaps/sectionBlock";
 import SearchBar from "../../component/searchBar";
 import { generateTags } from "../../component/roadmaps/groupTag";

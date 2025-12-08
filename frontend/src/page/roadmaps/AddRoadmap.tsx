@@ -1,4 +1,5 @@
-import RoadmapDetailForm from "@/component/roadmaps/roadmapDetailForm";
+
+import RoadmapDetailForm from "@/component/roadmaps/Form/roadmapDetailForm";
 import React from "react";
 
 export const AddRoadmap: React.FC = () => {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import type { Tag } from '../tag.tsx';
-import { TagPill } from '../tag.tsx';
-import { generateTags } from './groupTag';
+import type { Tag } from '../../tag.tsx';
+import { TagPill } from '../../tag.tsx';
+import { generateTags } from '../groupTag.tsx';
 import { useSelector } from "react-redux";
 import type { PillarCardProps } from './pillarCard.tsx';
 // Type and data structure

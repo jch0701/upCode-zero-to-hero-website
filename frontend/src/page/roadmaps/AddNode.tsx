@@ -1,4 +1,5 @@
-import LinkDetailForm from "@/component/roadmaps/linkDetailForm";
+
+import LinkDetailForm from "@/component/roadmaps/Form/linkDetailForm";
 import React from "react";
 
 export const AddNode: React.FC = () => {

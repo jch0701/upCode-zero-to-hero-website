@@ -1,9 +1,9 @@
-import ChapterDescription from '@/component/roadmaps/chapterDescription';
-import LinkList from '@/component/roadmaps/linkList';
+import ChapterDescription from '@/component/roadmaps/DetailSession/chapterDescription';
+import LinkList from '@/component/roadmaps/Selector/linkList';
 import { useSelector } from "react-redux";
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import type { PillarCardProps } from '@/component/roadmaps/pillarCard';
+import type { PillarCardProps } from '@/component/roadmaps/Selector/pillarCard';
 
 export const ChapterDetails: React.FC = () => {
     const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];

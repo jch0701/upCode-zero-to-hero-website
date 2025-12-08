@@ -1,9 +1,9 @@
 import React from "react";
-import RoadmapDescription from "../../component/roadmaps/roadmapDesciption";
+import RoadmapDescription from "../../component/roadmaps/DetailSession/roadmapDesciption";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import PillarList from "../../component/roadmaps/pillarList";
-import type { RoadmapItemCardProps } from "@/component/roadmaps/roadmapCard";
+import type { RoadmapItemCardProps } from "@/component/roadmaps/Selector/roadmapCard";
+import PillarList from "@/component/roadmaps/Selector/pillarList";
 
 export const RoadmapDetails: React.FC = () => {
     const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];

@@ -1,8 +1,9 @@
 import React from "react";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
-import RoadmapDetailForm from "@/component/roadmaps/roadmapDetailForm";
-import type { RoadmapItemCardProps } from "@/component/roadmaps/roadmapCard";
+
+import type { RoadmapItemCardProps } from "@/component/roadmaps/Selector/roadmapCard";
+import RoadmapDetailForm from "@/component/roadmaps/Form/roadmapDetailForm";
 
 export const EditRoadmap: React.FC = () => {
     const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];

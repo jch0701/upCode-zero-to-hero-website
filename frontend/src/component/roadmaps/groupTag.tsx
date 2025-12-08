@@ -1,5 +1,5 @@
 import type { Tag } from '../tag'; 
-import type { PillarCardProps } from './pillarCard';
+import type { PillarCardProps } from './Selector/pillarCard';
 
 export const generateTags = (roadmapID: number, pillarsData: PillarCardProps[]): Tag[] => {
   const filtered = pillarsData.filter(p => p.roadmapID === roadmapID);

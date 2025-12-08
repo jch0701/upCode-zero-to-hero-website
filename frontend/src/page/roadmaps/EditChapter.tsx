@@ -1,8 +1,8 @@
-import ChapterDetailForm from "@/component/roadmaps/chapterDetailForm";
+import ChapterDetailForm from "@/component/roadmaps/Form/chapterDetailForm";
 import { useSelector } from "react-redux";
 import React from "react";
 import { useParams } from "react-router";
-import type { PillarCardProps } from "@/component/roadmaps/pillarCard";
+import type { PillarCardProps } from "@/component/roadmaps/Selector/pillarCard";
 
 export const EditChapter: React.FC = () => {
     const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];

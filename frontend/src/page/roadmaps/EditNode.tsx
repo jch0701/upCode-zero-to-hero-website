@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import LinkDetailForm from "@/component/roadmaps/linkDetailForm";
-import type { LinkCardProps } from "@/component/roadmaps/linkCard";
+import LinkDetailForm from "@/component/roadmaps/Form/linkDetailForm";
+import type { LinkCardProps } from "@/component/roadmaps/Selector/linkCard";
 
 export const EditNode: React.FC = () => {
     const { nodeID } = useParams<{ nodeID: string }>();

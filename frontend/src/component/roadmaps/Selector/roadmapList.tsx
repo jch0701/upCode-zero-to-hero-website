@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { RoadmapItemCard } from "./roadmapCard.tsx";
-import type{ RoadmapItemCardProps } from "./roadmapCard.tsx"; 
-import { generateTags } from './groupTag';
+import { generateTags } from '../groupTag.tsx';
 import { useSelector } from "react-redux";
 import type { PillarCardProps } from "./pillarCard.tsx";
+import { RoadmapItemCard, type RoadmapItemCardProps } from "./roadmapCard.tsx";
 
 interface RoadmapItemListProps {
   items: RoadmapItemCardProps[];

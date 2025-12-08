@@ -1,11 +1,11 @@
 import React from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { TagPill } from "../tag";
-import type { RoadmapItemCardProps } from "./roadmapCard";
-import { generateTags } from './groupTag';
+import { TagPill } from "../../tag";
+import type { RoadmapItemCardProps } from "../Selector/roadmapCard";
+import { generateTags } from '../groupTag';
 import { useSelector } from "react-redux";
 import { Heart, X } from 'lucide-react';
-import type { PillarCardProps } from "./pillarCard";
+import type { PillarCardProps } from "../Selector/pillarCard";
 import { useDispatch } from 'react-redux';
 import { toggleFavourite } from "@/store/roadmapSlice";
 import type { UserListType } from "@/store/userListSlice";

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { X } from 'lucide-react';
-import FormBar from "./formBox";
-import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "./validateFormBox";
-import { defaultImageSrc, bin } from "./image";
+import FormBar from "../formBox";
+import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "../validateFormBox";
+import { defaultImageSrc, bin } from "../image";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
 import { addChapterAndTouch, editChapterAndTouch, deleteChapterAndTouch } from "@/store/pillarsSlice";
@@ -49,7 +49,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         roadmapID: Number(roadmapID),
                         title: queryTitle,
                         description: queryDescription,
-                        difficulty: queryDifficulty,
+                        difficulty: queryDifficulty.charAt(0).toUpperCase() + queryDifficulty.slice(1).toLowerCase(),
                         category: queryCategory,
                         prerequisite: queryPrerequisite,
                         order: Number(queryOrder)
@@ -65,7 +65,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         title: queryTitle,
                         description: queryDescription,
                         modifiedDate: "",
-                        difficulty: queryDifficulty,
+                        difficulty: queryDifficulty.charAt(0).toUpperCase() + queryDifficulty.slice(1).toLowerCase(),
                         category: queryCategory,
                         prerequisite: queryPrerequisite,
                         order: Number(queryOrder),

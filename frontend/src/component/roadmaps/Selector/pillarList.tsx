@@ -1,5 +1,5 @@
 import React from 'react';
-import PillarCard, { type PillarCardProps } from './pillarCard.tsx';
+import PillarCard, { type PillarCardProps } from '../Selector/pillarCard.tsx';
 import { useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
 import type { RoadmapItemCardProps } from './roadmapCard.tsx';

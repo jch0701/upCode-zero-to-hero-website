@@ -1,10 +1,11 @@
-import type{ RoadmapItemCardProps} from "./component/roadmaps/roadmapCard";
+import type{ RoadmapItemCardProps} from "./component/roadmaps/Selector/roadmapCard";
 import { defaultImageSrc, javaImage, pythonImage, javaScriptImage, cImage, machinelearningImage,
          devopsImage, frontendImage, backendImage, reactImage, apiImage, angularImage,
          typeScriptImage, htmlcssImage, sqlImage
  } from "./component/roadmaps/image";
-import type { PillarCardProps } from "./component/roadmaps/pillarCard";
-import type { LinkCardProps } from "./component/roadmaps/linkCard";
+import type { PillarCardProps } from "./component/roadmaps/Selector/pillarCard";
+import type { LinkCardProps } from "./component/roadmaps/Selector/linkCard";
+
 
 export const roadmapData: RoadmapItemCardProps[] = [
   {

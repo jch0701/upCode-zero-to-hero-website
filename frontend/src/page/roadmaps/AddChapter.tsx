@@ -1,4 +1,4 @@
-import ChapterDetailForm from "@/component/roadmaps/chapterDetailForm";
+import ChapterDetailForm from "@/component/roadmaps/Form/chapterDetailForm";
 import React from "react";
 
 export const AddChapter: React.FC = () => {

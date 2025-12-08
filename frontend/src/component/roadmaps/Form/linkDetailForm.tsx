@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { X } from 'lucide-react';
-import FormBar from "./formBox";
+import FormBar from "../formBox";
 import { validateTitle, validateOrder, validateLink } from "@/component/roadmaps/validateFormBox";
-import { defaultImageSrc, bin } from "./image";
+import { defaultImageSrc, bin } from "../image";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
 import { addLinkAndTouch, editLinkAndTouch, deleteLinkAndTouch } from "@/store/linksSlice";
