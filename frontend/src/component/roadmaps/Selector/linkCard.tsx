@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import type { RoadmapItemCardProps } from './roadmapCard';
 import type { PillarCardProps } from './pillarCard';
 import { useDispatch } from 'react-redux';
@@ -22,18 +22,34 @@ const LinkCard : React.FC<LinkCardProps> = ({
     nodeID, chapterID, title, order, link, isViewed,
 }) => {
     const dispatch = useDispatch();
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    useEffect(() => {
+            const userID = localStorage.getItem("userID");
+            setIsLoggedIn(userID && userID !== "0" ? true : false);
+    }, [location]); // re-check when route changes
+
     // seperate click
     const directLink = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        dispatch(autosetViewTrue(nodeID));
+        if(isLoggedIn){
+            dispatch(autosetViewTrue(nodeID));
+        }
         window.open(link, "_blank")
     }
     // toggleViewed indicator
     const handleToggleViewed = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        dispatch(toggleView(nodeID))
+        if(isLoggedIn){
+            dispatch(toggleView(nodeID))
+        }
+        else{
+            navigate("/Login");
+        }
     };
     const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
     const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
@@ -82,7 +98,6 @@ const LinkCard : React.FC<LinkCardProps> = ({
             </Link>)}
         </div>
     );
-    const location = useLocation();
     return (
         <>
         {creator == userID ? (
