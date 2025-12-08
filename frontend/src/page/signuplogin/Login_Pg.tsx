@@ -1,12 +1,7 @@
 import React from "react";
 import type { FC } from "react";
-<<<<<<< HEAD
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import {login} from "@/store/profileSlice";
-=======
 import { Link, useLocation, useNavigate } from "react-router-dom";
->>>>>>> 6d4b22a5a745c8f8b122ffbdd87789973f601ae4
 
 import "@/component/Signup_Login/Login_Signup_Pg.css";
 import { Validate_Email, Validate_Password } from "@/component/Signup_Login/Validate_Signup_Login";
