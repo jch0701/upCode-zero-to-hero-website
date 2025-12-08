@@ -1,5 +1,5 @@
-import React from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { TagPill } from "../../tag";
 import type { RoadmapItemCardProps } from "../Selector/roadmapCard";
 import { generateTags } from '../groupTag';
@@ -17,11 +17,24 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     const username = userData.find(user => user.userId === creator)?.username || 'Unknown Username';
     const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
     const dispatch = useDispatch();
+    
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    useEffect(() => {
+            const userID = localStorage.getItem("userID");
+            setIsLoggedIn(userID && userID !== "0" ? true : false);
+    }, [location]); // re-check when route changes
+
     const handleToggleFavourite = () => {
-        dispatch(toggleFavourite(Number(roadmapID)))
+        if (isLoggedIn){
+            dispatch(toggleFavourite(Number(roadmapID)))
+        }
+        else{
+            navigate("/Login");
+        }
     };
 
-    const navigate = useNavigate();
     const userID = localStorage.getItem("userID");
     const { roadmapID, roadmapSlug } = useParams<{ roadmapID: string, roadmapSlug: string }>();
 
