@@ -37,6 +37,9 @@ const PillarCard : React.FC<PillarCardProps> = ({
     // percentage generator
     const generateViewPercentage = (chapterID: number) => {
         const filtered = linksData.filter(p => p.chapterID === chapterID);
+        if (filtered.length === 0) {
+            return 0; // Return 0% for chapters with no links
+        }
         const viewArr = filtered.map(p => p.isViewed);
 
         const viewScore = (level: boolean) => (level ? 1 : 0);
@@ -74,7 +77,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
             </div>
 
             {/* Percentage Viewer */}
-            {generateViewPercentage(chapterID)!==100 && 
+            {generateViewPercentage(chapterID)!==100 && generateViewPercentage(chapterID)!==0 && 
             (<div className="flex items-center gap-2">
                 <div className="w-16 h-2 bg-gray-300 rounded-full overflow-hidden">
                     <div
