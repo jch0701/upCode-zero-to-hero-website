@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PillarCard, { type PillarCardProps } from '../Selector/pillarCard.tsx';
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ interface PillarListProps {
 }
 
 // Helper component to display projects for a single pillar
-const PillarProjects: React.FC<{ pillar: PillarCardProps; projects: ProjectType[]; navigateToProjectDetails: (projectId: number) => void }> = 
+const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[]; navigateToProjectDetails: (projectId: number) => void }> = 
     ({ pillar, projects, navigateToProjectDetails }) => {
     const chapterProjects = projects.filter(project => {
         if (project.difficulty !== pillar.difficulty) {
@@ -24,26 +24,55 @@ const PillarProjects: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
         return true;
     });
 
-    if (chapterProjects.length !== 0) {
+    const chapterCareers: any[] = [];
+    const [activeTab, setActiveTab] = useState<'project' | 'career'>('project');
+
         return (
-        <div>
-        <h3 className="pl-5 text-2xl font-semibold text-white text-left">
-            Suggested project
-        </h3>
-        <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4 p-4">
-            {chapterProjects.map((project: ProjectType) => (
-                <div className="flex-shrink-0 w-70">
-                <ProjectCard 
-                    key={project.projectId} 
-                    project={project}
-                    onClick={() => navigateToProjectDetails(project.projectId)}
-                />
+            <div className='pl-5 pr-5'>
+                {/* small backgroundless navbar */}
+                <div className="flex items-center gap-4 mb-3 justify-end">
+                    <button
+                        type="button"
+                        onClick={() => setActiveTab('project')}
+                        className={`text-sm font-semibold ${activeTab === 'project' ? 'text-white underline' : 'text-gray-300'}`}>
+                        Suggested project
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setActiveTab('career')}
+                        className={`text-sm font-semibold ${activeTab === 'career' ? 'text-white underline' : 'text-gray-300'}`}>
+                        Suggested career
+                    </button>
                 </div>
-            ))}
-        </div>
-        </div>
-    );
-    }
+
+                {activeTab === 'project' && (
+                    chapterProjects.length > 0 ? (
+                        <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
+                            {chapterProjects.map((project: ProjectType) => (
+                                <div className="flex-shrink-0 w-70" key={project.projectId}>
+                                    <ProjectCard 
+                                        project={project}
+                                        onClick={() => navigateToProjectDetails(project.projectId)}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="pl-5 text-sm text-gray-400">No suggested projects found.</p>
+                    )
+                )}
+
+                {activeTab === 'career' && (
+                    chapterCareers.length > 0 ? (
+                        <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
+                            {/* TODO: render career cards when careers are available */}
+                        </div>
+                    ) : (
+                        <p className="pl-5 text-sm text-gray-400">No career found.</p>
+                    )
+                )}
+            </div>
+        );
 };
 
 const PillarList: React.FC<PillarListProps> = ({ selectedRoadmapId }) => {
@@ -63,6 +92,30 @@ const navigate = useNavigate();
 function navigateToProjectDetails(projectId: number) {
     navigate(`/project/${projectId}`);
 }
+
+// Helper function to check if a pillar has matching projects
+function hasProjects(pillar: PillarCardProps): boolean {
+    const chapterProjects = projects.filter(project => {
+        if (project.difficulty !== pillar.difficulty) {
+            return false;
+        }
+        const pillarCategories = Array.isArray(pillar.category) ? pillar.category : [pillar.category];
+        if (!pillarCategories.includes(project.category)) {
+            return false;
+        }
+        return true;
+    });
+    return chapterProjects.length > 0;
+}
+
+const [openChapterId, setOpenChapterId] = useState<number | null>(null);
+
+function toggleProjectsVisibility(chapterID: number) {
+    // If the clicked chapter is already open, close it (set to null)
+    // Otherwise, open the clicked chapter
+    setOpenChapterId(prevId => (prevId === chapterID ? null : chapterID));
+}
+
     return (
         <div className="w-full mx-auto">
             <div className='flex items-center justify-between mb-6'>
@@ -83,12 +136,17 @@ function navigateToProjectDetails(projectId: number) {
                     <PillarCard 
                         key={pillar.chapterID}
                         {...pillar}
+                        onToggleClick={toggleProjectsVisibility}
+                        isOpen={openChapterId === pillar.chapterID}
+                        showArrow={hasProjects(pillar)}
                     />
-                    <PillarProjects 
-                            pillar={pillar} // Pass the entire pillar object now
+                    {openChapterId === pillar.chapterID && (
+                        <Recommendation
+                            pillar={pillar}
                             projects={projects}
                             navigateToProjectDetails={navigateToProjectDetails}
-                    />
+                        />
+                    )}
                 </div>
             )))}
         </div>

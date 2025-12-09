@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { toggleView, autosetViewTrue } from '@/store/pillarsSlice';
 import { useSelector } from "react-redux";
 import type { LinkCardProps } from './linkCard';
+import down from "../../../assets/image/down.png"
 
 // Type and data structure
 export interface PillarCardProps {
@@ -18,10 +19,13 @@ export interface PillarCardProps {
     prerequisite: string;
     order: number;
     isViewed: boolean;
+    onToggleClick: (chapterID: number) => void;
+    isOpen: boolean;
+    showArrow?: boolean;
 }
 
 const PillarCard : React.FC<PillarCardProps> = ({
-    title, order, isViewed, roadmapID, chapterID, chapterSlug,
+    title, order, isViewed, roadmapID, chapterID, chapterSlug, onToggleClick, isOpen, showArrow = true
 
 }) => {
     // use link to get roadmap slug
@@ -48,6 +52,14 @@ const PillarCard : React.FC<PillarCardProps> = ({
             navigate("/Login", { state: { from: location.pathname } });
         }
     };
+
+    const handleArrowClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        // Call the function passed from the parent (PillarList)
+        onToggleClick(chapterID);
+    }
+
     // percentage generator
     const generateViewPercentage = (chapterID: number) => {
         const filtered = linksData.filter(p => p.chapterID === chapterID);
@@ -71,50 +83,58 @@ const PillarCard : React.FC<PillarCardProps> = ({
     }
 
     return (
-        <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}`}>
-        <div className={`
-        flex items-center p-4 m-2 rounded-xl shadow-lg transition-all duration-300 
-        bg-pink-100/70 border-2 border-opacity-70 border-pink-300
-        cursor-pointer hover:bg-pink-200/90
-        `}>
-            {/* Order Number or Checkmark */}
-            <div className=" 
-            flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center 
-            bg-gray-300 text-gray-800 font-bold text-sm mr-4
-            ">
-                {order}
-            </div>
+        <div className='relative p-4 m-2 rounded-xl shadow-lg transition-all duration-300 
+                        bg-pink-100/70 border-2 border-opacity-70 border-pink-300
+                        cursor-pointer hover:bg-pink-200/90'>
+            <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}`}>
+                <div className={`flex items-center`}>
+                    {/* Order Number or Checkmark */}
+                    <div className=" 
+                    flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center 
+                    bg-gray-300 text-gray-800 font-bold text-sm mr-4
+                    ">
+                        {order}
+                    </div>
 
-            {/* Title */}
-            <div className="flex-grow text-lg font-medium text-gray-900 text-left">
-                {title}
-            </div>
+                    {/* Title */}
+                    <div className="flex-grow text-lg font-medium text-gray-900 text-left">
+                        {title}
+                    </div>
 
-            {/* Percentage Viewer */}
-            {generateViewPercentage(chapterID)!==100 && generateViewPercentage(chapterID)!==0 && 
-            (<div className="flex items-center gap-2">
-                <div className="w-16 h-2 bg-gray-300 rounded-full overflow-hidden">
-                    <div
-                        className="h-full bg-green-500 transition-all duration-300"
-                        style={{ width: `${generateViewPercentage(chapterID)}%` }}
-                    ></div>
+                    {/* Percentage Viewer */}
+                    {generateViewPercentage(chapterID)!==100 && generateViewPercentage(chapterID)!==0 && 
+                    (<div className="flex items-center gap-2">
+                        <div className="w-16 h-2 bg-gray-300 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-green-500 transition-all duration-300"
+                                style={{ width: `${generateViewPercentage(chapterID)}%` }}
+                            ></div>
+                        </div>
+                        <div className="text-gray-700 font-semibold text-sm min-w-[40px]">
+                            {generateViewPercentage(chapterID)}%
+                        </div>
+                    </div>)}
+
+                    {/* Viewed Indicator */}
+                    <div onClick={handleToggleViewed} className="ml-4 cursor-pointer">
+                        {isViewed ? (
+                            <svg className={"w-6 h-6 text-green-800"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>)
+                            :
+                            <div className="w-6 h-6 border-2 border-gray-400 rounded-full"></div>}
+                    </div>
                 </div>
-                <div className="text-gray-700 font-semibold text-sm min-w-[40px]">
-                    {generateViewPercentage(chapterID)}%
-                </div>
-            </div>)}
-
-            {/* Viewed Indicator */}
-            <div onClick={handleToggleViewed} className="ml-4 cursor-pointer">
-                {isViewed ? (
-                    <svg className={"w-6 h-6 text-green-800"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>)
-                    :
-                    <div className="w-6 h-6 border-2 border-gray-400 rounded-full"></div>}
-            </div>
+            </Link>
+            {showArrow && (
+            <img
+                src={down}
+                alt={title}
+                onClick={handleArrowClick}
+                className={`w-5 h-5 rounded-full bg-white border-2 border-pink-300 absolute left-1/2 -bottom-3 ${isOpen ? 'rotate-180' : ''} transform -translate-x-1/2`} 
+            />
+            )}
         </div>
-        </Link>
     );
 }
 
