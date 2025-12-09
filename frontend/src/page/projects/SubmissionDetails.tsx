@@ -121,7 +121,7 @@ const SubmissionDetails: React.FC = () => {
             {
               commitHistory && commitHistory.length > 0 ? (
                 // changed: improved table styling with better structure
-                <div className="overflow-x-auto rounded-lg border border-gray-600 mb-20 w-[95%]">
+                <div className="overflow-x-auto rounded-lg border border-gray-600 w-[95%]">
                   <table className="w-full table-auto">
                     <thead>
                       <tr className="bg-gray-700 border-b border-gray-600">

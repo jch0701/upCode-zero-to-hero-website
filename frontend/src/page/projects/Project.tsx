@@ -80,7 +80,7 @@ export const Project: React.FC = () => {
                                 <DialogTrigger asChild>
                                     <Button className={`${commonButtonStyles} h-10`}>+ Add a project</Button>
                                 </DialogTrigger>
-                                <DialogContent className={commonBackgroundClass}>
+                                <DialogContent className={`${commonBackgroundClass} flex flex-col sm:gap-0`}>
                                     <DialogHeader>
                                         <DialogTitle>Contribute a new project idea to the community</DialogTitle>
                                         <DialogDescription>

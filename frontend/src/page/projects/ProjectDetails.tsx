@@ -24,6 +24,51 @@ import { FieldGroup } from "@/component/shadcn/field";
 import { commonBackgroundClass, commonMarkDownClass } from "@/lib/styles";
 import { base64ToString } from "@/lib/utils";
 import { TagPill } from "@/component/tag";
+import emptybox_icon from "../../assets/emptybox_icon.png";
+import { EmptyUI } from "@/component/emptyUI";
+import { Separator } from "@/component/shadcn/separator";
+
+const NoSolutions: React.FC<{
+  title: string;
+  description: string;
+  submissionDialogOpen: boolean;
+  setSubmissionDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  project: any;
+  projectId: number
+}> = ({ title, description, submissionDialogOpen, setSubmissionDialogOpen, project, projectId }) => {
+  return (
+    <EmptyUI
+      iconSrc={emptybox_icon}
+      title={title}
+      description={description}
+    >
+      <Dialog open={submissionDialogOpen} onOpenChange={setSubmissionDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="rounded-2xl cursor-pointer bg-black"
+          >+ Add a Submission</Button>
+        </DialogTrigger>
+        <DialogContent className={commonBackgroundClass}>
+          <DialogHeader>
+            <DialogTitle>Contribute your solution to this project</DialogTitle>
+            <DialogDescription>
+              Share your solution with others by filling out the form below.
+            </DialogDescription>
+          </DialogHeader>
+          <FieldGroup className={commonBackgroundClass}>
+            <SubmissionForm
+              close={() => setSubmissionDialogOpen(false)}
+              openAsCreateForm={true}
+              initialData={project}
+              projectId={projectId}
+            />
+          </FieldGroup>
+        </DialogContent>
+      </Dialog>
+    </EmptyUI>
+  )
+}
 
 export const ProjectDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -40,7 +85,7 @@ export const ProjectDetails: React.FC = () => {
   // const userId = useSelector((state: any) => state.profile.userId);
   const userId = 1;
   const submissions = useSelector((state: any) => state.submissions.submissionsList
-  .filter((sub: any) => Number(sub.projectId) === projectId)
+    .filter((sub: any) => Number(sub.projectId) === projectId)
   );
   const communitySubmissions: any[] = [], mySubmissions: any[] = []; // Placeholder arrays for submissions
   submissions.map((sub: any) => {
@@ -50,29 +95,28 @@ export const ProjectDetails: React.FC = () => {
       communitySubmissions.push(sub);
     }
   });
-  const trackingData = useSelector((state: any) => 
+  const trackingData = useSelector((state: any) =>
     state.projectTracking.records.find(
       (record: any) => record.userId === userId && record.projectId === projectId
     )
   ) || { isTracking: false, isMarkedAsDone: false };
 
-  type DisplaySectionType = "Project Description" | "Community Submissions" | "My Submissions" | "What's next?";
+  type DisplaySectionType = "Project Description" | "Community Submissions" | "My Submissions";
   const [displaySection, setDisplaySection] = useState<DisplaySectionType>("Project Description");
   function handleDisplaySectionChange(value: DisplaySectionType) {
     setDisplaySection(value);
   }
-  console.log("Tracking Data:", trackingData);
 
   return (
     <div className="text-left mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-[90vh]">
       <h1 className="text-left mt-2 text-4xl font-extralight text-white">{project?.title}</h1>
       <p className="text-white text-[1.5rem] font-light">{project?.shortDescription}</p>
       <div className="text-white text-[1.2rem]">
-        <span>Created By: {creatorName} </span> | 
+        <span>Created By: {creatorName} </span> |
         <span> Last Update: {project.lastUpdated && formatDate(new Date(project.lastUpdated))}</span>
         <span className="space-x-2 ml-4">
-          <TagPill tag={{type: "Difficulty", label: project.difficulty, className: "text-black h-7 w-auto text-2xl"}}/>
-          <TagPill tag={{type: "Category", label: project.category, className: "text-black h-7 w-auto text-2xl"}}/>
+          <TagPill tag={{ type: "Difficulty", label: project.difficulty, className: "text-black h-7 w-auto text-2xl" }} />
+          <TagPill tag={{ type: "Category", label: project.category, className: "text-black h-7 w-auto text-2xl" }} />
         </span>
       </div>
 
@@ -105,15 +149,15 @@ export const ProjectDetails: React.FC = () => {
         </div>
       }
 
-      <div className="self-baseline-last space-x-3">
+      <div className="flex h-auto items-center mt-5 bg-black/50 text-sm w-fit rounded-2xl">
         {
           userId === project?.creatorId && (
             <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="rounded-2xl cursor-pointer"
-                >Edit Project</Button>
+                  className="cursor-pointer rounded-none rounded-l-2xl"
+                >! Edit Project</Button>
               </DialogTrigger>
               <DialogContent className={commonBackgroundClass}>
                 <DialogHeader>
@@ -130,6 +174,7 @@ export const ProjectDetails: React.FC = () => {
                   />
                 </FieldGroup>
               </DialogContent>
+              {/* <Separator orientation="vertical"/> */}
             </Dialog>
           )
         }
@@ -137,7 +182,7 @@ export const ProjectDetails: React.FC = () => {
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="rounded-2xl cursor-pointer"
+              className={`cursor-pointer rounded-none ${userId !== project?.creatorId && "rounded-l-2xl"}`}
             >+ Add a Submission</Button>
           </DialogTrigger>
           <DialogContent className={commonBackgroundClass}>
@@ -157,32 +202,37 @@ export const ProjectDetails: React.FC = () => {
             </FieldGroup>
           </DialogContent>
         </Dialog>
-
+        {/* <Separator orientation="vertical" /> */}
         <Toggle
           pressed={trackingData?.isTracking}
           onPressedChange={() => {
-            dispatch({type: 'projectTracking/setTrackingStatus', payload: {
-              userId: userId,
-              projectId: projectId,
-              isTracking: !trackingData?.isTracking,
-              isMarkedAsDone: trackingData?.isMarkedAsDone,
-            }});
+            dispatch({
+              type: 'projectTracking/setTrackingStatus', payload: {
+                userId: userId,
+                projectId: projectId,
+                isTracking: !trackingData?.isTracking,
+                isMarkedAsDone: trackingData?.isMarkedAsDone,
+              }
+            });
           }}
-          className={`cursor-pointer bg-black text-white px-4 rounded-2xl`}
+          className={`cursor-pointer bg-black text-white px-4 rounded-none`}
         >
           Track this project
         </Toggle>
+        {/* <Separator orientation="vertical"/> */}
         <Toggle
           pressed={trackingData?.isMarkedAsDone}
           onPressedChange={() => {
-            dispatch({type: 'projectTracking/setTrackingStatus', payload: {
-              userId: userId,
-              projectId: projectId,
-              isTracking: trackingData?.isTracking,
-              isMarkedAsDone: !trackingData?.isMarkedAsDone,
-            }});
+            dispatch({
+              type: 'projectTracking/setTrackingStatus', payload: {
+                userId: userId,
+                projectId: projectId,
+                isTracking: trackingData?.isTracking,
+                isMarkedAsDone: !trackingData?.isMarkedAsDone,
+              }
+            });
           }}
-          className={`cursor-pointer bg-black text-white px-4 rounded-2xl`}
+          className={`cursor-pointer bg-black text-white px-4 rounded-r-2xl rounded-l-none`}
         >
           Mark as Done
         </Toggle>
@@ -190,11 +240,11 @@ export const ProjectDetails: React.FC = () => {
 
       <div>
         <RadioGroup
-          options={["Project Description", "Community Submissions", "My Submissions", "What's next?"]}
+          options={["Project Description", "Community Submissions", "My Submissions"]}
           selected={displaySection}
           onClick={handleDisplaySectionChange}
           isHorizontal={true}
-          className="w-[75%] mt-6"
+          className="w-[55%] mt-6"
           // rounded upper borders
           buttonClassName="rounded-t-lg"
         />
@@ -214,7 +264,14 @@ export const ProjectDetails: React.FC = () => {
           <div className="grid grid-cols-1 gap-3.5">
             {
               communitySubmissions.length === 0 ? (
-                <p>No community submissions available.</p>
+                <NoSolutions
+                  title="No Community Submissions Yet"
+                  description="Be the first to contribute your solution!"
+                  submissionDialogOpen={submissionDialogOpen}
+                  setSubmissionDialogOpen={setSubmissionDialogOpen}
+                  project={project}
+                  projectId={projectId}
+                />
               ) : (
                 communitySubmissions.map((submission: any) => (
                   <SubmissionCard
@@ -237,7 +294,14 @@ export const ProjectDetails: React.FC = () => {
           <div>
             {
               mySubmissions.length === 0 ? (
-                <p>You have no submissions yet.</p>
+                <NoSolutions
+                  title="Looks like you have not contributed yet!"
+                  description="Share your solution with the community by submitting it below."
+                  submissionDialogOpen={submissionDialogOpen}
+                  setSubmissionDialogOpen={setSubmissionDialogOpen}
+                  project={project}
+                  projectId={projectId}
+                />
               ) : (
                 mySubmissions.map((submission: any) => (
                   <SubmissionCard
@@ -254,11 +318,6 @@ export const ProjectDetails: React.FC = () => {
                 )
               )
             }
-          </div>
-        )}
-        {displaySection === "What's next?" && (
-          <div>
-            <h2>What's next?</h2>
           </div>
         )}
       </div>

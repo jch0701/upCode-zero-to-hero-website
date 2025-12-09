@@ -52,7 +52,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ openAsCreateForm, init
       onClose={close}
     >
       <FieldGroup>
-        <FieldSet className="gap-3">
+        <FieldSet className="gap-3 sm:gap-1">
           <Input 
             readOnly
             hidden
