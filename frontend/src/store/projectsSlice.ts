@@ -9,9 +9,9 @@ export type ProjectType = {
   difficulty: Difficulty;
   category: Category;
   creatorId: number;
-  lastUpdated: Date;
+  lastUpdated: string;
   startingRepoLink?: string;
-  details: string;
+  detailsFile: Uint8Array | string;
   trackCount: number;
   submissionCount: number;
 }
@@ -42,9 +42,9 @@ const dummyState: ProjectSlice = {
       category: "Machine Learning",
       creatorId: 1,
       difficulty: "Intermediate",
-      lastUpdated: new Date("2024-01-15"),
+      lastUpdated: new Date("2024-01-15").toISOString(),
       startingRepoLink: "https://github.com/alice/ai-chatbot",
-      details: "This project involves building a chatbot that leverages natural language processing and machine learning to provide real-time customer support.",
+      detailsFile: "This project involves building a chatbot that leverages natural language processing and machine learning to provide real-time customer support.",
       trackCount: 5,
       submissionCount: 12
     },
@@ -55,9 +55,9 @@ const dummyState: ProjectSlice = {
       category: "Web Development",
       creatorId: 2,
       difficulty: "Advanced",
-      lastUpdated: new Date("2024-02-10"),
+      lastUpdated: new Date("2024-02-10").toISOString(),
       startingRepoLink: "https://github.com/bob/ecommerce-website",
-      details: "This project involves developing a comprehensive e-commerce platform with features like product listings, shopping cart, and payment integration.",
+      detailsFile: "This project involves developing a comprehensive e-commerce platform with features like product listings, shopping cart, and payment integration.",
       trackCount: 8,
       submissionCount: 20
     },
@@ -68,10 +68,10 @@ const dummyState: ProjectSlice = {
       category: "Mobile Apps",
       creatorId: 3,
       difficulty: "Beginner",
-      lastUpdated: new Date("2024-03-05"),
+      lastUpdated: new Date("2024-03-05").toISOString(),
       startingRepoLink: "https://github.com/charlie/fitness-tracker-app",
-      // details: "This project involves creating a mobile app that helps users track their fitness activities and monitor health metrics such as heart rate, steps, and calories burned.",
-      details: "",
+      // detailsFile: "This project involves creating a mobile app that helps users track their fitness activities and monitor health metrics such as heart rate, steps, and calories burned.",
+      detailsFile: "",
       trackCount: 20,
       submissionCount: 30
     }
@@ -82,13 +82,13 @@ const projectsSlice = createSlice({
   name: "projects",
   initialState: dummyState,
   reducers: {
-    setProject: (state, action: PayloadAction<InitialProjectType>) => {
+    addProject: (state, action: PayloadAction<InitialProjectType>) => {
       const newProject: ProjectType = {
         ...action.payload,
         projectId: generateProjectId(),
         trackCount: 0,
         submissionCount: 0,
-        lastUpdated: new Date(),
+        lastUpdated: new Date().toISOString(),
       };
       state.projectsList.push(newProject);
       },
@@ -108,5 +108,5 @@ const projectsSlice = createSlice({
   }
 });
 
-export const { setProject, editProject, deleteProject } = projectsSlice.actions;
+export const { addProject, editProject, deleteProject } = projectsSlice.actions;
 export default projectsSlice.reducer;

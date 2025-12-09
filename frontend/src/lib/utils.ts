@@ -37,4 +37,19 @@ export function generateSlug(text: string): string {
     .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
 }
 
+export function uint8ToBase64(uint8: Uint8Array) {
+  return btoa(String.fromCharCode(...uint8));
+}
 
+export async function convertFileToUInt8(file: File): Promise<Uint8Array> {
+  const arrayBuffer = await file.arrayBuffer();
+  return new Uint8Array(arrayBuffer);
+}
+
+export function base64ToString(base64: string): string {
+  try {
+    return atob(base64);
+  } catch (error) {
+    return base64;
+  }
+}

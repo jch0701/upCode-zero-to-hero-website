@@ -5,12 +5,6 @@ import {
   FieldGroup,
   FieldLabel
 } from "@/component/shadcn/field";
-import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/component/shadcn/dialog";
 import { useRef } from "react";
 
 import { Input } from "@/component/shadcn/input";
@@ -18,146 +12,149 @@ import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from "@
 import { Textarea } from "@/component/shadcn/textarea";
 import { Button } from "@/component/shadcn/button";
 import { categoryList } from "@/lib/types";
+import { Form } from "@/component/form";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
 
 type ProjectFormProps = {
-  onSubmit: (data: any) => void;
-  onClose?: () => void;
   openAsCreateForm: boolean;
   initialData?: any;
+  close: () => void;
 }
 
-export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onClose, openAsCreateForm, initialData }) => {
-  const commonBackgroundClass = "bg-gray-800 text-white border-0";
+export const ProjectForm: React.FC<ProjectFormProps> = ({ openAsCreateForm, initialData, close }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [title, setTitle] = useState(initialData?.title || "");
-  const [difficulty, setDifficulty] = useState(initialData?.difficulty || "Beginner");
-  const [category, setCategory] = useState(initialData?.category || categoryList[0]);
-  const [thumbnailDesc, setThumbnailDesc] = useState(initialData?.shortDescription || "");
-  const [requirementFile, setRequirementFile] = useState<File | null>(null);
-  const [startingRepoLink, setStartingRepoLink] = useState(initialData?.startingRepoLink || "");
+  const [fileInput, setFileInput] = useState<File | null>(initialData?.requirementFile || null);
+  const dispatch = useDispatch();
+  const creatorId = useSelector((state: any) => state.profile.userId);
+  
 
-  function handleSubmit() {
-    const formData = {
-      title,
-      difficulty,
-      category,
-      shortDescription: thumbnailDesc,
-      requirementFile,
-      startingRepoLink,
+  async function handleSubmit(fd: FormData) {
+    const payload: any = {
+      ...Object.fromEntries(fd.entries()),
+      creatorId
     };
-    onSubmit(formData);
-    onClose && onClose();
-  }
-
-  function handleClose() {
-    onClose && onClose();
+    const file = fd.get("detailsFile");
+    if (file instanceof File && file.size > 0) {
+      const uint8Array = await convertFileToUInt8(file);
+      payload.detailsFile = uint8ToBase64(uint8Array); // serializable
+    } else {
+      delete payload.detailsFile;
+    }
+    dispatch({ type: openAsCreateForm ? "projects/addProject" : "projects/editProject", payload });
+    close();
   }
 
   return (
-    <DialogContent className={commonBackgroundClass}>
-      <DialogHeader>
-        <DialogTitle>{openAsCreateForm ? "Create New Project" : "Edit Project"}</DialogTitle>
-        <DialogDescription>
-          Please {openAsCreateForm ? "fill in" : "update"} the project details as below
-        </DialogDescription>
-      </DialogHeader>
-      <FieldGroup className={commonBackgroundClass}>
-        <form>
-          <FieldGroup>
-            <FieldSet className="gap-3">
-              <FieldLabel>Project Title</FieldLabel>
+    <Form
+      onSubmit={handleSubmit}
+      onClose={close}
+    >
+      <FieldGroup>
+        <FieldSet className="gap-3 sm:gap-1">
+          <Input 
+            readOnly
+            hidden
+            name="creatorId"
+            value={creatorId}
+          />
+          <FieldLabel>Project Title</FieldLabel>
+          <FieldContent>
+            <Input
+              placeholder="Enter project title"
+              name="title"
+              defaultValue={initialData?.title || ""}
+            />
+          </FieldContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Field>
+              <FieldLabel>Difficulty</FieldLabel>
               <FieldContent>
-                <Input
-                  value={title}
-                  placeholder="Enter project title"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </FieldContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Field>
-                  <FieldLabel>Difficulty</FieldLabel>
-                  <FieldContent>
-                    <Select value={difficulty} onValueChange={(value) => setDifficulty(value)}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select difficulty" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {["Beginner", "Intermediate", "Advanced"].map((level) => (
-                          <SelectItem key={level} value={level}>
-                            {level}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FieldContent>
-                </Field>
-                <Field>
-                  <FieldLabel>Category</FieldLabel>
-                  <FieldContent>
-                    <Select value={category} onValueChange={(value) => setCategory(value)}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categoryList.map((cat) => (
-                          <SelectItem key={cat} value={cat}>
-                            {cat}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FieldContent>
-                </Field>
-              </div>
-              <FieldLabel>Thumbnail Description</FieldLabel>
-              <FieldContent>
-                <Textarea
-                  value={thumbnailDesc}
-                  placeholder="Enter thumbnail description"
-                  onChange={(e) => setThumbnailDesc(e.target.value)}
+                <Select
+                  name="difficulty"
+                  defaultValue={initialData?.difficulty || ""}
                 >
-                  {thumbnailDesc}
-                </Textarea>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue
+                      placeholder="Select difficulty"
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {["Beginner", "Intermediate", "Advanced"].map((level) => (
+                      <SelectItem key={level}
+                        value={level}
+                      >
+                        {level}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FieldContent>
-              <FieldLabel>Requirement File</FieldLabel>
+            </Field>
+            <Field>
+              <FieldLabel>Category</FieldLabel>
               <FieldContent>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="text-black w-fit cursor-pointer"
-                  onClick={() => fileInputRef.current?.click()}
+                <Select
+                  name="category"
+                  defaultValue={initialData?.category || categoryList[0]}
                 >
-                  {requirementFile ? requirementFile.name : "Upload File"}
-                </Button>
-                <Input
-                  hidden
-                  ref={fileInputRef}
-                  type="file"
-                  onChange={(e) => setRequirementFile(e.target.files?.[0] || null)}
-                />
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categoryList.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FieldContent>
-              <FieldLabel>Starting Repository Link</FieldLabel>
-              <FieldContent>
-                <Input
-                  placeholder="Optionally add a starting repository for software maintenance projects"
-                  type="url"
-                  value={startingRepoLink}
-                  onChange={(e) => setStartingRepoLink(e.target.value)}
-                />
-              </FieldContent>
-            </FieldSet>
-          </FieldGroup>
-          <FieldGroup className="mt-4 flex flex-row justify-end gap-3">
-            <Button variant="outline" onClick={handleClose} className="text-black w-fit cursor-pointer">
-              Cancel
+            </Field>
+          </div>
+          <FieldLabel>Thumbnail Description</FieldLabel>
+          <FieldContent>
+            <Textarea
+              name="shortDescription"
+              placeholder="Enter thumbnail description"
+              defaultValue={initialData?.shortDescription || ""}
+            />
+          </FieldContent>
+          <FieldLabel>Requirement File</FieldLabel>
+          <FieldContent>
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-black w-fit cursor-pointer"
+              onClick={() => fileInputRef.current?.click()}
+              defaultValue={fileInput ? fileInput.name : ""}
+            >
+              {fileInput ? fileInput.name : "Upload File"}
             </Button>
-            <Button onClick={handleSubmit} className="w-fit bg-green-400 hover:bg-green-500 cursor-pointer">
-              {openAsCreateForm ? "Create" : "Update"}
-            </Button>
-          </FieldGroup>
-        </form>
+            <Input
+              hidden
+              name="detailsFile"
+              type="file"
+              ref={fileInputRef}
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setFileInput(e.target.files[0]);
+                }
+              }}
+            />
+          </FieldContent>
+          <FieldLabel>Starting Repository Link</FieldLabel>
+          <FieldContent>
+            <Input
+              name="startingRepoLink"
+              placeholder="Optionally add a starting repository for software maintenance projects"
+              type="url"
+              defaultValue={initialData?.startingRepoLink || ""}
+            />
+          </FieldContent>
+        </FieldSet>
       </FieldGroup>
-    </DialogContent>
+    </Form>
   )
 }

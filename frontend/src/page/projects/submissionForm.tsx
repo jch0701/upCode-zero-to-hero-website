@@ -4,105 +4,108 @@ import {
   FieldGroup,
   FieldLabel
 } from "@/component/shadcn/field";
-import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/component/shadcn/dialog";
 import { useRef } from "react";
 
 import { Input } from "@/component/shadcn/input";
 import { Button } from "@/component/shadcn/button";
-
+import { Form } from "@/component/form";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
 
 type SubmissionFormProps = {
-  onSubmit: (data: any) => void;
-  onClose?: () => void;
-  openAsCreateForm: boolean;
+  close: () => void;
+  openAsCreateForm?: boolean;
   initialData?: any;
+  projectId: number;
 }
-// onSubmit={ (payload) => {dispatch({ type: "projects/addProject", payload});} }
-export const SubmissionForm: React.FC<SubmissionFormProps> = ({ onSubmit, onClose, openAsCreateForm, initialData }) => {
-  const commonBackgroundClass = "bg-gray-800 text-white border-0";
+
+export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm, close, initialData, projectId }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [title, setTitle] = useState(initialData?.title || "");
-  const [repoLink, setRepoLink] = useState(initialData?.repoLink || "");
-  const [requirementFile, setRequirementFile] = useState<File | null>(null);
+  const [fileInput, setFileInput] = useState<File | null>(null);
+  const dispatch = useDispatch();
+  // Currently creatorId is bugged
+  // const creatorId = useSelector((state: any) => state.profile.userId); 
+  const creatorId = 1;
 
-  function handleSubmit() {
-    const formData = {
-      title,
-      requirementFile,
-      repoLink,
+  async function handleSubmit(fd: FormData) {
+    const payload: any = {
+      ...Object.fromEntries(fd.entries()),
+      creatorId
     };
-    onSubmit(formData);
-    onClose && onClose();
-  }
-
-  function handleClose() {
-    onClose && onClose();
+    const file = fd.get("rationaleFile");
+    if (file instanceof File && file.size > 0) {
+      const uint8Array = await convertFileToUInt8(file);
+      payload.rationaleFile = uint8ToBase64(uint8Array); // serializable
+    } else {
+      delete payload.rationaleFile;
+    }
+    console.log("Submitting payload:", payload);
+    dispatch({ type: openAsCreateForm ? "submissions/addSubmission" : "submissions/editSubmission", payload });
+    close();
   }
 
   return (
-    <DialogContent className={commonBackgroundClass}>
-      <DialogHeader>
-        <DialogTitle>{openAsCreateForm ? "Create New Project" : "Edit Project"}</DialogTitle>
-        <DialogDescription>
-          Please {openAsCreateForm ? "fill in" : "update"} the project details as below
-        </DialogDescription>
-      </DialogHeader>
-      <FieldGroup className={commonBackgroundClass}>
-        <form>
-          <FieldGroup>
-            <FieldSet className="gap-3">
-              <FieldLabel>Project Title</FieldLabel>
-              <FieldContent>
-                <Input
-                  value={title}
-                  placeholder="Enter project title"
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </FieldContent>
-              <FieldLabel>Rationale File</FieldLabel>
-              <FieldContent>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  className="text-black w-fit cursor-pointer"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  {requirementFile ? requirementFile.name : "Upload File"}
-                </Button>
-                <Input
-                  hidden
-                  ref={fileInputRef}
-                  type="file"
-                  onChange={(e) => setRequirementFile(e.target.files?.[0] || null)}
-                />
-              </FieldContent>
-              <FieldLabel>Repository Link</FieldLabel>
-              <FieldContent>
-                <Input
-                  placeholder="Add a repository link for the submission"
-                  type="url"
-                  value={repoLink}
-                  onChange={(e) => setRepoLink(e.target.value)}
-                />
-              </FieldContent>
-            </FieldSet>
-          </FieldGroup>
-          <FieldGroup className="mt-4 flex flex-row justify-end gap-3">
-            <Button variant="outline" onClick={handleClose} className="text-black w-fit cursor-pointer">
-              Cancel
+    <Form
+      onSubmit={handleSubmit}
+      onClose={close}
+    >
+      <FieldGroup>
+        <FieldSet className="gap-3">
+          <Input
+            readOnly
+            hidden
+            name="creatorId"
+            value={creatorId}
+          />
+          <Input
+            readOnly
+            hidden
+            name="projectId"
+            value={projectId}
+          />
+          <FieldLabel>Submission Title</FieldLabel>
+          <FieldContent>
+            <Input
+              name="title"
+              defaultValue={initialData?.title || ""}
+              placeholder="Enter submission title"
+            />
+          </FieldContent>
+          <FieldLabel>Rationale File</FieldLabel>
+          <FieldContent>
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-black w-fit cursor-pointer"
+              onClick={() => fileInputRef.current?.click()}
+              defaultValue={fileInput ? fileInput.name : ""}
+            >
+              {fileInput ? fileInput.name : "Upload File"}
             </Button>
-            <Button onClick={handleSubmit} className="w-fit bg-green-400 hover:bg-green-500 cursor-pointer">
-              {openAsCreateForm ? "Create" : "Update"}
-            </Button>
-          </FieldGroup>
-        </form>
+            <Input
+              hidden
+              name="rationaleFile"
+              type="file"
+              ref={fileInputRef}
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setFileInput(e.target.files[0]);
+                }
+              }}
+            />
+          </FieldContent>
+          <FieldLabel>Repository Link</FieldLabel>
+          <FieldContent>
+            <Input
+              name="repoLink"
+              placeholder="Submit your GitHub repository link"
+              type="url"
+              defaultValue={initialData?.repoLink || ""}
+            />
+          </FieldContent>
+        </FieldSet>
       </FieldGroup>
-    </DialogContent>
+    </Form>
   )
 }

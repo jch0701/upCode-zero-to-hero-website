@@ -10,19 +10,26 @@ import { useSelector } from "react-redux";
 import { categoryList } from "@/lib/types.ts";
 import { commonButtonStyles, commonIconStyles } from "../../lib/styles.ts";
 import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
 import ProjectCard from "../../component/projects/projectCard.tsx";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { ProjectForm } from "./projectForm.tsx";
+import {
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/component/shadcn/dialog";
+import { FieldGroup } from "@/component/shadcn/field";
+import { commonBackgroundClass } from "@/lib/styles";
 
 
 export const Project: React.FC = () => {
     const selections = ["All", ...categoryList];
     const [query, setQuery] = useState("");
     const [category, setCategory] = useState(selections[0]);
+    const [dialogOpen, setDialogOpen] = useState(false);
     const projects = useSelector((state: any) => state.projects.projectsList);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     function handleCategoryChange(value: string) {
         setCategory(value);
@@ -69,15 +76,23 @@ export const Project: React.FC = () => {
                                 <img src={folder_icon} alt="" className={commonIconStyles} />
                                 My Projects and Submissions
                             </Button>
-                            <Dialog>
+                            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                                 <DialogTrigger asChild>
                                     <Button className={`${commonButtonStyles} h-10`}>+ Add a project</Button>
                                 </DialogTrigger>
-                                <ProjectForm
-                                    onSubmit={ (payload) => {dispatch({ type: "projects/addProject", payload});} }
-                                    openAsCreateForm={true}
-                                />
+                                <DialogContent className={`${commonBackgroundClass} flex flex-col sm:gap-0`}>
+                                    <DialogHeader>
+                                        <DialogTitle>Contribute a new project idea to the community</DialogTitle>
+                                        <DialogDescription>
+                                            Share your innovative project ideas with others by filling out the form below.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <FieldGroup className={commonBackgroundClass}>
+                                        <ProjectForm openAsCreateForm={true} close={() => setDialogOpen(false)} />
+                                    </FieldGroup>
+                                </DialogContent>
                             </Dialog>
+
                         </div>
                     </div>
                 </div>

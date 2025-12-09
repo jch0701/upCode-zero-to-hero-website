@@ -3,13 +3,14 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 export type SubmissionType = {
   submissionId: number;
-  projectId: string;
-  creatorId: string;
-  postedOn: Date;
-  lastUpdated: Date;
+  projectId: number;
+  creatorId: number;
+  postedOn: string;
+  lastUpdated: string;
   title: string;
-  tag: string;
   repoLink: string;
+  // tag should be dynamically generated preferably by calling from github api
+  rationaleFile?: Uint8Array | string;
 }
 
 type InitialSubmissionsOmits = "submissionId" | "lastUpdated" | "postedOn";
@@ -28,22 +29,20 @@ const dummyState: SubmissionsSlice = {
   submissionsList: [
     {
       submissionId: 1,
-      projectId: "1",
-      creatorId: "1",
-      postedOn: new Date("2024-03-01"),
-      lastUpdated: new Date("2024-03-05"),
+      projectId: 1,
+      creatorId: 1,
+      postedOn: new Date("2024-03-01").toISOString(),
+      lastUpdated: new Date("2024-03-05").toISOString(),
       title: "AI Chatbot v1",
-      tag: "Machine Learning",
       repoLink: "https://github.com/xinsheng04/memory-card-game.git",
     },
     {
       submissionId: 2,
-      projectId: "2",
-      creatorId: "2",
-      postedOn: new Date("2024-03-10"),
-      lastUpdated: new Date("2024-03-12"),
+      projectId: 2,
+      creatorId: 2,
+      postedOn: new Date("2024-03-10").toISOString(),
+      lastUpdated: new Date("2024-03-12").toISOString(),
       title: "E-commerce Platform v1",
-      tag: "Web Development",
       repoLink: "https://github.com/kyle-bdvl/Notes-App.git",
     },
   ],
@@ -61,9 +60,11 @@ const submissionsSlice = createSlice({
     addSubmission: (state, action: PayloadAction<InitialSubmissionType>) => {
       const newSubmission: SubmissionType = {
         ...action.payload,
+        projectId: Number(action.payload.projectId),  // Ensure it's a number
+        creatorId: Number(action.payload.creatorId),  // Ensure it's a number
         submissionId: generateSubmissionId(),
-        postedOn: new Date(),
-        lastUpdated: new Date(),
+        postedOn: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
       };
       state.submissionsList.push(newSubmission);
     },
@@ -74,7 +75,7 @@ const submissionsSlice = createSlice({
       if (index !== -1) {
         state.submissionsList[index] = {
           ...action.payload,
-          lastUpdated: new Date(),
+          lastUpdated: new Date().toISOString(),
         };
       }
     },
@@ -86,5 +87,5 @@ const submissionsSlice = createSlice({
   },
 });
 
-export const { addSubmission, deleteSubmission } = submissionsSlice.actions;
+export const { addSubmission, editSubmission, deleteSubmission } = submissionsSlice.actions;
 export default submissionsSlice.reducer;

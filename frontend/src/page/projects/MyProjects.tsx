@@ -16,7 +16,8 @@ export const MyProjects: React.FC = () => {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(selections[0]);
   const [submissionType, setSubmissionType] = useState<"Projects" | "Submissions">("Projects");
-  const userId = useSelector((state: any) => state.profile.userId);
+  // const userId = useSelector((state: any) => state.profile.userId);
+  const userId = 1; // Temporary fix until auth is done
   const projects = useSelector((state: any) => state.projects.projectsList)
     .filter((project: ProjectType) => project.creatorId === userId);
   const submissions = useSelector((state: any) => state.submissions.submissionsList)

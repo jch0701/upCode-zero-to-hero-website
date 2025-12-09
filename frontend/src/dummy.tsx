@@ -3,8 +3,8 @@ import { defaultImageSrc, javaImage, pythonImage, javaScriptImage, cImage, machi
          devopsImage, frontendImage, backendImage, reactImage, apiImage, angularImage,
          typeScriptImage, htmlcssImage, sqlImage
  } from "./component/roadmaps/image";
-import type { PillarCardProps } from "./component/roadmaps/Selector/pillarCard";
 import type { LinkCardProps } from "./component/roadmaps/Selector/linkCard";
+import type { PillarType } from "./store/pillarsSlice";
 
 
 export const roadmapData: RoadmapItemCardProps[] = [
@@ -221,7 +221,7 @@ export const roadmapData: RoadmapItemCardProps[] = [
 ];
 
 
-export const pillarsData: PillarCardProps[] = [
+export const pillarsData: PillarType[] = [
     // Java Fundamentals (100001)
   { chapterID: 100001, chapterSlug: "java-introduction", roadmapID: 100001, title: "Introduction to Java", description: "Learn Java basics and set up your development environment.", modifiedDate: "2025-10-01", difficulty: "Beginner", category: "Java", prerequisite: "None", order: 1, isViewed: false },
   { chapterID: 100002, chapterSlug: "java-variables", roadmapID: 100001, title: "Variables and Data Types", description: "Understand variables, primitive types, and type conversions.", modifiedDate: "2025-10-02", difficulty: "Beginner", category: "Java", prerequisite: "Introduction to Java", order: 2, isViewed: false },

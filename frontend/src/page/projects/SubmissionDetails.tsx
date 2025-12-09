@@ -8,20 +8,21 @@ import github_icon from "../../assets/projects/github_icon.png";
 import ReactMarkdown from "react-markdown";
 import { Button } from "../../component/shadcn/button";
 import { SubmissionForm } from "./submissionForm";
-import { useDispatch } from "react-redux";
 import { commonIconStyles } from "@/lib/styles";
 import { ellipsifyText } from "@/lib/utils";
-import { Dialog, DialogTrigger } from "@/component/shadcn/dialog";
+import { FieldGroup } from "@/component/shadcn/field";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/component/shadcn/dialog";
+import { commonBackgroundClass, commonMarkDownClass } from "@/lib/styles";
+import { base64ToString } from "@/lib/utils";
 
 const SubmissionDetails: React.FC = () => {
   const { submissionId } = useParams<{ submissionId: string }>();
-  const dispatch = useDispatch();
-  
-  const submission = useSelector((state: any) => state.submissions.submissionsList.find((sub: any) => sub.submissionId === submissionId));
+
+  const submission = useSelector((state: any) => state.submissions.submissionsList.find((sub: any) => sub.submissionId === Number(submissionId)));
   const {
-    data: commitHistory, 
-    isLoading: commitsIsLoading, 
-    isError: getCommitsIsError, 
+    data: commitHistory,
+    isLoading: commitsIsLoading,
+    isError: getCommitsIsError,
     error: getCommitsError
   } = useGetCommitHistory(submission?.repoLink || "");
   const creatorId = submission.creatorId;
@@ -34,6 +35,7 @@ const SubmissionDetails: React.FC = () => {
 
   type displaySectionType = "Commits History" | "Rationale File";
   const [displaySection, setDisplaySection] = useState<displaySectionType>("Commits History");
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   function handleDisplaySectionChange(value: displaySectionType) {
     setDisplaySection(value);
   }
@@ -46,8 +48,8 @@ const SubmissionDetails: React.FC = () => {
         Project: {projectTitle} | Created By: {submission?.creator}
       </p>
       <p className="text-white text-[1rem]">
-        Submitted On: {submission?.postedOn && formatDate(new Date(submission.postedOn))}
-        | Last Update: {submission.lastUpdated && formatDate(new Date(submission.lastUpdated))}
+        <span>Submitted On: {submission?.postedOn && formatDate(new Date(submission.postedOn))} </span>
+        | <span>Last Update: {submission.lastUpdated && formatDate(new Date(submission.lastUpdated))}</span>
       </p>
 
       <div className="rounded-[.8rem] grid grid-rows-2 mt-4 overflow-hidden w-[90%]">
@@ -72,18 +74,29 @@ const SubmissionDetails: React.FC = () => {
       </div>
       {
         creatorName === userName &&
-        <Dialog>
+        <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
           <DialogTrigger asChild>
             <Button
               variant="outline"
               className="rounded-2xl cursor-pointer justify-end"
             >Edit Submission</Button>
           </DialogTrigger>
-          <SubmissionForm
-            onSubmit={(payload) => { dispatch({ type: "projects/editSubmission", payload }); }}
-            openAsCreateForm={false}
-            initialData={submission}
-          />
+          <DialogContent className={commonBackgroundClass}>
+            <DialogHeader>
+              <DialogTitle>Contribute your solution to this project</DialogTitle>
+              <DialogDescription>
+                Share your solution with others by filling out the form below.
+              </DialogDescription>
+            </DialogHeader>
+            <FieldGroup className={commonBackgroundClass}>
+              <SubmissionForm
+                close={() => setEditDialogOpen(false)}
+                projectId={projectId || ""}
+                openAsCreateForm={false}
+                initialData={submission}
+              />
+            </FieldGroup>
+          </DialogContent>
         </Dialog>
       }
       <div className="flex justify-start items-center gap-5">
@@ -108,7 +121,7 @@ const SubmissionDetails: React.FC = () => {
             {
               commitHistory && commitHistory.length > 0 ? (
                 // changed: improved table styling with better structure
-                <div className="overflow-x-auto rounded-lg border border-gray-600 mb-20 w-[95%]">
+                <div className="overflow-x-auto rounded-lg border border-gray-600 w-[95%]">
                   <table className="w-full table-auto">
                     <thead>
                       <tr className="bg-gray-700 border-b border-gray-600">
@@ -135,10 +148,10 @@ const SubmissionDetails: React.FC = () => {
           </div>
         )}
         {displaySection === "Rationale File" && (
-          <div className="prose prose-invert max-w-none mt-4 text-white text-left">
-            <ReactMarkdown>
-              Rationale file content appears here in markdown format.
-            </ReactMarkdown>
+          <div className={`prose prose-invert max-w-none mt-4 text-white text-left ${commonMarkDownClass}`}>
+              <ReactMarkdown>
+                {submission?.rationaleFile ? base64ToString(submission.rationaleFile) : "No project details available."}
+              </ReactMarkdown>
           </div>
         )}
       </div>
