@@ -74,59 +74,7 @@ const dummyState: ProjectSlice = {
       detailsFile: "",
       trackCount: 20,
       submissionCount: 30
-    },
-    {
-      projectId: 4,
-      title: "AI-Powered Chatbot",
-      shortDescription: "A chatbot that uses AI to provide customer support.",
-      category: "Machine Learning",
-      creatorId: 1,
-      difficulty: "Intermediate",
-      lastUpdated: new Date("2024-01-15").toISOString(),
-      startingRepoLink: "https://github.com/alice/ai-chatbot",
-      detailsFile: "This project involves building a chatbot that leverages natural language processing and machine learning to provide real-time customer support.",
-      trackCount: 5,
-      submissionCount: 12
-    },
-    {
-      projectId: 5,
-      title: "AI-Powered Chatbot",
-      shortDescription: "A chatbot that uses AI to provide customer support.",
-      category: "Machine Learning",
-      creatorId: 1,
-      difficulty: "Intermediate",
-      lastUpdated: new Date("2024-01-15").toISOString(),
-      startingRepoLink: "https://github.com/alice/ai-chatbot",
-      detailsFile: "This project involves building a chatbot that leverages natural language processing and machine learning to provide real-time customer support.",
-      trackCount: 5,
-      submissionCount: 12
-    },
-    {
-      projectId: 6,
-      title: "AI-Powered Chatbot",
-      shortDescription: "A chatbot that uses AI to provide customer support.",
-      category: "Machine Learning",
-      creatorId: 1,
-      difficulty: "Intermediate",
-      lastUpdated: new Date("2024-01-15").toISOString(),
-      startingRepoLink: "https://github.com/alice/ai-chatbot",
-      detailsFile: "This project involves building a chatbot that leverages natural language processing and machine learning to provide real-time customer support.",
-      trackCount: 5,
-      submissionCount: 12
-    },
-    {
-      projectId: 7,
-      title: "AI-Powered Chatbot",
-      shortDescription: "A chatbot that uses AI to provide customer support.",
-      category: "Machine Learning",
-      creatorId: 1,
-      difficulty: "Intermediate",
-      lastUpdated: new Date("2024-01-15").toISOString(),
-      startingRepoLink: "https://github.com/alice/ai-chatbot",
-      detailsFile: "This project involves building a chatbot that leverages natural language processing and machine learning to provide real-time customer support.",
-      trackCount: 5,
-      submissionCount: 12
-    },
+    }
   ]
 };
 
