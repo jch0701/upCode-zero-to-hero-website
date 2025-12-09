@@ -26,13 +26,13 @@ const PillarProjects: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
 
     if (chapterProjects.length !== 0) {
         return (
-        <div>
-            <h3 className="pl-5 text-m font-semibold text-white text-left">
+        <div className= "pl-5 pr-5">
+            <h3 className="text-m font-semibold text-white text-left">
                 Suggested project
             </h3>
-            <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4 p-4">
+            <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
                 {chapterProjects.map((project: ProjectType) => (
-                    <div className="flex-shrink-0 w-70">
+                    <div className="flex-shrink-0 w-72">
                         <ProjectCard 
                             key={project.projectId} 
                             project={project}
