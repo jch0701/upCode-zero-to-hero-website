@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { formatDate } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import github_icon from "../../assets/projects/github_icon.png";
@@ -23,9 +23,11 @@ import {
 import { FieldGroup } from "@/component/shadcn/field";
 import { commonBackgroundClass, commonMarkDownClass } from "@/lib/styles";
 import { base64ToString } from "@/lib/utils";
+import { TagPill } from "@/component/tag";
 
 export const ProjectDetails: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [submissionDialogOpen, setSubmissionDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   let { projectId: projectIdParam } = useParams<{ projectId: string }>();
@@ -48,20 +50,31 @@ export const ProjectDetails: React.FC = () => {
       communitySubmissions.push(sub);
     }
   });
+  const trackingData = useSelector((state: any) => 
+    state.projectTracking.records.find(
+      (record: any) => record.userId === userId && record.projectId === projectId
+    )
+  ) || { isTracking: false, isMarkedAsDone: false };
 
   type DisplaySectionType = "Project Description" | "Community Submissions" | "My Submissions" | "What's next?";
   const [displaySection, setDisplaySection] = useState<DisplaySectionType>("Project Description");
   function handleDisplaySectionChange(value: DisplaySectionType) {
     setDisplaySection(value);
   }
+  console.log("Tracking Data:", trackingData);
 
   return (
     <div className="text-left mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-[90vh]">
       <h1 className="text-left mt-2 text-4xl font-extralight text-white">{project?.title}</h1>
       <p className="text-white text-[1.5rem] font-light">{project?.shortDescription}</p>
-      <p className="text-white text-[1.2rem]">
-        <span>Created By: {creatorName}</span> | Last Update: {project.lastUpdated && formatDate(new Date(project.lastUpdated))}
-      </p>
+      <div className="text-white text-[1.2rem]">
+        <span>Created By: {creatorName} </span> | 
+        <span> Last Update: {project.lastUpdated && formatDate(new Date(project.lastUpdated))}</span>
+        <span className="space-x-2 ml-4">
+          <TagPill tag={{type: "Difficulty", label: project.difficulty, className: "text-black h-7 w-auto text-2xl"}}/>
+          <TagPill tag={{type: "Category", label: project.category, className: "text-black h-7 w-auto text-2xl"}}/>
+        </span>
+      </div>
 
       {project.startingRepoLink &&
         <div className="rounded-[.8rem] grid grid-rows-2 mt-4 overflow-hidden w-[90%]">
@@ -92,7 +105,7 @@ export const ProjectDetails: React.FC = () => {
         </div>
       }
 
-      <div className="self-baseline-last space-x-5">
+      <div className="self-baseline-last space-x-3">
         {
           userId === project?.creatorId && (
             <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
@@ -120,15 +133,6 @@ export const ProjectDetails: React.FC = () => {
             </Dialog>
           )
         }
-        {/* <Button
-          variant="outline"
-          onClick={() => {
-            // Implement share functionality here
-          }}
-          className="rounded-2xl cursor-pointer"
-        >
-          Share This Project
-        </Button> */}
         <Dialog open={submissionDialogOpen} onOpenChange={setSubmissionDialogOpen}>
           <DialogTrigger asChild>
             <Button
@@ -155,16 +159,31 @@ export const ProjectDetails: React.FC = () => {
         </Dialog>
 
         <Toggle
-          pressed={false} //later dynamically determine if user is tracking this project
-          onPressedChange={() => { }} //handle tracking logic here
-          className="text-white cursor-pointer"
+          pressed={trackingData?.isTracking}
+          onPressedChange={() => {
+            dispatch({type: 'projectTracking/setTrackingStatus', payload: {
+              userId: userId,
+              projectId: projectId,
+              isTracking: !trackingData?.isTracking,
+              isMarkedAsDone: trackingData?.isMarkedAsDone,
+            }});
+          }}
+          className={`cursor-pointer bg-black text-white px-4 rounded-2xl`}
         >
           Track this project
         </Toggle>
         <Toggle
-          pressed={false} //later dynamically determine if user has done this project
-          onPressedChange={() => { }} //handle marking logic here
-          className="text-white cursor-pointer">
+          pressed={trackingData?.isMarkedAsDone}
+          onPressedChange={() => {
+            dispatch({type: 'projectTracking/setTrackingStatus', payload: {
+              userId: userId,
+              projectId: projectId,
+              isTracking: trackingData?.isTracking,
+              isMarkedAsDone: !trackingData?.isMarkedAsDone,
+            }});
+          }}
+          className={`cursor-pointer bg-black text-white px-4 rounded-2xl`}
+        >
           Mark as Done
         </Toggle>
       </div>
