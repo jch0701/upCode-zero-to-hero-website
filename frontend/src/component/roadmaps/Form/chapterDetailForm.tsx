@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { X } from 'lucide-react';
-import FormBar from "../formBox";
+import FormBar, { type SelectorOption } from "../formBox";
 import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "../validateFormBox";
 import { defaultImageSrc, bin } from "../image";
 import { useDispatch } from "react-redux";
@@ -25,11 +25,16 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
         const {roadmapID, chapterID} = useParams<{ roadmapID: string, chapterID: string}>();
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
         const [queryDescription, setQueryDescription] = useState(mode === "edit" ? description ?? "" : "")
-        const [queryDifficulty, setQueryDifficulty] = useState(mode === "edit" ? difficulty ?? "" : "")
+        const [queryDifficulty, setQueryDifficulty] = useState(mode === "edit" ? difficulty?.toLowerCase() ?? "" : "")
         const [queryOrder, setQueryOrder] = useState(mode === "edit" && order !== undefined ? String(order) : "");
         const [queryCategory, setQueryCategory] = useState(mode === "edit" ? category ?? "" : "")
         const [queryPrerequisite, setQueryPrerequisite] = useState(mode === "edit" ? prerequisite ?? "" : "")
         const [errors, setErrors] = React.useState<string[]>([]);
+        const difficultyOptions: SelectorOption[] = [
+            { value: 'beginner', label: 'Beginner' },
+            { value: 'intermediate', label: 'Intermediate' },
+            { value: 'advanced', label: 'Advanced' },
+        ];
         const handleSubmit = (e: React.FormEvent) => {
             e.preventDefault()
             // validate title
@@ -121,7 +126,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         </p>
                         {/* Difficulty Section */}
                         <h3 className="text-xl font-bold mb-2 text-left">Difficulty</h3>
-                        <FormBar query={queryDifficulty} setQuery={setQueryDifficulty} placeholder="Enter category (Beginner/Intermediate/Advanced)" />
+                        <FormBar query={queryDifficulty} setQuery={setQueryDifficulty} placeholder="Select difficulties" isOption={true} options={difficultyOptions}/>
                         <p className="min-h-3 text-left text-[#f60101] text-[12px]" >
                             {errors.find((e) => e.startsWith("- Difficulty"))}
                         </p>
