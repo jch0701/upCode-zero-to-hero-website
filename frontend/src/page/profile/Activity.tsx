@@ -41,8 +41,8 @@ export function ActivityContent(){
         {/* Submission Count */}
           <label className="block text-start text-indigo-400 text-2xl font-semibold pt-1 pl-7 mb-2 mt-2 ">Total Project Submission</label>
           {activity.submissions > 0 ? (
-            <p className="block text-start text-indigo-200 text-2xl font-semibold pt-1 pl-7 mb-2 mt-2 ">
-              {activity.submissions}
+            <p className="block text-start text-white text-l pt-1 pl-7 mb-2 mt-2 ">
+              Count: <strong className="text-red-500 font-extrabold">{activity.submissions}</strong> times
             </p>
           ) : (
             <p className="block text-start text-white text-l pt-1 pl-7 mb-2 mt-2">
