@@ -56,7 +56,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
     const chapterSlug = pillarsData.find(p => p.chapterID === chapterID)?.chapterSlug || 'Unknown Chapter Slug';
     const roadmapID = pillarsData.find(p => p.chapterID === chapterID)?.roadmapID || 'Unknown Roadmap ID';
     const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
-    const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creator || 'Unknown creator';
+    const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creatorID || 'Unknown creator';
     const userID = localStorage.getItem("userID");
 
     const CardContent = (

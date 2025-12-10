@@ -9,7 +9,7 @@ import { deleteLink } from "./linksSlice";
 export interface RoadmapType {
     roadmapID: number;
     roadmapSlug: string;
-    creator: number;
+    creatorID: number;
     imageSrc: string;
     title: string;
     description: string;

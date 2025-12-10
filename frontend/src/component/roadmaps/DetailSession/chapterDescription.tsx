@@ -16,7 +16,7 @@ const ChapterDescription: React.FC<PillarCardProps> = ({
     const userData = useSelector((state: any) => state.userList.userList) as UserListType[];
     const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
     const imageSrc = roadmapData.find(r => r.roadmapID === roadmapID)?.imageSrc || 'placeholder-image.jpg';
-    const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creator || 'Unknown Creator';
+    const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creatorID || 'Unknown Creator';
     const username = userData.find(user => user.userId === creator)?.username || 'Unknown Username';
     const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
     const tags: Tag[] = [

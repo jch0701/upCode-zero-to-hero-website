@@ -11,10 +11,10 @@ import { toggleFavourite } from "@/store/roadmapSlice";
 import type { UserListType } from "@/store/userListSlice";
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
-    creator,imageSrc, title, description, createdDate, tags,
+    creatorID,imageSrc, title, description, createdDate, tags,
     modifiedDate, isFavourite, roadmapID: roadmapIDProp}) => {
     const userData = useSelector((state: any) => state.userList.userList) as UserListType[];
-    const username = userData.find(user => user.userId === creator)?.username || 'Unknown Username';
+    const username = userData.find(user => user.userId === creatorID)?.username || 'Unknown Username';
     const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
     const dispatch = useDispatch();
     
@@ -63,7 +63,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                                 e.currentTarget.src = 'placeholder-image.jpg'; 
                             }}
                         />
-                        {(Number(userID) !== creator) && (
+                        {(Number(userID) !== creatorID) && (
                         <button 
                             className="absolute top-3 left-3 p-2 bg-black/40 rounded-full cursor-pointer hover:bg-black/60 transition"
                             onClick={handleToggleFavourite}
@@ -78,7 +78,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                     </div>
                     <h2 className="text-3xl font-bold mb-4 text-left">{title}</h2>
                     {/* Save as Favourite Button */}
-                    {(Number(userID) !== creator)
+                    {(Number(userID) !== creatorID)
                         ?
                         <button 
                             className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"
@@ -110,7 +110,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                     {/* Creator / Date Info */} 
                     {/*Show like grid with 3 columns*/}
                     <div className="grid grid-cols-2 gap-4 mb-6 text-left">
-                        {(Number(userID) !== creator) && (
+                        {(Number(userID) !== creatorID) && (
                         <>
                             <div>
                                 <h3 className="font-semibold text-left">Creator</h3>
