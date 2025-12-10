@@ -9,7 +9,7 @@ import type { PillarCardProps } from './pillarCard.tsx';
 export interface RoadmapItemCardProps {
     roadmapID: number;
     roadmapSlug: string;
-    creator: number;
+    creatorID: number;
     imageSrc: string; // URL for the image
     title: string;
     description: string;

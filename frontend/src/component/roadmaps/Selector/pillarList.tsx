@@ -83,7 +83,7 @@ const projects = useSelector((state: any) => state.projects.projectsList) as Pro
 const filteredPillars = pillarsData.filter(pillar => pillar.roadmapID === selectedRoadmapId);
 const roadmapSlug = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.roadmapSlug || 'Unknown Roadmap Slug';
 const roadmapTitle = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.title || 'Unknown Roadmap';
-const creator = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.creator || 'Unknown creator';
+const creator = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.creatorID || 'Unknown creator';
 const userID = localStorage.getItem("userID");
 // order by 'order' field
 filteredPillars.sort((a, b) => a.order - b.order);
