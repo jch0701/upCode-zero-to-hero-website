@@ -11,8 +11,8 @@ interface PillarListProps {
 }
 
 // Helper component to display projects for a single pillar
-const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[]; navigateToProjectDetails: (projectId: number) => void }> = 
-    ({ pillar, projects, navigateToProjectDetails }) => {
+const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[]; navigateToProjectDetails: (projectId: number) => void; creator: string }> = 
+    ({ pillar, projects, navigateToProjectDetails, creator }) => {
     const chapterProjects = projects.filter(project => {
         if (project.difficulty !== pillar.difficulty) {
             return false;
@@ -26,18 +26,19 @@ const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
 
     const chapterCareers: any[] = [];
     const [activeTab, setActiveTab] = useState<'project' | 'career'>('project');
+    const userID = localStorage.getItem("userID");
 
         return (
             <div className='pl-5 pr-5'>
                 {/* small backgroundless navbar */}
                 <div className="flex items-center gap-4 mb-3 justify-end">
-                    {chapterProjects.length > 0 && (<button
+                    {(chapterProjects.length > 0 || userID === creator) && (<button
                         type="button"
                         onClick={() => setActiveTab('project')}
                         className={`text-sm font-semibold ${activeTab === 'project' ? 'text-white underline' : 'text-gray-300'}`}>
                         Suggested project
                     </button>)}
-                    {chapterCareers.length > 0 && (<button
+                    {(chapterCareers.length > 0 || userID === creator) && (<button
                         type="button"
                         onClick={() => setActiveTab('career')}
                         className={`text-sm font-semibold ${activeTab === 'career' ? 'text-white underline' : 'text-gray-300'}`}>
@@ -95,6 +96,7 @@ function navigateToProjectDetails(projectId: number) {
 
 // Helper function to check if a pillar has matching projects
 function hasProjects(pillar: PillarCardProps): boolean {
+    if(Number(userID) === creator) return true;
     const chapterProjects = projects.filter(project => {
         if (project.difficulty !== pillar.difficulty) {
             return false;
@@ -145,6 +147,7 @@ function toggleProjectsVisibility(chapterID: number) {
                             pillar={pillar}
                             projects={projects}
                             navigateToProjectDetails={navigateToProjectDetails}
+                            creator={creator.toString()}
                         />
                     )}
                 </div>
