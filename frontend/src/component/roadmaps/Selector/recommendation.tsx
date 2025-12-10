@@ -3,6 +3,8 @@ import type { PillarCardProps } from './pillarCard';
 import type { ProjectType } from '@/store/projectsSlice';
 import ProjectCard from '@/component/projects/projectCard';
 import AddRecommendation from './recommendationAdd';
+import { useParams } from 'react-router';
+
 
 const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[]; navigateToProjectDetails: (projectId: number) => void; creator: string }> = 
     ({ pillar, projects, navigateToProjectDetails, creator }) => {
@@ -20,6 +22,7 @@ const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
     const chapterCareers: any[] = [];
     const [activeTab, setActiveTab] = useState<'project' | 'career'>('project');
     const userID = localStorage.getItem("userID");
+    const { roadmapID, roadmapSlug } = useParams<{ roadmapID: string, roadmapSlug: string }>();
 
         return (
             <div className='pl-5 pr-5'>
@@ -44,6 +47,7 @@ const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
                         <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
                             {chapterProjects.map((project: ProjectType) => (
                                 <div className="flex-shrink-0 w-70" key={project.projectId}>
+
                                     <ProjectCard 
                                         projectId={project.projectId}
                                         onClick={() => navigateToProjectDetails(project.projectId)}
@@ -51,12 +55,12 @@ const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
                                 </div>
                             ))}
                             {userID === creator && (
-                            <AddRecommendation extraClass='flex-shrink-0'/>)}
+                            <AddRecommendation extraClass='flex-shrink-0' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-project`}/>)}
                         </div>
                     ) : (
                         <>
                         {userID === creator ?
-                            (<AddRecommendation extraClass='mx-auto h-58'/>)
+                            (<AddRecommendation extraClass='mx-auto h-58' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-project`}/>)
                             :
                             (<p className="pl-5 text-sm text-gray-400">No suggested projects found.</p>)}
                         </>
@@ -67,12 +71,12 @@ const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
                     chapterCareers.length > 0 ? (
                         <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
                             {userID === creator && (
-                            <AddRecommendation extraClass='flex-shrink-0'/>)}
+                            <AddRecommendation extraClass='flex-shrink-0' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-career`}/>)}
                         </div>
                     ) : (
                         <>
                         {userID === creator ?
-                            (<AddRecommendation extraClass='mx-auto h-58'/>)
+                            (<AddRecommendation extraClass='mx-auto h-58' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-career`}/>)
                             :
                             (<p className="pl-5 text-sm text-gray-400">No suggested career found.</p>)}
                         </>
