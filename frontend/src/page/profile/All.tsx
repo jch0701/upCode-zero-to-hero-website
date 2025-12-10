@@ -21,18 +21,17 @@ export const All: React.FC = () => {
     const activeUser = activeUserRaw ? JSON.parse(activeUserRaw) : null;
 
     return (
-    <div>
+    <div className="flex">
         {/*navbar vertically*/}
-        <div className="grid grid-cols-[200px_1fr] h-screen px-6 w-full">
-          <div className="h-screen sticky top-24 flex flex-col justify-between py-16 ">
+        <div className="grid grid-cols-[200px_1fr] min-h-full px-6 w-full">
+          <div className="relative ">
                 <RadioGroup
                     onClick={handleCategoryChange}
                     options={click}
                     selected={category}
                     isHorizontal = {false}
-                    className= "w-50"
-                />
-                    
+                    className= "w-60 fixed"
+                />  
             </div>
             {/*contents*/}
             <div className="pt-10 ">
