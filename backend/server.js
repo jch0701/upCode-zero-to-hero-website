@@ -1,7 +1,5 @@
 import express from "express";
 import cors from 'cors';
-// Import your routes here
-// Example: import exampleRoutes from './routes/exampleRoutes.js';
 
 import { initDB } from './config.js';
 const app = express();
@@ -16,9 +14,12 @@ app.use(express.json());
     // import routes AFTER DB init so controllers can create pools safely
     // format: const { default: <routeName> } = await import('<path-to-route>');
     // Example: const { default: exampleRoutes } = await import('./routes/exampleRoutes.js');
+    const { default: projectRoutes } = await import('./routes/projectRoutes.js');
 
     // Now do: app.use("/api", <routeName>);
     // app.use("/api", exampleRoutes);
+
+    app.use("/api", projectRoutes);
 
     // Starts the server
     app.listen(5000, () => console.log("server started on port 5000"));
