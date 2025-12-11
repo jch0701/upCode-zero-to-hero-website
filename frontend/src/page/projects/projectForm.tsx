@@ -5,156 +5,286 @@ import {
   FieldGroup,
   FieldLabel
 } from "@/component/shadcn/field";
-import { useRef } from "react";
-
+import { useRef, useState } from "react";
+import { SearchableMultiSelect } from "@/component/projects/searchableMultiSelect";
 import { Input } from "@/component/shadcn/input";
 import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from "@/component/shadcn/select";
 import { Textarea } from "@/component/shadcn/textarea";
 import { Button } from "@/component/shadcn/button";
 import { categoryList } from "@/lib/types";
-import { Form } from "@/component/form";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import type { AppDispatch } from "@/store"; // Import AppDispatch from your store
 import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
+import { addProjectAndRecommendations } from "@/store/projectsSlice";
+import type { ExtendedProjectType } from "@/store/projectsSlice";
 
 type ProjectFormProps = {
-  openAsCreateForm: boolean;
   initialData?: any;
   close: () => void;
 }
 
-export const ProjectForm: React.FC<ProjectFormProps> = ({ openAsCreateForm, initialData, close }) => {
+export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [fileInput, setFileInput] = useState<File | null>(initialData?.requirementFile || null);
-  const dispatch = useDispatch();
+  const [fileInput, setFileInput] = useState<File | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [formData, setFormData] = useState<any>({
+    title: initialData?.title || "",
+    difficulty: initialData?.difficulty || "",
+    category: initialData?.category || categoryList[0],
+    shortDescription: initialData?.shortDescription || "",
+    detailsFile: initialData?.detailsFile || null,
+    startingRepoLink: initialData?.startingRepoLink || "",
+    roadmaps: initialData?.roadmaps || [],
+    careers: initialData?.careers || [],
+  });
+  const dispatchThunk = useDispatch<AppDispatch>();
   const creatorId = useSelector((state: any) => state.profile.userId);
-  
+  const roadmaps = useSelector((state: any) => state.roadmap.roadmapList);
+  // const careers = useSelector((state: any) => state.careers.careerList);
+  const careers: any[] = []; // Placeholder careers array
 
-  async function handleSubmit(fd: FormData) {
-    const payload: any = {
-      ...Object.fromEntries(fd.entries()),
-      creatorId
+  async function handleSubmit() { 
+    // Create a deep copy to avoid any reference issues
+    const finalFormData: ExtendedProjectType = {
+      title: formData.title,
+      difficulty: formData.difficulty,
+      category: formData.category,
+      shortDescription: formData.shortDescription,
+      startingRepoLink: formData.startingRepoLink,
+      detailsFile: formData.detailsFile,
+      roadmaps: formData.roadmaps,
+      careers: formData.careers,
+      creatorId: creatorId
     };
-    const file = fd.get("detailsFile");
-    if (file instanceof File && file.size > 0) {
-      const uint8Array = await convertFileToUInt8(file);
-      payload.detailsFile = uint8ToBase64(uint8Array); // serializable
-    } else {
-      delete payload.detailsFile;
+    
+    // Handle file separately if it exists
+    if (fileInput) {
+      const uint8Array = await convertFileToUInt8(fileInput);
+      finalFormData.detailsFile = uint8ToBase64(uint8Array);
     }
-    dispatch({ type: openAsCreateForm ? "projects/addProject" : "projects/editProject", payload });
+    
+    dispatchThunk(addProjectAndRecommendations(finalFormData));
     close();
   }
 
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]: value
+    }));
+  }
+
   return (
-    <Form
-      onSubmit={handleSubmit}
-      onClose={close}
-    >
-      <FieldGroup>
-        <FieldSet className="gap-3">
-          <Input 
-            readOnly
-            hidden
-            name="creatorId"
-            value={creatorId}
-          />
-          <FieldLabel>Project Title</FieldLabel>
-          <FieldContent>
-            <Input
-              placeholder="Enter project title"
-              name="title"
-              defaultValue={initialData?.title || ""}
-            />
-          </FieldContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field>
-              <FieldLabel>Difficulty</FieldLabel>
-              <FieldContent>
-                <Select
-                  name="difficulty"
-                  defaultValue={initialData?.difficulty || ""}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue
-                      placeholder="Select difficulty"
+    <form className="w-full max-w-2xl mx-auto p-4 sm:p-6">
+      {(() => {
+        switch (currentPage) {
+          case 1:
+            return (
+              <FieldGroup>
+                <FieldSet className="gap-3 sm:gap-1">
+                  <Input
+                    readOnly
+                    hidden
+                    name="creatorId"
+                    value={creatorId}
+                  />
+                  <FieldLabel>Project Title</FieldLabel>
+                  <FieldContent>
+                    <Input
+                      placeholder="Enter project title"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleChange}
                     />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {["Beginner", "Intermediate", "Advanced"].map((level) => (
-                      <SelectItem key={level}
-                        value={level}
-                      >
-                        {level}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FieldContent>
-            </Field>
-            <Field>
-              <FieldLabel>Category</FieldLabel>
-              <FieldContent>
-                <Select
-                  name="category"
-                  defaultValue={initialData?.category || categoryList[0]}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categoryList.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FieldContent>
-            </Field>
-          </div>
-          <FieldLabel>Thumbnail Description</FieldLabel>
-          <FieldContent>
-            <Textarea
-              name="shortDescription"
-              placeholder="Enter thumbnail description"
-              defaultValue={initialData?.shortDescription || ""}
-            />
-          </FieldContent>
-          <FieldLabel>Requirement File</FieldLabel>
-          <FieldContent>
-            <Button
-              type="button"
-              variant="secondary"
-              className="text-black w-fit cursor-pointer"
-              onClick={() => fileInputRef.current?.click()}
-              defaultValue={fileInput ? fileInput.name : ""}
-            >
-              {fileInput ? fileInput.name : "Upload File"}
-            </Button>
-            <Input
-              hidden
-              name="detailsFile"
-              type="file"
-              ref={fileInputRef}
-              onChange={(e) => {
-                if (e.target.files && e.target.files.length > 0) {
-                  setFileInput(e.target.files[0]);
-                }
-              }}
-            />
-          </FieldContent>
-          <FieldLabel>Starting Repository Link</FieldLabel>
-          <FieldContent>
-            <Input
-              name="startingRepoLink"
-              placeholder="Optionally add a starting repository for software maintenance projects"
-              type="url"
-              defaultValue={initialData?.startingRepoLink || ""}
-            />
-          </FieldContent>
-        </FieldSet>
+                  </FieldContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Field>
+                      <FieldLabel>Difficulty</FieldLabel>
+                      <FieldContent>
+                        <Select
+                          name="difficulty"
+                          value={formData.difficulty}
+                          onValueChange={(value) => setFormData((prev: any) => ({ ...prev, difficulty: value }))}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select difficulty" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {["Beginner", "Intermediate", "Advanced"].map((level) => (
+                              <SelectItem key={level} value={level}>
+                                {level}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FieldContent>
+                    </Field>
+                    <Field>
+                      <FieldLabel>Category</FieldLabel>
+                      <FieldContent>
+                        <Select
+                          name="category"
+                          value={formData.category}
+                          onValueChange={(value) => setFormData((prev: any) => ({ ...prev, category: value }))}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categoryList.map((cat) => (
+                              <SelectItem key={cat} value={cat}>
+                                {cat}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FieldContent>
+                    </Field>
+                  </div>
+                  <FieldLabel>Thumbnail Description</FieldLabel>
+                  <FieldContent>
+                    <Textarea
+                      name="shortDescription"
+                      placeholder="Enter thumbnail description"
+                      value={formData.shortDescription}
+                      onChange={handleChange}
+                    />
+                  </FieldContent>
+                  <FieldLabel>Requirement File</FieldLabel>
+                  <FieldContent>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="text-black w-fit cursor-pointer"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {fileInput ? fileInput.name : "Upload File"}
+                    </Button>
+                    <Input
+                      hidden
+                      name="detailsFile"
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          setFileInput(e.target.files[0]);
+                        }
+                      }}
+                    />
+                  </FieldContent>
+                  <FieldLabel>Starting Repository Link</FieldLabel>
+                  <FieldContent>
+                    <Input
+                      name="startingRepoLink"
+                      placeholder="Optionally add a starting repository"
+                      type="url"
+                      value={formData.startingRepoLink}
+                      onChange={handleChange}
+                    />
+                  </FieldContent>
+                </FieldSet>
+              </FieldGroup>
+            );
+
+          case 2:
+            return (
+              <FieldGroup>
+                <FieldSet className="gap-4 sm:gap-3">
+                  <SearchableMultiSelect
+                    label="Related Roadmaps"
+                    description="Link this project to relevant learning roadmaps"
+                    placeholder="Search and select roadmaps..."
+                    items={roadmaps}
+                    selectedItems={formData.roadmaps}
+                    onSelect={(roadmaps) => 
+                      setFormData((prev: any) => ({ ...prev, roadmaps }))
+                    }
+                    maxSelections={5}
+                    renderItem={(roadmap) => (
+                      <div>
+                        <p className="font-medium text-white">{roadmap.title}</p>
+                        <p className="text-sm text-gray-400">{roadmap.description}</p>
+                      </div>
+                    )}
+                    searchKey="title"
+                    idtag="roadmapID"
+                  />
+                </FieldSet>
+              </FieldGroup>
+            );
+
+          case 3:
+            return (
+              <FieldGroup>
+                <FieldSet className="gap-4 sm:gap-3">
+                  <SearchableMultiSelect
+                    label="Related Careers"
+                    description="Link this project to relevant career paths"
+                    placeholder="Search and select careers..."
+                    items={careers}
+                    selectedItems={formData.careers}
+                    onSelect={(careers) =>
+                      setFormData((prev: any) => ({ ...prev, careers }))
+                    }
+                    maxSelections={5}
+                    renderItem={(career) => (
+                      <div>
+                        <p className="font-medium text-white">{career.name}</p>
+                        <p className="text-sm text-gray-400">{career.description}</p>
+                      </div>
+                    )}
+                    searchKey="name"
+                    idtag="careerID"
+                  />
+                </FieldSet>
+              </FieldGroup>
+            );
+
+          default:
+            return null;
+        }
+      })()}
+
+      <FieldGroup className="mt-4 flex flex-col sm:flex-row sm:justify-end gap-3">
+        {currentPage > 1 ? (
+          <Button
+            type="button"
+            onClick={() => setCurrentPage(currentPage - 1)}
+            variant="outline"
+            className="text-black w-full sm:w-fit cursor-pointer"
+          >
+            Previous
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            onClick={currentPage === 1 ? close : () => setCurrentPage(currentPage - 1)}
+            variant="outline"
+            className="text-black w-full sm:w-fit cursor-pointer"
+          >
+            Cancel
+          </Button>
+        )}
+
+        {currentPage < 3 ? (
+          <Button
+            type="button"
+            onClick={() => setCurrentPage(currentPage + 1)}
+            className="w-full sm:w-fit bg-blue-400 hover:bg-blue-500 cursor-pointer"
+          >
+            Next
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            onClick={handleSubmit}
+            className="w-full sm:w-fit bg-green-400 hover:bg-green-500 cursor-pointer"
+          >
+            Submit
+          </Button>
+        )}
       </FieldGroup>
-    </Form>
+    </form>
   )
 }

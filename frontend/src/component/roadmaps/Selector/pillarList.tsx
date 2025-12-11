@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PillarCard, { type PillarCardProps } from '../Selector/pillarCard.tsx';
 import { useSelector } from "react-redux";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { RoadmapItemCardProps } from './roadmapCard.tsx';
+import type { ProjectType } from '@/store/projectsSlice.ts';
+import Recommendation from './recommendation.tsx';
+import type { RecommendationType } from '@/store/recommendationSlice.ts';
+
 
 interface PillarListProps {
     selectedRoadmapId: number; 
@@ -12,13 +16,37 @@ const PillarList: React.FC<PillarListProps> = ({ selectedRoadmapId }) => {
 // Filter pillars based on selectedRoadmapId
 const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
 const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
+const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
+const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
 const filteredPillars = pillarsData.filter(pillar => pillar.roadmapID === selectedRoadmapId);
 const roadmapSlug = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.roadmapSlug || 'Unknown Roadmap Slug';
 const roadmapTitle = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.title || 'Unknown Roadmap';
-const creator = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.creator || 'Unknown creator';
+const creator = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.creatorID || 'Unknown creator';
 const userID = localStorage.getItem("userID");
 // order by 'order' field
 filteredPillars.sort((a, b) => a.order - b.order);
+const navigate = useNavigate();
+
+function navigateToProjectDetails(projectId: number) {
+    navigate(`/project/${projectId}`);
+}
+
+// Helper function to check if a pillar has project in recommended data
+function hasProjects(pillar: PillarCardProps): boolean {
+    if(Number(userID) === creator) return true;
+    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar.chapterID && data.sourceType === "Roadmap"));
+    const uniqueChapterIds = [...new Set(filterRecommendedData.map(data => data.sourceId))];
+    if(uniqueChapterIds.includes(pillar.chapterID)) return true;
+    return false;
+}
+
+const [openChapterId, setOpenChapterId] = useState<number | null>(null);
+
+function toggleProjectsVisibility(chapterID: number) {
+    // If the clicked chapter is already open, close it (set to null)
+    // Otherwise, open the clicked chapter
+    setOpenChapterId(prevId => (prevId === chapterID ? null : chapterID));
+}
 
     return (
         <div className="w-full mx-auto">
@@ -36,10 +64,23 @@ filteredPillars.sort((a, b) => a.order - b.order);
             {filteredPillars.length === 0 ? (
                 <p className="text-gray-400 text-center mt-10">No chapters found for this roadmap.</p>
             ) : (filteredPillars.map((pillar) => (
-                <PillarCard 
-                    key={pillar.chapterID}
-                    {...pillar}
-                />
+                <div key={pillar.chapterID} className='mb-4'>
+                    <PillarCard 
+                        key={pillar.chapterID}
+                        {...pillar}
+                        onToggleClick={toggleProjectsVisibility}
+                        isOpen={openChapterId === pillar.chapterID}
+                        showArrow={hasProjects(pillar)}
+                    />
+                    {openChapterId === pillar.chapterID && (
+                        <Recommendation
+                            pillar={pillar}
+                            projects={projects}
+                            navigateToProjectDetails={navigateToProjectDetails}
+                            creator={creator.toString()}
+                        />
+                    )}
+                </div>
             )))}
         </div>
     );

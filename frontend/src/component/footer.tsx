@@ -3,7 +3,8 @@ import { FaFacebookF, FaInstagram, FaGithub, FaLinkedin } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="bg-gray-900 text-gray-400 py-6 px-8 flex flex-col md:flex-row items-center justify-between rounded-t-lg z-50 fixed bottom-0 w-full h-15">
+        <footer className="fixed bottom-0 bg-gray-900 text-gray-400 py-6 px-8 flex flex-col md:flex-row items-center justify-between rounded-t-lg z-50 w-full h-8">
+
             {/* Copyright */}
             <span className="text-sm">&copy; 2025 UpCode: Form Zero to Hero, Inc. All rights reserved.</span>
 

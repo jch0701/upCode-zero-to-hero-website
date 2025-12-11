@@ -80,7 +80,7 @@ export const Project: React.FC = () => {
                                 <DialogTrigger asChild>
                                     <Button className={`${commonButtonStyles} h-10`}>+ Add a project</Button>
                                 </DialogTrigger>
-                                <DialogContent className={commonBackgroundClass}>
+                                <DialogContent className={`${commonBackgroundClass} flex flex-col sm:gap-0`}>
                                     <DialogHeader>
                                         <DialogTitle>Contribute a new project idea to the community</DialogTitle>
                                         <DialogDescription>
@@ -88,7 +88,7 @@ export const Project: React.FC = () => {
                                         </DialogDescription>
                                     </DialogHeader>
                                     <FieldGroup className={commonBackgroundClass}>
-                                        <ProjectForm openAsCreateForm={true} close={() => setDialogOpen(false)} />
+                                        <ProjectForm close={() => setDialogOpen(false)} />
                                     </FieldGroup>
                                 </DialogContent>
                             </Dialog>
@@ -106,7 +106,7 @@ export const Project: React.FC = () => {
                                     return null;
                                 }
                                 return (
-                                    <ProjectCard key={project.projectId} project={project}
+                                    <ProjectCard key={project.projectId} projectId={project.projectId}
                                         onClick={() => navigateToProjectDetails(project.projectId)}
                                     />
                                 );

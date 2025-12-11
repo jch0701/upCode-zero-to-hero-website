@@ -59,7 +59,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
             if (mode === 'add'){
                 dispatch(
                     addRoadmap({
-                        creator: Number(userID),
+                        creatorID: Number(userID),
                         imageSrc:currentImageSrc,
                         title: queryTitle,
                         description: queryDescription,
@@ -72,7 +72,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                     editRoadmap({
                         roadmapID: Number(roadmapID),
                         roadmapSlug: "",
-                        creator: Number(userID),
+                        creatorID: Number(userID),
                         imageSrc:currentImageSrc,
                         title: queryTitle,
                         description: queryDescription,

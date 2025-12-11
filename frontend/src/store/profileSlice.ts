@@ -8,6 +8,7 @@ type profileType = {
   role:string;
   bio?:string;
   avatar: string;
+  skill: string[];
   token?: string; //to come in the future
 }
 
@@ -18,6 +19,7 @@ const initialState: profileType = {
   role:"",
   bio:"",
   avatar:"",
+  skill: [],
   token: "",
 };
 
@@ -32,6 +34,7 @@ const profileSlice = createSlice({
       state.role = action.payload.role;
       state.bio = action.payload.bio ?? "";
       state.avatar = action.payload.avatar;
+      state.skill = action.payload.skill ?? [];
       state.token = action.payload.token ?? "";
     },
     logout(state) {
@@ -40,7 +43,8 @@ const profileSlice = createSlice({
       state.email = "";
       state.role = "";
       state.bio = "";
-      state.avatar= "";
+      state.avatar = "";
+      state.skill = [];
       state.token = "";
     }
   },

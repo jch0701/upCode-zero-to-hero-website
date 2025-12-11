@@ -1,19 +1,17 @@
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useGetCommitHistory } from "@/api/getCommitHistory";
-import React, { useState } from "react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, base64ToString } from "@/lib/utils";
 import RadioGroup from "@/component/projects/radioGroup";
-import github_icon from "../../assets/projects/github_icon.png";
 import ReactMarkdown from "react-markdown";
 import { Button } from "../../component/shadcn/button";
 import { SubmissionForm } from "./submissionForm";
-import { commonIconStyles } from "@/lib/styles";
 import { ellipsifyText } from "@/lib/utils";
 import { FieldGroup } from "@/component/shadcn/field";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/component/shadcn/dialog";
 import { commonBackgroundClass, commonMarkDownClass } from "@/lib/styles";
-import { base64ToString } from "@/lib/utils";
+import { GitHubLink } from "@/component/projects/gitHubLink";
 
 const SubmissionDetails: React.FC = () => {
   const { submissionId } = useParams<{ submissionId: string }>();
@@ -52,26 +50,7 @@ const SubmissionDetails: React.FC = () => {
         | <span>Last Update: {submission.lastUpdated && formatDate(new Date(submission.lastUpdated))}</span>
       </p>
 
-      <div className="rounded-[.8rem] grid grid-rows-2 mt-4 overflow-hidden w-[90%]">
-        <div className="bg-gray-700 w-full text-white pl-5 p-1 py-2 flex items-center gap-2">
-          <span className="text-sm font-semibold">GitHub Repository Link</span>
-        </div>
-        <div className="bg-white flex items-center pl-5 p-1 gap-2">
-          <img
-            src={github_icon}
-            alt="GitHub Link: "
-            className={`${commonIconStyles} w-6`}
-          />
-          <a
-            href={submission.repoLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            {submission.repoLink}
-          </a>
-        </div>
-      </div>
+      <GitHubLink repoUrl={submission?.repoLink || ""} title="This submission contains a GitHub repository link." />
       {
         creatorName === userName &&
         <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
@@ -121,7 +100,7 @@ const SubmissionDetails: React.FC = () => {
             {
               commitHistory && commitHistory.length > 0 ? (
                 // changed: improved table styling with better structure
-                <div className="overflow-x-auto rounded-lg border border-gray-600 mb-20 w-[95%]">
+                <div className="overflow-x-auto rounded-lg border border-gray-600 w-[95%]">
                   <table className="w-full table-auto">
                     <thead>
                       <tr className="bg-gray-700 border-b border-gray-600">

@@ -19,7 +19,7 @@ const chapterSlug = pillarsData.find(p => p.chapterID === selectedChapterId)?.ch
 const chapterTitle = pillarsData.find(p => p.chapterID === selectedChapterId)?.title || 'Unknown Chapter';
 const roadmapID = pillarsData.find(p => p.chapterID === selectedChapterId)?.roadmapID || 'Unknown Roadmap ID';
 const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
-const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creator || 'Unknown creator';
+const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creatorID || 'Unknown creator';
 const userID = localStorage.getItem("userID");
 // order by 'order' field
 filteredLinks.sort((a, b) => a.order - b.order);
@@ -37,14 +37,16 @@ return (
                         Add Link
                     </button>
                 </Link>)}
-        </div>
+        </div >
             {filteredLinks.length === 0 ? (
                 <p className="text-gray-400 text-center mt-10">No links found for this chapter.</p>
             ) : (filteredLinks.map((links) => (
-                <LinkCard 
-                    key={links.chapterID}
-                    {...links}
-                />
+                <div className='mb-4'>
+                    <LinkCard 
+                        key={links.chapterID}
+                        {...links}
+                    />
+                </div>
             )))}
         </div>
 )}

@@ -16,11 +16,17 @@ export type ProjectType = {
   submissionCount: number;
 }
 
+
 type InitialProjectTypeOmissions = "projectId" | "trackCount" | "submissionCount" | "lastUpdated";
 
 export type InitialProjectType = Omit<ProjectType, InitialProjectTypeOmissions>;
 
-interface ProjectSlice{
+export type ExtendedProjectType = InitialProjectType & {
+  roadmaps?: any[];
+  careers?: any[];
+}
+
+interface ProjectSlice {
   projectsList: Array<ProjectType>;
 }
 
@@ -74,9 +80,10 @@ const dummyState: ProjectSlice = {
       detailsFile: "",
       trackCount: 20,
       submissionCount: 30
-    }
+    },
   ]
 };
+
 
 const projectsSlice = createSlice({
   name: "projects",
@@ -91,12 +98,12 @@ const projectsSlice = createSlice({
         lastUpdated: new Date().toISOString(),
       };
       state.projectsList.push(newProject);
-      },
+    },
     editProject: (state, action: PayloadAction<ProjectType>) => {
       const index = state.projectsList.findIndex(
         (project: ProjectType) => project.projectId === action.payload.projectId
       );
-      if (index !== -1){
+      if (index !== -1) {
         state.projectsList[index] = action.payload;
       }
     },
@@ -107,6 +114,42 @@ const projectsSlice = createSlice({
     },
   }
 });
+
+export const addProjectAndRecommendations = (projectData: ExtendedProjectType) => (dispatch: any, getState: any) => {
+  console.log("Adding project with recommendations:", projectData);
+  const roadmaps = projectData.roadmaps;
+  const careers = projectData.careers;
+  delete projectData.roadmaps;
+  delete projectData.careers;
+  // 1. dispatch project
+  dispatch({ type: 'projects/addProject', payload: projectData });
+
+  // 2. read new ID from state
+  const state = getState();
+  const projectsList = state.projects.projectsList;
+  const createdProject = projectsList[projectsList.length - 1]; // last inserted
+  const projectId = createdProject.projectId;
+
+  // 3. dispatch recommendations
+  roadmaps?.forEach((roadmap: any) => {
+    const newRec = {
+      sourceId: projectId,
+      targetId: roadmap.roadmapID,
+      sourceType: "project",
+      targetType: "roadmap"
+    }
+    dispatch({ type: 'recommendations/addRecommendation', payload: { projectId, ...newRec } });
+  });
+  careers?.forEach((career: any) => {
+    const newRec = {
+      sourceId: projectId,
+      targetId: career.careerID,
+      sourceType: "project",
+      targetType: "career"
+    }
+    dispatch({ type: 'recommendations/addRecommendation', payload: { projectId, ...newRec } });
+  });
+};
 
 export const { addProject, editProject, deleteProject } = projectsSlice.actions;
 export default projectsSlice.reducer;

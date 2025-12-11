@@ -53,6 +53,7 @@ const Login_Pg: FC = () => {
           ...userDetail,
           avatar: DEFAULT_AVATAR,
           bio: "",
+          skills: userDetail.skill ?? [],
         };
         localStorage.setItem(key, JSON.stringify(profileToUse));
       }
