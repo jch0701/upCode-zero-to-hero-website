@@ -21,10 +21,8 @@ import { AddRoadmap } from "./page/roadmaps/AddRoadmap.tsx";
 import SubmissionDetails from "./page/projects/SubmissionDetails.tsx";
 import { AddChapter } from "./page/roadmaps/AddChapter.tsx";
 import { AddNode } from "./page/roadmaps/AddNode.tsx";
-import { AddRecommendedProject } from "./page/roadmaps/Recommendation/addProject.tsx";
-import { AddRecommendedCareer } from "./page/roadmaps/Recommendation/addCareer.tsx";
-import { EditRecommendedProject } from "./page/roadmaps/Recommendation/editProject.tsx";
-import { EditRecommendedCareer } from "./page/roadmaps/Recommendation/editCareer.tsx";
+import { RecommendedProject } from "./page/roadmaps/Recommendation/Project.tsx";
+import { RecommendedCareer } from "./page/roadmaps/Recommendation/Career.tsx";
 
 
 function AppRoutes() {
@@ -46,10 +44,8 @@ function AppRoutes() {
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/edit" element={<EditChapter />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/add-node" element={<AddNode />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<EditNode />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-project" element={<AddRecommendedProject />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-career" element={<AddRecommendedCareer />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-project-edit" element={<EditRecommendedProject />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-career-edit" element={<EditRecommendedCareer />} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-project" element={<RecommendedProject />} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-career" element={<RecommendedCareer />} />
           <Route path="project" element={<Project />} />
           <Route path="project/:projectId" element={<ProjectDetails />} />
           <Route path="project/myProjects" element={<MyProjects />} />
@@ -66,10 +62,8 @@ function AppRoutes() {
         <Routes>
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/add-node" element={<AddNode />} />
           <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/:nodeID/edit" element={<EditNode />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-project" element={<AddRecommendedProject />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-career" element={<AddRecommendedCareer />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-project-edit" element={<EditRecommendedProject />} />
-          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-career-edit" element={<EditRecommendedCareer />} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-project" element={<RecommendedProject />} />
+          <Route path="roadmap/:roadmapID/:roadmapSlug/:chapterID/:chapterSlug/recommend-career" element={<RecommendedCareer />} />
         </Routes>
       )}
     </>

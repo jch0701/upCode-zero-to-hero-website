@@ -55,12 +55,12 @@ const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
                                 </div>
                             ))}
                             {userID === creator && (
-                            <AddRecommendation extraClass='flex-shrink-0' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-project`}/>)}
+                            <AddRecommendation link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-project`}/>)}
                         </div>
                     ) : (
                         <>
                         {userID === creator ?
-                            (<AddRecommendation extraClass='mx-auto h-58' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-project`}/>)
+                            (<AddRecommendation extraClass='mx-auto' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-project`}/>)
                             :
                             (<p className="pl-5 text-sm text-gray-400">No suggested projects found.</p>)}
                         </>
@@ -71,12 +71,12 @@ const Recommendation: React.FC<{ pillar: PillarCardProps; projects: ProjectType[
                     chapterCareers.length > 0 ? (
                         <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
                             {userID === creator && (
-                            <AddRecommendation extraClass='flex-shrink-0' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-career`}/>)}
+                            <AddRecommendation link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-career`}/>)}
                         </div>
                     ) : (
                         <>
                         {userID === creator ?
-                            (<AddRecommendation extraClass='mx-auto h-58' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-career`}/>)
+                            (<AddRecommendation extraClass='mx-auto' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar.chapterID}/${pillar.chapterSlug}/recommend-career`}/>)
                             :
                             (<p className="pl-5 text-sm text-gray-400">No suggested career found.</p>)}
                         </>

@@ -2,7 +2,7 @@ import React from "react";
 import { X } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
-export const AddRecommendedProject: React.FC = () => {
+export const RecommendedProject: React.FC = () => {
     const navigate = useNavigate();
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
