@@ -124,7 +124,7 @@ export const ProjectDetails: React.FC = () => {
                           creator={submission.creator}
                           date={new Date(submission.postedOn)}
                           title={submission.title}
-                          tag={submission.tag}
+                          repoLink={submission.repoLink}
                           onClick={() => {
                             navigate(`/project/submission/${submission.submissionId}`);
                           }}
@@ -155,7 +155,7 @@ export const ProjectDetails: React.FC = () => {
                           creator={submission.creator}
                           date={new Date(submission.postedOn)}
                           title={submission.title}
-                          tag={submission.tag}
+                          repoLink={submission.repoLink}
                           onClick={() => {
                             navigate(`/project/submission/${submission.submissionId}`);
                           }}

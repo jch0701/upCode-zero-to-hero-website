@@ -1,4 +1,5 @@
 import { supabase } from "../../config.js";
+import { getUserNameFromId } from "../../util/getUserNameFromId.js";
 
 // Get all projects (not including starting repo link, details file, recommendations and submissions)
 /*
@@ -23,43 +24,33 @@ project_details: {
 export const getAllBasicDetailsOnly = async (req, res) => {
   const { data: projects, error: initialFetchError } = await supabase
     .from("projects")
-    .select("projectId, title, shortDescription, difficulty, category, creatorId, lastUpdated");
+    .select(`
+      projectId,
+      title,
+      shortDescription,
+      difficulty,
+      category,
+      creatorId,
+      lastUpdated,
+      Users!creatorId(fname, lname),
+      Project_Tracking(count),
+      Submissions(count)
+    `);
 
   if (initialFetchError) return res.status(500).json({ error: initialFetchError });
-  // Enrich each project with creator name and counts
-  const enrichedData = await Promise.all(
-    projects.map(async (project) => {
-      // Get creator name
-      const { data: userData } = await supabase
-        .from("Users")
-        .select("fname, lname")
-        .eq("userId", project.creatorId)
-        .single();
 
-      const creatorName = userData
-        ? `${userData.fname} ${userData.lname}`
-        : null;
-
-      // Get track count
-      const { count: trackCount } = await supabase
-        .from("Project_Tracking")
-        .select("*", { count: "exact" })
-        .eq("projectId", project.projectId);
-
-      // Get submission count
-      const { count: submissionCount } = await supabase
-        .from("Submissions")
-        .select("*", { count: "exact" })
-        .eq("projectId", project.projectId);
-
-      return {
-        ...project,
-        creatorName,
-        trackCount: trackCount || 0,
-        submissionCount: submissionCount || 0,
-      };
-    })
-  );
+  const enrichedData = projects.map(project => ({
+    projectId: project.projectId,
+    title: project.title,
+    shortDescription: project.shortDescription,
+    difficulty: project.difficulty,
+    category: project.category,
+    creatorId: project.creatorId,
+    lastUpdated: project.lastUpdated,
+    creatorName: project.Users ? `${project.Users.fname} ${project.Users.lname}` : null,
+    trackCount: project.Project_Tracking?.length || 0,
+    submissionCount: project.Submissions?.length || 0,
+  }));
 
   return res.json(enrichedData);
 };
@@ -91,58 +82,38 @@ Excluded: trackCount: number; //dynamically computed, not included at the moment
 export const getByTitleComplete = async (req, res) => {
   const { data: project, error: initialFetchError } = await supabase
     .from("projects")
-    .select("*")
+    .select(`
+      *,
+      Users!creatorId(fname, lname),
+      Submissions(*)
+    `)
     .eq("title", req.params.title)
     .single();
 
   if (initialFetchError) return res.status(500).json({ error: initialFetchError });
 
-  // Get creator name
-  project.creatorName = "";
-  const { data: userData, error: userDataError } = await supabase
-    .from("Users")
-    .select("fname, lname")
-    .eq("userId", project.creatorId)
-    .single();
-  if (userDataError) return res.status(500).json({ error: userDataError });
-  project.creatorName = userData ? `${userData.fname} ${userData.lname}` : "";
-
-  // Enrich project with recommendations and submissions
-  project.recommendations = [];
-  const { data: recommendations, error: recommendationsError } = await supabase
+  // Fetch recommendations separately (polymorphic relationship)
+  const { data: recommendations } = await supabase
     .from("Recommendations")
     .select("*")
-    .eq("projectId", project.projectId)
-    .then(({ data }) => data);
+    .eq("sourceId", project.projectId)
+    .eq("sourceType", "project");
 
-  if (recommendationsError) return res.status(500).json({ error: recommendationsError });
-  project.recommendations = [...recommendations];
-
-  project.submissions = [];
-  const { data: submissions, error: submissionsError } = await supabase
-    .from("Submissions")
-    .select("*")
-    .eq("projectId", project.projectId);
-
-  if (submissionsError) return res.status(500).json({ error: submissionsError });
-  project.submissions = [...submissions];
-
-  project.isMarkedAsDone = false;
-  project.isTracking = false;
-  const { data: trackingData, error: trackingDataError } = await supabase
+  // Get tracking data for current user
+  const { data: trackingData } = await supabase
     .from("Project_Tracking")
-    .select("isTracking", "isMarkedAsDone")
+    .select("isTracking, isMarkedAsDone")
     .eq("projectId", project.projectId)
     .eq("userId", req.user.userId)
     .single();
 
-  if (trackingDataError && trackingDataError.code !== "PGRST116") {
-    return res.status(500).json({ error: trackingDataError });
-  }
-  if (trackingData) {
-    project.isMarkedAsDone = trackingData.isMarkedAsDone;
-    project.isTracking = trackingData.isTracking;
-  }
-  return res.json(project);
-}
+  return res.json({
+    ...project,
+    creatorName: project.Users ? `${project.Users.fname} ${project.Users.lname}` : null,
+    recommendations: recommendations || [],
+    submissions: project.Submissions || [],
+    isMarkedAsDone: trackingData?.isMarkedAsDone || false,
+    isTracking: trackingData?.isTracking || false,
+  });
+};
 

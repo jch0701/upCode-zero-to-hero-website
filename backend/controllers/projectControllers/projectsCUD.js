@@ -50,6 +50,33 @@ export const createProject = async (req, res) => {
   return res.status(201).json(newProject);
 };
 
+// Put tracking data (user level) for the project
+/*
+Input:
+  Params: projectId: number, userId: number
+  Body: {
+    isTracking: boolean;
+    isMarkedAsDone: boolean;
+  }
+  Output: None
+*/
+
+export const putTrackingData = async(req, res) => {
+  const { projectId, userId } = req.params;
+  const trackingData = req.body;
+
+  // Upsert tracking data
+  const { error: trackingError } = await supabase
+    .from("Project_Tracking")
+    .upsert({
+      projectId,
+      userId,
+      ...trackingData
+    });
+  if (trackingError) return res.status(500).json({ error: trackingError });
+  return res.status(200).json({ message: "Tracking data updated successfully" });
+}
+
 // Update project details
 /*
 Input: 
