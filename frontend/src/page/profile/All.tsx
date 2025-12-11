@@ -19,7 +19,14 @@ export const All: React.FC = () => {
     // Load the active user from localStorage
     const activeUserRaw = localStorage.getItem("activeUser");
     const activeUser = activeUserRaw ? JSON.parse(activeUserRaw) : null;
-
+    if(!activeUser){
+        return(
+            <div className="text-white p-10">
+            <h1>You must be logged in to view your profile.</h1>
+            <a href="/login" className="text-blue-300 underline">Go to Login</a>
+            </div>
+        );
+    }
     return (
     <div className="flex">
         {/*navbar vertically*/}
