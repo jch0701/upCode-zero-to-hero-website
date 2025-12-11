@@ -24,6 +24,8 @@ import { AddChapter } from "./page/roadmaps/AddChapter";
 import { AddNode } from "./page/roadmaps/AddNode";
 import { RecommendedProject } from "./page/roadmaps/Recommendation/Project";
 import { RecommendedCareer } from "./page/roadmaps/Recommendation/Career";
+import { AddCareer } from "./page/career/AddCareer.tsx";
+import CareerDetailsModal from "@/page/career/CareerInfoSub";
 
 const router = createBrowserRouter([
   {
@@ -66,7 +68,14 @@ const router = createBrowserRouter([
           { path: "submission/:submissionId", element: <SubmissionDetails /> },
         ],
       },
-      { path: "career", element: <Career /> },
+      { path: "career",
+        children: [
+          { index: true, element: <Career /> },
+          { path: "addCareer", element: <AddCareer />},
+          { path: ":id/:slug", element: <CareerDetailsModal />},
+          
+        ],
+      },
       { path: "profile", element: <All /> },
       { path: "signup", element: <Signup_Pg /> },
       { path: "forgot-password", element: <ForgotPassword_Pg /> },
