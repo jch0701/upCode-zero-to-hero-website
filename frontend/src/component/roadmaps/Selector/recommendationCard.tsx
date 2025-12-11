@@ -1,5 +1,5 @@
 import type { ProjectType } from "@/store/projectsSlice";
-import { createRecommendation, removeRecommendation, type Recommendation } from "@/store/recommendationSlice";
+import { createRecommendation, removeRecommendation, type RecommendationType } from "@/store/recommendationSlice";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -16,7 +16,7 @@ const RecommendationCard: React.FC<RecommendProps> =({
     const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
     const projectTitle = projects.find(p => p.projectId === selectedId)?.title || 'Unknown Title';
     const { chapterID } = useParams<{ chapterID: string }>();
-    const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as Recommendation[];
+    const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
     const recommendedID = recommendedData.find(data => (
         data.sourceId === Number(chapterID) && 
         data.sourceType === "Roadmap" && 

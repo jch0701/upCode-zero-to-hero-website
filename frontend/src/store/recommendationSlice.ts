@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface Recommendation {
+export interface RecommendationType {
   recommendationId: number;
   sourceId: number;
   targetId: number;
@@ -10,10 +10,10 @@ export interface Recommendation {
 }
 
 interface RecommendationState {
-  recommendations: Recommendation[];
+  recommendations: RecommendationType[];
 }
 
-export type InitialRecommendation = Omit<Recommendation, "recommendationId">;
+export type InitialRecommendation = Omit<RecommendationType, "recommendationId">;
 
 let nextRecommendationId = 1;
 function generateRecommendationId() {
@@ -51,7 +51,7 @@ const recommendationSlice = createSlice({
   initialState,
   reducers: {
     createRecommendation: (state, action) => {
-      const newRecommendation: Recommendation = {
+      const newRecommendation: RecommendationType = {
         recommendationId: generateRecommendationId(),
         ...action.payload,
       };

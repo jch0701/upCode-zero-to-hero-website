@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import type { RoadmapItemCardProps } from './roadmapCard.tsx';
 import type { ProjectType } from '@/store/projectsSlice.ts';
 import Recommendation from './recommendation.tsx';
+import type { RecommendationType } from '@/store/recommendationSlice.ts';
+
 
 interface PillarListProps {
     selectedRoadmapId: number; 
@@ -15,6 +17,7 @@ const PillarList: React.FC<PillarListProps> = ({ selectedRoadmapId }) => {
 const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
 const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
 const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
+const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
 const filteredPillars = pillarsData.filter(pillar => pillar.roadmapID === selectedRoadmapId);
 const roadmapSlug = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.roadmapSlug || 'Unknown Roadmap Slug';
 const roadmapTitle = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.title || 'Unknown Roadmap';
@@ -28,20 +31,13 @@ function navigateToProjectDetails(projectId: number) {
     navigate(`/project/${projectId}`);
 }
 
-// Helper function to check if a pillar has matching projects
+// Helper function to check if a pillar has project in recommended data
 function hasProjects(pillar: PillarCardProps): boolean {
     if(Number(userID) === creator) return true;
-    const chapterProjects = projects.filter(project => {
-        if (project.difficulty !== pillar.difficulty) {
-            return false;
-        }
-        const pillarCategories = Array.isArray(pillar.category) ? pillar.category : [pillar.category];
-        if (!pillarCategories.includes(project.category)) {
-            return false;
-        }
-        return true;
-    });
-    return chapterProjects.length > 0;
+    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar.chapterID && data.sourceType === "Roadmap"));
+    const uniqueChapterIds = [...new Set(filterRecommendedData.map(data => data.sourceId))];
+    if(uniqueChapterIds.includes(pillar.chapterID)) return true;
+    return false;
 }
 
 const [openChapterId, setOpenChapterId] = useState<number | null>(null);

@@ -7,9 +7,10 @@ import type { PillarCardProps } from "./pillarCard";
 interface recommendationListProps {
     selectedChapterID: number
     selectedSection: string
+    searchQuery: string
 }
 
-const RecommendedList: React.FC<recommendationListProps> = ({selectedChapterID, selectedSection}) => {
+const RecommendedList: React.FC<recommendationListProps> = ({selectedChapterID, selectedSection, searchQuery}) => {
     const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
     const pillars = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
 
@@ -37,14 +38,34 @@ const RecommendedList: React.FC<recommendationListProps> = ({selectedChapterID, 
         }
         else if (selectedSection === "not-recommended")
             return !chapterCategories.includes(project.category);
-    }).map(p => p.projectId);
+    })
+
+    const normalizedQuery = searchQuery.toLowerCase().trim();
+
+    const filteredCandidates = candidate.filter(project => {
+        if (!normalizedQuery) {
+            return true; // If query is empty, show all primary candidates
+        }
+
+        // Check if query matches title, category, or difficulty
+        const titleMatch = project.title.toLowerCase().includes(normalizedQuery);
+        const categoryMatch = project.category.toLowerCase().includes(normalizedQuery);
+        const difficultyMatch = project.difficulty.toLowerCase().includes(normalizedQuery);
+        
+        return titleMatch || categoryMatch || difficultyMatch;
+    });
+
+    // Map the final filtered list to project IDs for rendering
+    const finalIds = filteredCandidates.map(p => p.projectId);
 
     return (
         <div className="w-full mx-auto">
             <div className="flex flex-wrap gap-2">
-                {candidate.length === 0 ? (
-                    <p className="text-gray-400 text-center mt-10">No candidate projects found.</p>
-                ) : (candidate.map((projectId) => (
+                {finalIds.length === 0 ? (
+                    <div className="w-full mx-auto">
+                        <p className="text-gray-400 text-center mb-4">No candidate projects found.</p>
+                    </div>
+                ) : (finalIds.map((projectId) => (
                     <div className='mb-4' key={projectId}>
                         <RecommendationCard selectedId={projectId}/>
                     </div>
