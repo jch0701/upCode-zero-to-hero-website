@@ -35,20 +35,20 @@ export function SettingContent(){
   }
   return(
     <div>
-    <label className="block text-center text-white text-4xl font-bold pt-1 mt-2 -mb-15 ">Settings</label>
+    <label className="block text-center text-indigo-600 text-6xl font-bold pt-1 mt-2 -mb-15 ">Settings</label>
     <div className="w-full flex justify-center items-center py-20">
-    <div className="w-[600px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-xl p-10 space-y-8">
-    <label className="block text-start font-bold text-4xl text-white mb-5">Logout Your Account</label>
+    <div className="w-[600px] bg-gray-800/70 backdrop-blur-lg border border-white/30 rounded-3xl shadow-xl p-10 space-y-8">
+    <label className="block text-start font-bold text-2xl text-indigo-400 mb-5">Logout Your Account</label>
       <button
         onClick={handleLogout}
-        className="bg-white/20 border border-white/20 text-white px-4 py-1 rounded-2xl hover:bg-red-600 flex items-center gap-2">
+        className="bg-white/20 border border-white/20 text-white px-4 py-1 rounded-2xl hover:bg-red-500 flex items-center gap-2">
         <img src={logout_icon} alt="logout" className="h-5 w-5"/>
         Logout
       </button>
-      <label className="block text-start font-bold text-4xl text-white mb-5">Permanant Delete Account</label>
+      <label className="block text-start font-bold text-2xl text-indigo-400 mb-5">Permanant Delete Account</label>
       <button
         onClick={handleDelete}
-        className="bg-white/20 border border-white/20 text-white px-4 py-1 rounded-2xl hover:bg-red-600 flex items-center gap-2">
+        className="bg-white/20 border border-white/20 text-white px-4 py-1 rounded-2xl hover:bg-red-500 flex items-center gap-2">
         <img src={delete_icon} alt="delete" className="h-5 w-5"/>
         Delete Account
       </button>

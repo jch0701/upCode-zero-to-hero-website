@@ -20,7 +20,7 @@ function ProfileRow({
 }){
     return(
         <div className= "space-y-2 ">
-            <label className="block w-full text-lg font-bold text-white text-start">{label}</label>
+            <label className="block w-full text-lg font-bold text-indigo-400 text-start">{label}</label>
             <div className="w-full flex items-center bg-white/50 px-4 py-2 rounded-full text-black gap-2">
                 {icon && (
                     <img src={icon}     
@@ -110,14 +110,14 @@ export function ProfileContent(){
 
     return (
         <div>
-        <label className="block text-center text-white text-4xl font-bold pt-1 mt-2 -mb-15 ">Profile</label>
+        <label className="block text-center text-indigo-600 text-6xl font-bold pt-1 mt-2 -mb-15 ">Profile</label>
         <div className="w-full flex justify-center items-center py-20">
-            <div className="w-[600px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-xl p-10 space-y-8">
+            <div className="w-[600px] bg-gray-800/70 backdrop-blur-lg border border-white/30 rounded-3xl shadow-xl p-10 space-y-8">
             
                 <div className="flex flex-col items-center space-y-4">
                     <img src={profile.avatar} alt="" className="w-50 h-50 rounded-full border-4 border-white/50 object-cover shadow-lg bg-fuchsia-200"/>
                     {isEditing && !showAvatar && (
-                        <button className="text-sm text-purple-300 hover:text-purple-200" onClick={() => setshowAvatar(true)}>
+                        <button className="text-sm text-indigo-400 hover:text-purple-200" onClick={() => setshowAvatar(true)}>
                             Change Picture
                         </button>
                     )}
@@ -142,7 +142,7 @@ export function ProfileContent(){
                 <div className="flex justify-end">
                     <button
                         onClick={() => setisEditing(true)}
-                        className="flex items-center gap-2 text-purple-300 hover:text-purple-200">
+                        className="flex items-center gap-2 text-indigo-400 hover:text-indigo-500">
                     <img src={edit_icon} alt="" className="w-5 h-5" />
                         Edit Profile
                     </button>

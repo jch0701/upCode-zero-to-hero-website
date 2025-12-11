@@ -4,15 +4,14 @@ import {
   FieldGroup,
   FieldLabel
 } from "@/component/shadcn/field";
-import { useRef } from "react";
 
 import { Input } from "@/component/shadcn/input";
 import { Button } from "@/component/shadcn/button";
 import { Form } from "@/component/form";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
-
+import { update_Activity } from "@/component/activity/activity_tracker";
 type SubmissionFormProps = {
   close: () => void;
   openAsCreateForm?: boolean;
@@ -27,7 +26,8 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
   // Currently creatorId is bugged
   // const creatorId = useSelector((state: any) => state.profile.userId); 
   const creatorId = 1;
-
+  const submissionCounted = useRef(false);
+ 
   async function handleSubmit(fd: FormData) {
     const payload: any = {
       ...Object.fromEntries(fd.entries()),
@@ -40,8 +40,17 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
     } else {
       delete payload.rationaleFile;
     }
+
     console.log("Submitting payload:", payload);
     dispatch({ type: openAsCreateForm ? "submissions/addSubmission" : "submissions/editSubmission", payload });
+
+    //Profile usage
+    if (openAsCreateForm && !submissionCounted.current) {
+      update_Activity(activity => {
+        activity.submissions = (activity.submissions || 0) + 1;
+      }, { type: "submission", id: projectId });
+      submissionCounted.current = true; // prevent double count in the same submit event
+    }
     close();
   }
 
