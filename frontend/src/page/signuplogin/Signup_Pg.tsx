@@ -25,8 +25,19 @@ const Signup_Pg: FC = () => {
   const [errors, setErrors] = React.useState<string[]>([]);
   const navigate = useNavigate();
 
+  function getNextUserId() {
+  const usersRaw = localStorage.getItem("users");
+  const users = usersRaw ? JSON.parse(usersRaw) : [];
+
+  if (users.length === 0) return 101; // first user ID
+
+  const maxId = Math.max(...users.map((u: any) => Number(u.userId)));
+    return maxId + 1;
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     const usernameErrors = Validate_Username(username);
     const emailErrors = Validate_Email(email);
     const passwordErrors = Validate_Password(password);
@@ -39,17 +50,31 @@ const Signup_Pg: FC = () => {
     ];
     setErrors(errormsg);
 
-    if (errormsg.length > 0) {
+    if (errormsg.length > 0) return;
+
+    // Create new user with incremental ID
+    const newUser = {
+      userId: getNextUserId(),
+      username,
+      email,
+      password, // plaintext only for dev
+      role,
+      createdAt: Date.now(),
+    };
+
+  const usersRaw = localStorage.getItem("users");
+  const users = usersRaw ? JSON.parse(usersRaw) : [];
+
+    if (users.some((u: any) => u.email === email)) {
+      setErrors(["- Email is already registered"]);
       return;
-    } else {
-      alert(
-          "Account created successfully!\n" +
-          `Username: ${username}\n` +
-          `Email: ${email}\n` +
-          `Role: ${role}\n`
-      );
-      navigate("/login");
     }
+
+  users.push(newUser);
+  localStorage.setItem("users", JSON.stringify(users));
+
+  alert("Account created successfully!");
+  navigate("/login");
   };
 
   return (

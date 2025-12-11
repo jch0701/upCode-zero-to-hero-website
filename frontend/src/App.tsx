@@ -27,6 +27,12 @@ import { AddChapter } from "./page/roadmaps/AddChapter";
 import { AddNode } from "./page/roadmaps/AddNode";
 import { RecommendedProject } from "./page/roadmaps/Recommendation/Project";
 import { RecommendedCareer } from "./page/roadmaps/Recommendation/Career";
+import AdminLayout from "./page/admin/adminLayout";
+import AdminDashboard from "./page/admin/ad_dashboard";
+import Admin_Users from "./page/admin/ad_user";
+import Admin_Roadmaps from "./page/admin/ad_roadmap";
+import Admin_Projects from "./page/admin/ad_project";
+import Admin_Analytics from "./page/admin/ad_analytics";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +81,18 @@ const router = createBrowserRouter([
       { path: "*", element: <ErrorBoundary /> },
     ],
   },
+  //Admin
+  {
+    path:"/admin",
+    element: <AdminLayout/>,
+    children:[
+      {index: true, element: <AdminDashboard/>},
+      {path: "users_admin", element: <Admin_Users/> },
+      { path: "roadmaps_admin", element: <Admin_Roadmaps/> },
+      { path: "projects_admin", element: <Admin_Projects/> },
+      { path: "analytics_admin", element: <Admin_Analytics/> }
+    ]
+   },
 ]);
 
 function App() {

@@ -7,6 +7,7 @@ import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "../image";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
 import { addRoadmap, editRoadmap, deleteRoadmapAndCascade } from "@/store/roadmapSlice";
+import { update_Activity } from "@/component/activity/activity_tracker";
 
 interface RoadmapDetailFormProps{
     mode: "add" | "edit";
@@ -66,6 +67,9 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                         isFavourite: false,
                     })
                 )
+                 update_Activity((activity) => {
+                    activity.roadmap_created = (activity.roadmap_created || 0) + 1;
+                }, { type: "roadmap_created", id: queryTitle });
             }
             if (mode === 'edit'){
                 dispatch(
@@ -88,6 +92,9 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
         const handleDelete = () => {
             if (roadmapID) {
             dispatch(deleteRoadmapAndCascade(Number(roadmapID)));
+            update_Activity((activity) => {
+            activity.roadmap_deleted = (activity.roadmap_deleted || 0) + 1;
+        }, { type: "roadmap_deleted", id: queryTitle });
         }
         navigate(-2);
         };
