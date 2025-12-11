@@ -13,6 +13,23 @@ export function useGetCommitHistory(repoLink: string) {
   })
 }
 
+export function useGetMainRepoLanguage(repoLink: string) {
+  return useQuery({
+    queryKey: ["mainRepoLanguage", repoLink],
+    queryFn: async () => {
+      const { owner, repo } = parseGitHubRepoLink(repoLink);
+      console.log("Fetching main language for:", owner, repo);
+      const url = `https://api.github.com/repos/${owner}/${repo}`;
+      const response = await Api.get(url, {
+        headers: { 
+          Accept: "application/vnd.github+json" 
+        },
+      });
+      return response.data.language;
+    }
+  })
+}
+
 // utils/github.ts
 const regex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+?)(\.git)?(\/|$)/;
 export function parseGitHubRepoLink(repoLink: string): { owner: string; repo: string } {
@@ -22,6 +39,7 @@ export function parseGitHubRepoLink(repoLink: string): { owner: string; repo: st
   }
   return { owner: match[1], repo: match[2] };
 }
+
 
 export async function fetchAllCommits(owner: string, repo: string) {
   const perPage = 100;
