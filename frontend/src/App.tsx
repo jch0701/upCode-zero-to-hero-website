@@ -4,7 +4,7 @@ import { Overview } from "./page/Overview";
 import { Roadmap } from "./page/roadmaps/Roadmap";
 import { RoadmapDetails } from "./page/roadmaps/RoadmapDetails";
 import { Project } from "./page/projects/Project";
-import { Career } from "./page/Career";
+import { Career } from "./page/career/Career";
 import { All } from "./page/profile/All";
 import Login_Pg from "./page/signuplogin/Login_Pg";
 import Signup_Pg from "./page/signuplogin/Signup_Pg";
