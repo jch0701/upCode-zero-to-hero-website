@@ -117,7 +117,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                 <form onSubmit={handleSubmit}>
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Left Section: Order, Difficulty, Category, Prerequisite Info */}
-                    <div className="w-full md:w-[55%]">
+                    <div className="w-full md:w-[55%] md:order-none">
                         {/* Order Section */}
                         <h3 className="text-xl font-bold mb-2 text-left">Order</h3>
                         <FormBar query={queryOrder} setQuery={setQueryOrder} placeholder="Enter order (integer)" />
@@ -144,7 +144,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         </p>
                     </div>
                     {/* Right Section: Tags */}
-                    <div className="w-full md:w-[45%]">
+                    <div className="w-full md:w-[45%] order-first md:order-none">
                         {/* Title Section */}
                         <h3 className="text-xl font-bold mb-2 text-left">Chapter Title</h3>
                         <FormBar query={queryTitle} setQuery={setQueryTitle} placeholder="Enter a title" />
