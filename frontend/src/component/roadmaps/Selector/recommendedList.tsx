@@ -2,7 +2,7 @@ import React from "react";
 import RecommendationCard from "@/component/roadmaps/Selector/recommendationCard";
 import { useSelector } from "react-redux";
 import type { ProjectType } from "@/store/projectsSlice";
-import type { PillarCardProps } from "./pillarCard";
+import type { PillarType } from "@/store/pillarsSlice";
 
 interface recommendationListProps {
     selectedChapterID: number
@@ -12,7 +12,7 @@ interface recommendationListProps {
 
 const RecommendedList: React.FC<recommendationListProps> = ({selectedChapterID, selectedSection, searchQuery}) => {
     const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
-    const pillars = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
+    const pillars = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
 
     // Find the chapter/pillar to determine categories (and optionally difficulty)
     const chapter = pillars.find(p => p.chapterID === selectedChapterID);

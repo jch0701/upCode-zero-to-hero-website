@@ -1,7 +1,7 @@
+import type { PillarType } from '@/store/pillarsSlice';
 import type { Tag } from '../tag'; 
-import type { PillarCardProps } from './Selector/pillarCard';
 
-export const generateTags = (roadmapID: number, pillarsData: PillarCardProps[]): Tag[] => {
+export const generateTags = (roadmapID: number, pillarsData: PillarType[]): Tag[] => {
   const filtered = pillarsData.filter(p => p.roadmapID === roadmapID);
 
   const difficultyArr = filtered.map(p => p.difficulty);
