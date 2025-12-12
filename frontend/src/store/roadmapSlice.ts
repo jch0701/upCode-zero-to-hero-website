@@ -94,9 +94,12 @@ export const deleteRoadmapAndCascade = (roadmapID: number) => (dispatch: any, ge
         const links: any[] = state.link?.linkList?.filter((l: any) => l.chapterID === ch.chapterID) ?? [];
         for (const l of links) {
             dispatch(deleteLink(l.nodeID));
+            console.log("Delete link:", l.title);
         }
         dispatch(deleteChapter(ch.chapterID));
+        console.log("Delete chapter:", ch.title);
     }
     // finally delete the roadmap itself
     dispatch(deleteRoadmap(roadmapID));
+    console.log("Delete roadmap:", roadmapID);
 };

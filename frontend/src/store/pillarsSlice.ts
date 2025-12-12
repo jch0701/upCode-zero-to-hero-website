@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { pillarsData } from "@/dummy";
 import { generateSlug } from "@/lib/utils";
-import { touchRoadmap } from "./action";
 import { deleteLink } from "./linksSlice";
 
 export interface PillarType{
@@ -93,16 +92,14 @@ export const { addChapter, editChapter, deleteChapter, toggleView, autosetViewTr
 export default pillarSlice.reducer;
 
 export const deleteChapterAndCascade = (chapterID: number) => (dispatch: any, getState: any) => {
-    // find pillar to get roadmapID before deletion
     const state: any = getState();
-    const pillar = state.chapter?.pillarList?.find((p: any) => p.chapterID === chapterID);
-    const roadmapID = pillar?.roadmapID;
     // delete any links that belong to this chapter
     const links: any[] = state.link?.linkList?.filter((l: any) => l.chapterID === chapterID) ?? [];
     for (const l of links) {
         dispatch(deleteLink(l.nodeID));
+        console.log("Delete link:", l.title);
     }
     dispatch(deleteChapter(chapterID));
-    if (roadmapID !== undefined) dispatch(touchRoadmap(roadmapID));
+    console.log("Delete chapter:", chapterID);
 };
 
