@@ -102,6 +102,7 @@ function toggleProjectsVisibility(chapterID: number) {
 
                 {hasCareer() && (
                     <div>
+                        <hr className="border-t border-gray-600 my-4" />
                         <br></br>
                         <h3 className='text-3xl font-semibold text-white text-left'>Recommended Career</h3>
                         <Recommendation
