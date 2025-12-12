@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import type { PillarType } from '@/store/pillarsSlice';
 import type { RoadmapType } from '@/store/roadmapSlice';
 import type { CareerItem } from '@/store/careerSlice';
+import { CareerItemCard } from '@/component/career/Selector/careerCard';
 
 interface Recommendation {
   recommendationId: number;
@@ -95,10 +96,11 @@ const Recommendation: React.FC<RecommendationProps> =
                     {roadmapCareers.map((career: CareerItem) => (
                         <div className="flex-shrink-0 w-70" key={career.id}>
                             {/* Roadmap Suggested Career */}
+                            <CareerItemCard key={career.id} {...career}/>
                         </div>
                     ))}
                     {userID === creator && (
-                    <AddRecommendation link={`/roadmap/${roadmapID}/${roadmapSlug}/recommend-career`}/>)}
+                    <AddRecommendation extraClass=' h-100 ' link={`/roadmap/${roadmapID}/${roadmapSlug}/recommend-career`}/>)}
                 </div>
                 ) : (
                 <>
