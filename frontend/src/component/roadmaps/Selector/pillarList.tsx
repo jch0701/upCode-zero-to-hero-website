@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import PillarCard, { type PillarCardProps } from '../Selector/pillarCard.tsx';
+import PillarCard from '../Selector/pillarCard.tsx';
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
-import type { RoadmapItemCardProps } from './roadmapCard.tsx';
 import type { ProjectType } from '@/store/projectsSlice.ts';
 import Recommendation from './recommendation.tsx';
 import type { RecommendationType } from '@/store/recommendationSlice.ts';
+import type { RoadmapType } from '@/store/roadmapSlice.ts';
+import type { PillarType } from '@/store/pillarsSlice.ts';
 
 
 interface PillarListProps {
@@ -14,8 +15,8 @@ interface PillarListProps {
 
 const PillarList: React.FC<PillarListProps> = ({ selectedRoadmapId }) => {
 // Filter pillars based on selectedRoadmapId
-const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
-const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
+const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
+const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
 const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
 const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
 const filteredPillars = pillarsData.filter(pillar => pillar.roadmapID === selectedRoadmapId);
@@ -32,7 +33,7 @@ function navigateToProjectDetails(projectId: number) {
 }
 
 // Helper function to check if a pillar has project in recommended data
-function hasProjects(pillar: PillarCardProps): boolean {
+function hasProjects(pillar: PillarType): boolean {
     if(Number(userID) === creator) return true;
     const filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar.chapterID && data.sourceType === "Roadmap"));
     const uniqueChapterIds = [...new Set(filterRecommendedData.map(data => data.sourceId))];
@@ -67,7 +68,7 @@ function toggleProjectsVisibility(chapterID: number) {
                 <div key={pillar.chapterID} className='mb-4'>
                     <PillarCard 
                         key={pillar.chapterID}
-                        {...pillar}
+                        selectedChapterID={pillar.chapterID}
                         onToggleClick={toggleProjectsVisibility}
                         isOpen={openChapterId === pillar.chapterID}
                         showArrow={hasProjects(pillar)}

@@ -44,15 +44,7 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({proje
                 {roadmapsData.map((rec: any) => (
                   <div key={rec.id} onClick={() => navigate(`/roadmaps/${rec.targetId}`)}>
                     <RoadmapItemCard
-                      roadmapID={rec.roadmapID}
-                      roadmapSlug={rec.roadmapSlug}
-                      imageSrc={rec.imageSrc}
-                      title={rec.title}
-                      createdDate={rec.createdDate}
-                      modifiedDate={rec.modifiedDate}
-                      description={rec.description}
-                      creator={rec.creator}
-                      isFavourite={rec.isFavourite}
+                      selectedRoadmapID={rec.roadmapID}
                     />
                   </div>
                 ))}

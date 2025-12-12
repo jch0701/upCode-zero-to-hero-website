@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { X } from 'lucide-react';
 import FormBar from "../formBox";
 import { validateDescription, validateTitle } from "../validateFormBox";
 import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "../image";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store";
-import { addRoadmap, editRoadmap, deleteRoadmapAndCascade } from "@/store/roadmapSlice";
+import { addRoadmap, editRoadmap, deleteRoadmapAndCascade, type RoadmapType } from "@/store/roadmapSlice";
 import { update_Activity } from "@/component/activity/activity_tracker";
 
 interface RoadmapDetailFormProps{
     mode: "add" | "edit";
-    imageSrc?: string;
-    title?: string;
-    description?: string;
+    selectedRoadmapID? : number;
 }
 
 const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
-    mode, imageSrc, title, description}) => {
+    mode, selectedRoadmapID}) => {
         const navigate = useNavigate();
         const dispatch = useDispatch<AppDispatch>();
+        const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
+        const roadmapItem = roadmapData.find(p => p.roadmapID === selectedRoadmapID);
+        if (!roadmapItem && mode==="edit" ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
         const userID = localStorage.getItem("userID");
-        const {roadmapID} = useParams<{ roadmapID: string}>();
-        const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
-        const [queryDescription, setQueryDescription] = useState( mode === "edit" ? description ?? "" : "")
-        const [currentImageSrc, setCurrentImageSrc] = useState(mode === "edit" ? (imageSrc ?? defaultImageSrc) : defaultImageSrc);
+        const [queryTitle, setQueryTitle] = useState(mode === "edit" ? roadmapItem!.title ?? "" : "");
+        const [queryDescription, setQueryDescription] = useState( mode === "edit" ? roadmapItem!.description ?? "" : "")
+        const [currentImageSrc, setCurrentImageSrc] = useState(mode === "edit" ? (roadmapItem!.imageSrc ?? defaultImageSrc) : defaultImageSrc);
         const [errors, setErrors] = React.useState<string[]>([]);
         // Function to find the image URL based on the title keyword
         const getDynamicImageSrc = (inputTitle: string): string => {
@@ -74,7 +74,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
             if (mode === 'edit'){
                 dispatch(
                     editRoadmap({
-                        roadmapID: Number(roadmapID),
+                        roadmapID: Number(roadmapItem!.roadmapID),
                         roadmapSlug: "",
                         creatorID: Number(userID),
                         imageSrc:currentImageSrc,
@@ -90,8 +90,8 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
         }
 
         const handleDelete = () => {
-            if (roadmapID) {
-            dispatch(deleteRoadmapAndCascade(Number(roadmapID)));
+            if (roadmapItem!.roadmapID) {
+            dispatch(deleteRoadmapAndCascade(Number(roadmapItem!.roadmapID)));
             update_Activity((activity) => {
             activity.roadmap_deleted = (activity.roadmap_deleted || 0) + 1;
         }, { type: "roadmap_deleted", id: queryTitle });

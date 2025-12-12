@@ -134,7 +134,7 @@ export const Roadmap: React.FC = () => {
       <div className="fixed hidden md:block">
         <RoadmapSidebar visibleSections={visibleSidebarItems} />
       </div>
-      <div className="pl-5 pr-5 md:pl-72">
+      <div className="flex-1 min-w-0 pl-5 pr-5 md:pl-72">
         <SearchBar query={query} setQuery={setQuery} placeholder="Enter a roadmap title / category to see what other people saying about" />
         {availableSections.map((section) => {
           const items = getItemsForSection(section);
@@ -142,7 +142,7 @@ export const Roadmap: React.FC = () => {
           if (items.length === 0 && section.id !== "your-design") return null;
 
           return (
-            <SectionBlock key={section.id} id={section.id} title={section.title} extraClass="pt-18">
+            <SectionBlock key={section.id} id={section.id} title={section.title} extraClass="pt-18 w-full">
               <RoadmapItemList items={items} filterTag={section.tag} />
             </SectionBlock>
           );

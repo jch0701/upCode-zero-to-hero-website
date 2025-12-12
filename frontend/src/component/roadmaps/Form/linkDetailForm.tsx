@@ -4,25 +4,26 @@ import { X } from 'lucide-react';
 import FormBar from "../formBox";
 import { validateTitle, validateOrder, validateLink } from "@/component/roadmaps/validateFormBox";
 import { defaultImageSrc, bin } from "../image";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store";
-import { addLinkAndTouch, editLinkAndTouch, deleteLinkAndTouch } from "@/store/linksSlice";
+import { addLinkAndTouch, editLinkAndTouch, deleteLinkAndTouch, type LinkType } from "@/store/linksSlice";
 
 interface LinkDetailFormProps{
     mode: "add" | "edit";
-    title?: string;
-    order?: number;
-    link?: string;
+    selectedLinkID?: number;
 }
 
 const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
-    mode, title, order, link}) => {
+    mode, selectedLinkID}) => {
         const navigate = useNavigate();
         const dispatch = useDispatch<AppDispatch>();
-        const { chapterID, nodeID } = useParams<{ chapterID: string, nodeID: string }>();
-        const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
-        const [queryOrder, setQueryOrder] = useState(mode === "edit" && order !== undefined ? String(order) : "");
-        const [queryLink, setQueryLink] = useState(mode === "edit" ? link ?? "" : "");
+        const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
+        const linkItem = linkData.find(p => p.nodeID === selectedLinkID);
+        if (!linkItem && mode==="edit" ) return <p className="text-white text-center mt-10">Link not found</p>;
+        const { chapterID } = useParams<{ chapterID: string}>();
+        const [queryTitle, setQueryTitle] = useState(mode === "edit" ? linkItem!.title ?? "" : "");
+        const [queryOrder, setQueryOrder] = useState(mode === "edit" && linkItem!.order !== undefined ? String(linkItem!.order) : "");
+        const [queryLink, setQueryLink] = useState(mode === "edit" ? linkItem!.link ?? "" : "");
         const [errors, setErrors] = React.useState<string[]>([]);
         const handleSubmit = (e: React.FormEvent) => {
             e.preventDefault()
@@ -48,7 +49,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
             if (mode === "edit"){
                 dispatch(
                     editLinkAndTouch({
-                        nodeID: Number(nodeID),
+                        nodeID: Number(selectedLinkID),
                         chapterID: Number(chapterID),
                         title: queryTitle,
                         order: Number(queryOrder),
@@ -62,8 +63,8 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
         }
 
         const handleDelete = () => {
-        if (nodeID) {
-            dispatch(deleteLinkAndTouch(Number(nodeID)));
+        if (selectedLinkID) {
+            dispatch(deleteLinkAndTouch(Number(selectedLinkID)));
         }
         navigate(-1);
         };

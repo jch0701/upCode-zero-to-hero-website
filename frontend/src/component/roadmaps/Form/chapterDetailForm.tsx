@@ -4,31 +4,29 @@ import { X } from 'lucide-react';
 import FormBar, { type SelectorOption } from "../formBox";
 import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "../validateFormBox";
 import { defaultImageSrc, bin } from "../image";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store";
-import { addChapterAndTouch, editChapterAndTouch, deleteChapterAndTouch } from "@/store/pillarsSlice";
+import { addChapterAndTouch, editChapterAndTouch, deleteChapterAndTouch, type PillarType } from "@/store/pillarsSlice";
 
 interface ChapterDetailFormProps{
     mode: "add" | "edit";
-    title?: string;
-    description?: string;
-    difficulty?: string;
-    order?: number;
-    category?: string;
-    prerequisite?: string
+    selectedChapterID?: number;
 }
 
 const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
-    mode, title, description, difficulty, order, category, prerequisite}) => {
+    mode, selectedChapterID}) => {
         const navigate = useNavigate();
         const dispatch = useDispatch<AppDispatch>();
-        const {roadmapID, chapterID} = useParams<{ roadmapID: string, chapterID: string}>();
-        const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
-        const [queryDescription, setQueryDescription] = useState(mode === "edit" ? description ?? "" : "")
-        const [queryDifficulty, setQueryDifficulty] = useState(mode === "edit" ? difficulty?.toLowerCase() ?? "" : "")
-        const [queryOrder, setQueryOrder] = useState(mode === "edit" && order !== undefined ? String(order) : "");
-        const [queryCategory, setQueryCategory] = useState(mode === "edit" ? category ?? "" : "")
-        const [queryPrerequisite, setQueryPrerequisite] = useState(mode === "edit" ? prerequisite ?? "" : "")
+        const pillarData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+        const chapterItem = pillarData.find(p => p.chapterID === selectedChapterID);
+        if (!chapterItem && mode==="edit" ) return <p className="text-white text-center mt-10">Chapter not found</p>;
+        const {roadmapID} = useParams<{ roadmapID: string}>();
+        const [queryTitle, setQueryTitle] = useState(mode === "edit" ? chapterItem!.title ?? "" : "");
+        const [queryDescription, setQueryDescription] = useState(mode === "edit" ? chapterItem!.description ?? "" : "")
+        const [queryDifficulty, setQueryDifficulty] = useState(mode === "edit" ? chapterItem!.difficulty?.toLowerCase() ?? "" : "")
+        const [queryOrder, setQueryOrder] = useState(mode === "edit" && chapterItem!.order !== undefined ? String(chapterItem!.order) : "");
+        const [queryCategory, setQueryCategory] = useState(mode === "edit" ? chapterItem!.category ?? "" : "")
+        const [queryPrerequisite, setQueryPrerequisite] = useState(mode === "edit" ? chapterItem!.prerequisite ?? "" : "")
         const [errors, setErrors] = React.useState<string[]>([]);
         const difficultyOptions: SelectorOption[] = [
             { value: 'beginner', label: 'Beginner' },
@@ -64,7 +62,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
             if (mode === 'edit'){
                 dispatch(
                     editChapterAndTouch({
-                        chapterID: Number(chapterID),
+                        chapterID: Number(selectedChapterID),
                         chapterSlug: "",
                         roadmapID: Number(roadmapID),
                         title: queryTitle,
@@ -82,8 +80,8 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
         }
 
         const handleDelete = () => {
-        if (chapterID) {
-            dispatch(deleteChapterAndTouch(Number(chapterID)));
+        if (selectedChapterID) {
+            dispatch(deleteChapterAndTouch(Number(selectedChapterID)));
         }
         navigate(-2);
         };
