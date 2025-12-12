@@ -7,6 +7,7 @@ import Recommendation from './recommendation.tsx';
 import type { RecommendationType } from '@/store/recommendationSlice.ts';
 import type { RoadmapType } from '@/store/roadmapSlice.ts';
 import type { PillarType } from '@/store/pillarsSlice.ts';
+import type { CareerItem } from '@/store/careerSlice.ts';
 
 
 interface PillarListProps {
@@ -18,6 +19,7 @@ const PillarList: React.FC<PillarListProps> = ({ selectedRoadmapId }) => {
 const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
 const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
 const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
+const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];
 const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
 const filteredPillars = pillarsData.filter(pillar => pillar.roadmapID === selectedRoadmapId);
 const roadmapSlug = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.roadmapSlug || 'Unknown Roadmap Slug';
@@ -32,12 +34,25 @@ function navigateToProjectDetails(projectId: number) {
     navigate(`/project/${projectId}`);
 }
 
+function navigateToCareerDetails(careerId: number, careerSlug: string) {
+    navigate(`/career/${careerId}/${careerSlug}`);
+}
+
 // Helper function to check if a pillar has project in recommended data
 function hasProjects(pillar: PillarType): boolean {
     if(Number(userID) === creator) return true;
-    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar.chapterID && data.sourceType === "Roadmap"));
+    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar.chapterID && data.sourceType === "Chapter"));
     const uniqueChapterIds = [...new Set(filterRecommendedData.map(data => data.sourceId))];
     if(uniqueChapterIds.includes(pillar.chapterID)) return true;
+    return false;
+}
+
+// Helper function to check if a roadmap has career in recommended data
+function hasCareer(): boolean {
+    if(Number(userID) === creator) return true;
+    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === selectedRoadmapId && data.sourceType === "Roadmap"));
+    const uniqueRoadmapIds = [... new Set(filterRecommendedData.map(data => data.sourceId))];
+    if(uniqueRoadmapIds.includes(selectedRoadmapId)) return true;
     return false;
 }
 
@@ -84,6 +99,20 @@ function toggleProjectsVisibility(chapterID: number) {
                     )}
                 </div>
             )))}
+
+                {hasCareer() && (
+                    <div>
+                        <br></br>
+                        <h3 className='text-3xl font-semibold text-white text-left'>Recommended Career</h3>
+                        <Recommendation
+                            mode="career"
+                            selectedID={selectedRoadmapId}
+                            careers={careers}
+                            navigateDetails={navigateToCareerDetails}
+                            creator={creator.toString()}
+                        />
+                    </div>
+                )}
         </div>
     );
 };

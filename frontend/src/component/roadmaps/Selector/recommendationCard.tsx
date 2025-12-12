@@ -19,11 +19,11 @@ const RecommendationCard: React.FC<RecommendProps> =({
     const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
     const recommendedID = recommendedData.find(data => (
         data.sourceId === Number(chapterID) && 
-        data.sourceType === "Roadmap" && 
+        data.sourceType === "Chapter" && 
         data.targetId === selectedId &&
         data.targetType === "Project"
     ))?.recommendationId;
-    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === Number(chapterID) && data.sourceType === "Roadmap"));
+    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === Number(chapterID) && data.sourceType === "Chapter"));
     const uniqueProjectIds = [...new Set(filterRecommendedData.map(data => data.targetId))];
     const isRecommended = uniqueProjectIds.includes(selectedId);
     const colorClasses = isRecommended
@@ -39,7 +39,7 @@ const RecommendationCard: React.FC<RecommendProps> =({
             dispatch(
                 createRecommendation({
                     sourceId: Number(chapterID),
-                    sourceType: "Roadmap",
+                    sourceType: "Chapter",
                     targetId: selectedId,
                     targetType: "Project"
                 })

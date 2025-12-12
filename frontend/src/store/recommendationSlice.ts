@@ -25,21 +25,21 @@ const initialState: RecommendationState = {
     {
       recommendationId: 1,
       sourceId: 100081,
-      sourceType: "Roadmap",
+      sourceType: "Chapter",
       targetId: 1,
       targetType: "Project"
     },
     {
       recommendationId: 2,
       sourceId: 100081,
-      sourceType: "Roadmap",
+      sourceType: "Chapter",
       targetId: 2,
       targetType: "Project"
     },
     {
       recommendationId: 3,
       sourceId: 100081,
-      sourceType: "Roadmap",
+      sourceType: "Chapter",
       targetId: 3,
       targetType: "Project"
     }
