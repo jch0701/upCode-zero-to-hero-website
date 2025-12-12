@@ -6,7 +6,7 @@ import { validateTitle, validateOrder, validateDifficulty, validateCategory, val
 import { defaultImageSrc, bin } from "../../../lib/image";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store";
-import { addChapterAndTouch, editChapterAndTouch, deleteChapterAndTouch, type PillarType } from "@/store/pillarsSlice";
+import { addChapter, editChapter, deleteChapterAndCascade, type PillarType } from "@/store/pillarsSlice";
 
 interface ChapterDetailFormProps{
     mode: "add" | "edit";
@@ -48,7 +48,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
             } 
             if (mode === 'add'){
                 dispatch(
-                    addChapterAndTouch({
+                    addChapter({
                         roadmapID: Number(roadmapID),
                         title: queryTitle,
                         description: queryDescription,
@@ -61,13 +61,12 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
             }
             if (mode === 'edit'){
                 dispatch(
-                    editChapterAndTouch({
+                    editChapter({
                         chapterID: Number(selectedChapterID),
                         chapterSlug: "",
                         roadmapID: Number(roadmapID),
                         title: queryTitle,
                         description: queryDescription,
-                        modifiedDate: "",
                         difficulty: queryDifficulty.charAt(0).toUpperCase() + queryDifficulty.slice(1).toLowerCase(),
                         category: queryCategory,
                         prerequisite: queryPrerequisite,
@@ -81,7 +80,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
 
         const handleDelete = () => {
         if (selectedChapterID) {
-            dispatch(deleteChapterAndTouch(Number(selectedChapterID)));
+            dispatch(deleteChapterAndCascade(Number(selectedChapterID)));
         }
         navigate(-2);
         };

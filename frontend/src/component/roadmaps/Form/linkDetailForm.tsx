@@ -5,8 +5,7 @@ import FormBar from "../../formBox";
 import { validateTitle, validateOrder, validateLink } from "@/component/validateFormBox";
 import { defaultImageSrc, bin } from "../../../lib/image";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch } from "@/store";
-import { addLinkAndTouch, editLinkAndTouch, deleteLinkAndTouch, type LinkType } from "@/store/linksSlice";
+import { addLink, editLink, deleteLink, type LinkType } from "@/store/linksSlice";
 
 interface LinkDetailFormProps{
     mode: "add" | "edit";
@@ -16,7 +15,7 @@ interface LinkDetailFormProps{
 const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
     mode, selectedLinkID}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch<AppDispatch>();
+        const dispatch = useDispatch();
         const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
         const linkItem = linkData.find(p => p.nodeID === selectedLinkID);
         if (!linkItem && mode==="edit" ) return <p className="text-white text-center mt-10">Link not found</p>;
@@ -38,7 +37,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
             } 
             if (mode === "add"){
                 dispatch(
-                    addLinkAndTouch({
+                    addLink({
                         chapterID: Number(chapterID),
                         title: queryTitle,
                         order: Number(queryOrder),
@@ -48,7 +47,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
             }
             if (mode === "edit"){
                 dispatch(
-                    editLinkAndTouch({
+                    editLink({
                         nodeID: Number(selectedLinkID),
                         chapterID: Number(chapterID),
                         title: queryTitle,
@@ -64,7 +63,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
 
         const handleDelete = () => {
         if (selectedLinkID) {
-            dispatch(deleteLinkAndTouch(Number(selectedLinkID)));
+            dispatch(deleteLink(Number(selectedLinkID)));
         }
         navigate(-1);
         };

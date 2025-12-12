@@ -16,7 +16,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Java Fundamentals",
     description: "The Java Fundamentals roadmap is designed to build a strong foundation in the Java programming language. It starts with essential topics such as data types, control flow, arrays, and Object-Oriented Programming (OOP) concepts like classes, objects, inheritance, and polymorphism. You will also learn how to work with the Java Collections Framework, handle exceptions, and use Java’s functional features like lambda expressions and the Stream API. This roadmap prepares learners for real-world development and serves as a prerequisite for more advanced Java frameworks like Spring Boot.",
     createdDate: "2025-10-20",
-    modifiedDate: "2025-10-20",
     isFavourite: false,
     
   },
@@ -28,7 +27,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Python Basics",
     description: "Python Basics introduces new learners to one of the most popular and beginner-friendly programming languages. This roadmap covers variables, loops, conditions, functions, and basic data structures such as lists and dictionaries. You will also explore simple file handling, modules, and basic problem-solving techniques. The goal is to help beginners write clean and readable Python scripts while building confidence to continue toward intermediate Python topics or apply Python in fields like data analytics, automation, and AI.",
     createdDate: "2025-11-05",
-    modifiedDate: "2025-11-05",
     isFavourite: false,
     
   },
@@ -40,7 +38,6 @@ export const roadmapData: RoadmapType[] = [
     title: "JavaScript Essentials",
     description: "JavaScript Essentials provides a clear path for mastering the core features of JavaScript, the language of the web. This roadmap includes topics such as variables, functions, loops, arrays, objects, and basic DOM manipulation. You will also learn how JavaScript runs in the browser, how events work, and how to interact with HTML and CSS. These fundamentals form the base required for front-end frameworks like React, Angular, and Vue.",
     createdDate: "2025-08-15",
-    modifiedDate: "2025-11-15",
     isFavourite: false,
     
   },
@@ -52,7 +49,6 @@ export const roadmapData: RoadmapType[] = [
     title: "React for Beginners",
     description: "This roadmap introduces the basics of React, one of the most in-demand front-end frameworks. You will learn how to create components, manage state, handle props, and work with React Hooks such as useState and useEffect. The roadmap also covers JSX, component trees, and simple API fetching. By the end, you will understand how to build interactive and reusable UI components — an essential skill for modern web development.",
     createdDate: "2025-09-25",
-    modifiedDate: "2025-11-25",
     isFavourite: false,
     
   },
@@ -64,7 +60,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Node.js Fundamentals",
     description: "Node.js Fundamentals guides you into the world of backend JavaScript development. You will learn how Node.js works, how to use built-in modules, and how to create simple servers. The roadmap also covers asynchronous programming, callbacks, promises, and using npm packages. By understanding the Node.js runtime environment and event loop, you will be prepared to build APIs or move into full-stack development using frameworks like Express.js.",
     createdDate: "2025-11-09",
-    modifiedDate: "2025-12-05",
     isFavourite: false,
     
   },
@@ -76,7 +71,6 @@ export const roadmapData: RoadmapType[] = [
     title: "SQL Basics",
     description: "SQL Basics provides a foundational understanding of relational databases and the SQL language. You will learn how to create, read, update, and delete data using SQL queries. The roadmap covers essential concepts such as database design, normalization, joins, and indexing. By mastering SQL, you will be equipped to work with popular database systems like MySQL, PostgreSQL, and SQLite, which are crucial for backend development and data management.",
     createdDate: "2025-12-15",
-    modifiedDate: "2025-12-15",
     isFavourite: false,
     
   },
@@ -88,7 +82,6 @@ export const roadmapData: RoadmapType[] = [
     title: "HTML & CSS Fundamentals",
     description:  "HTML & CSS Fundamentals teaches the core building blocks of web development. You will learn how to structure webpages using HTML elements such as headings, paragraphs, lists, and forms. Then, you will work with CSS to style layouts, apply colors, spacing, and responsive design. This roadmap helps beginners create clean and attractive webpages and builds the foundation needed for JavaScript and front-end frameworks.",
     createdDate: "2025-11-11",
-    modifiedDate: "2025-12-20",
     isFavourite: false,
     
   },
@@ -100,7 +93,6 @@ export const roadmapData: RoadmapType[] = [
     title: "TypeScript Basics",
     description: "TypeScript Basics introduces the strongly typed superset of JavaScript that adds static types. You will learn about type annotations, interfaces, classes, and generics. The roadmap covers how TypeScript improves code quality and developer experience by catching errors early and enabling better tooling. By mastering TypeScript basics, you will be prepared to work on large-scale JavaScript applications and frameworks like Angular.",
     createdDate: "2025-12-05",
-    modifiedDate: "2026-01-05",
     isFavourite: false,
     
   },
@@ -112,7 +104,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Angular Fundamentals",
     description: "Angular Fundamentals covers the core concepts of the Angular framework. You will learn about components, templates, data binding, directives, services, and dependency injection. The roadmap also introduces Angular CLI, routing, and forms. By mastering these fundamentals, you will be able to build dynamic single-page applications and understand the architecture of modern front-end development with Angular.",
     createdDate: "2025-01-15",
-    modifiedDate: "2026-01-15",
     isFavourite: false,
     
   },
@@ -124,7 +115,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Python Advanced Concepts",
     description: "Explore advanced concepts in Python programming, including decorators, generators, context managers, metaclasses, and concurrency. This roadmap helps you deepen your understanding of Python's capabilities and prepares you for complex application development and optimization.",
     createdDate: "2026-01-25",
-    modifiedDate: "2026-02-25",
     isFavourite: false,
     
   },
@@ -136,7 +126,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Java Advanced Topics",
     description: "Explore advanced topics in Java programming, including concurrency, JVM internals, garbage collection, and performance tuning. This roadmap helps you deepen your understanding of Java's capabilities and prepares you for building high-performance, scalable applications.",
     createdDate: "2026-01-05",
-    modifiedDate: "2026-02-05",
     isFavourite: false,
     
   },
@@ -148,7 +137,6 @@ export const roadmapData: RoadmapType[] = [
     title: "React Advanced Patterns",
     description: "Explore advanced patterns in React development, including higher-order components, render props, context API, hooks, and performance optimization techniques. This roadmap helps you build scalable and maintainable React applications by mastering design patterns and best practices.",
     createdDate: "2025-02-15",
-    modifiedDate: "2026-02-15",
     isFavourite: false,
     
   },
@@ -160,7 +148,6 @@ export const roadmapData: RoadmapType[] = [
     title: "API Design and Development",
     description: "Master the principles of designing, developing, and deploying robust APIs. Topics include RESTful design, GraphQL fundamentals, authentication (OAuth, JWT), API documentation (Swagger/OpenAPI), and performance testing.",
     createdDate: "2025-03-01",
-    modifiedDate: "2026-03-01",
     isFavourite: false,
   },
   {
@@ -171,7 +158,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Modern Frontend Development",
     description: "A comprehensive path covering HTML5, CSS3 (Flexbox/Grid), advanced JavaScript (ES6+), and popular frameworks like Vue.js and Svelte. Focus on responsive design, state management, and build tools (Webpack/Vite).",
     createdDate: "2025-04-10",
-    modifiedDate: "2026-04-10",
     isFavourite: false,
   },
   {
@@ -182,7 +168,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Scalable Backend Engineering",
     description: "Learn to build high-performance, scalable servers using languages like Node.js, Go, or Python (Django/Flask). Includes database management (SQL/NoSQL), microservices architecture, caching strategies, and security implementation.",
     createdDate: "2025-05-20",
-    modifiedDate: "2026-05-20",
     isFavourite: false,
   },
   {
@@ -193,7 +178,6 @@ export const roadmapData: RoadmapType[] = [
     title: "DevOps Fundamentals and CI/CD",
     description: "Master the DevOps toolchain, focusing on automation, infrastructure as code (Terraform), containerization (Docker, Kubernetes), and building continuous integration/continuous delivery (CI/CD) pipelines (Jenkins/GitLab CI).",
     createdDate: "2025-06-05",
-    modifiedDate: "2026-06-05",
     isFavourite: false,
   },
   {
@@ -204,7 +188,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Machine Learning Engineering",
     description: "A deep dive into model development, training, and deployment. Covers core algorithms, data preprocessing, MLOps, cloud platforms (AWS Sagemaker/Azure ML), and performance optimization for production environments.",
     createdDate: "2025-07-12",
-    modifiedDate: "2026-07-12",
     isFavourite: false,
   },
   {
@@ -215,7 +198,6 @@ export const roadmapData: RoadmapType[] = [
     title: "Modern C++ Programming",
     description: "Focus on C++17 and C++20 features, object-oriented programming, standard template library (STL), memory management, multithreading, and best practices for developing high-performance, low-latency applications.",
     createdDate: "2025-08-25",
-    modifiedDate: "2026-08-25",
     isFavourite: false,
 },
 ];
@@ -223,129 +205,129 @@ export const roadmapData: RoadmapType[] = [
 
 export const pillarsData: PillarType[] = [
     // Java Fundamentals (100001)
-  { chapterID: 100001, chapterSlug: "java-introduction", roadmapID: 100001, title: "Introduction to Java", description: "Learn Java basics and set up your development environment.", modifiedDate: "2025-10-01", difficulty: "Beginner", category: "Java", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100002, chapterSlug: "java-variables", roadmapID: 100001, title: "Variables and Data Types", description: "Understand variables, primitive types, and type conversions.", modifiedDate: "2025-10-02", difficulty: "Beginner", category: "Java", prerequisite: "Introduction to Java", order: 2, isViewed: false },
-  { chapterID: 100003, chapterSlug: "java-control-flow", roadmapID: 100001, title: "Control Flow", description: "Learn conditionals, loops, and decision-making in Java.", modifiedDate: "2025-10-03", difficulty: "Intermediate", category: "Java", prerequisite: "Variables and Data Types", order: 3, isViewed: false },
-  { chapterID: 100004, chapterSlug: "java-oop", roadmapID: 100001, title: "Object-Oriented Programming", description: "Explore classes, objects, inheritance, and polymorphism.", modifiedDate: "2025-10-04", difficulty: "Intermediate", category: "Java", prerequisite: "Control Flow", order: 4, isViewed: false },
-  { chapterID: 100005, chapterSlug: "java-collections", roadmapID: 100001, title: "Collections Framework", description: "Learn Lists, Sets, Maps, and Queues in Java.", modifiedDate: "2025-10-05", difficulty: "Advanced", category: "Java", prerequisite: "Object-Oriented Programming", order: 5, isViewed: false },
+  { chapterID: 100001, chapterSlug: "java-introduction", roadmapID: 100001, title: "Introduction to Java", description: "Learn Java basics and set up your development environment.", difficulty: "Beginner", category: "Java", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100002, chapterSlug: "java-variables", roadmapID: 100001, title: "Variables and Data Types", description: "Understand variables, primitive types, and type conversions.", difficulty: "Beginner", category: "Java", prerequisite: "Introduction to Java", order: 2, isViewed: false },
+  { chapterID: 100003, chapterSlug: "java-control-flow", roadmapID: 100001, title: "Control Flow", description: "Learn conditionals, loops, and decision-making in Java.", difficulty: "Intermediate", category: "Java", prerequisite: "Variables and Data Types", order: 3, isViewed: false },
+  { chapterID: 100004, chapterSlug: "java-oop", roadmapID: 100001, title: "Object-Oriented Programming", description: "Explore classes, objects, inheritance, and polymorphism.", difficulty: "Intermediate", category: "Java", prerequisite: "Control Flow", order: 4, isViewed: false },
+  { chapterID: 100005, chapterSlug: "java-collections", roadmapID: 100001, title: "Collections Framework", description: "Learn Lists, Sets, Maps, and Queues in Java.", difficulty: "Advanced", category: "Java", prerequisite: "Object-Oriented Programming", order: 5, isViewed: false },
 
   // Python Basics (100002)
-  { chapterID: 100006, chapterSlug: "python-intro", roadmapID: 100002, title: "Introduction to Python", description: "Get started with Python syntax and setup.", modifiedDate: "2025-11-01", difficulty: "Beginner", category: "Python", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100007, chapterSlug: "python-variables", roadmapID: 100002, title: "Variables and Data Types", description: "Understand Python variables, lists, tuples, and dictionaries.", modifiedDate: "2025-11-02", difficulty: "Beginner", category: "Python", prerequisite: "Introduction to Python", order: 2, isViewed: false },
-  { chapterID: 100008, chapterSlug: "python-control-flow", roadmapID: 100002, title: "Control Flow", description: "Learn if statements, loops, and error handling in Python.", modifiedDate: "2025-11-03", difficulty: "Intermediate", category: "Python", prerequisite: "Variables and Data Types", order: 3, isViewed: false },
-  { chapterID: 100009, chapterSlug: "python-functions", roadmapID: 100002, title: "Functions and Modules", description: "Create reusable code using functions and modules.", modifiedDate: "2025-11-04", difficulty: "Intermediate", category: "Python", prerequisite: "Control Flow", order: 4, isViewed: false },
-  { chapterID: 100010, chapterSlug: "python-file-io", roadmapID: 100002, title: "File I/O", description: "Read and write files in Python for data storage.", modifiedDate: "2025-11-05", difficulty: "Advanced", category: "Python", prerequisite: "Functions and Modules", order: 5, isViewed: false },
+  { chapterID: 100006, chapterSlug: "python-intro", roadmapID: 100002, title: "Introduction to Python", description: "Get started with Python syntax and setup.", difficulty: "Beginner", category: "Python", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100007, chapterSlug: "python-variables", roadmapID: 100002, title: "Variables and Data Types", description: "Understand Python variables, lists, tuples, and dictionaries.", difficulty: "Beginner", category: "Python", prerequisite: "Introduction to Python", order: 2, isViewed: false },
+  { chapterID: 100008, chapterSlug: "python-control-flow", roadmapID: 100002, title: "Control Flow", description: "Learn if statements, loops, and error handling in Python.", difficulty: "Intermediate", category: "Python", prerequisite: "Variables and Data Types", order: 3, isViewed: false },
+  { chapterID: 100009, chapterSlug: "python-functions", roadmapID: 100002, title: "Functions and Modules", description: "Create reusable code using functions and modules.", difficulty: "Intermediate", category: "Python", prerequisite: "Control Flow", order: 4, isViewed: false },
+  { chapterID: 100010, chapterSlug: "python-file-io", roadmapID: 100002, title: "File I/O", description: "Read and write files in Python for data storage.", difficulty: "Advanced", category: "Python", prerequisite: "Functions and Modules", order: 5, isViewed: false },
 
   // JavaScript Essentials (100003)
-  { chapterID: 100011, chapterSlug: "js-intro", roadmapID: 100003, title: "Introduction to JavaScript", description: "Learn JS basics, variables, and operators.", modifiedDate: "2025-08-01", difficulty: "Beginner", category: "JavaScript", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100012, chapterSlug: "js-functions", roadmapID: 100003, title: "Functions and Scope", description: "Understand functions, closures, and variable scope.", modifiedDate: "2025-08-02", difficulty: "Intermediate", category: "JavaScript", prerequisite: "Introduction to JavaScript", order: 2, isViewed: false },
-  { chapterID: 100013, chapterSlug: "js-dom", roadmapID: 100003, title: "DOM Manipulation", description: "Interact with web pages using the DOM.", modifiedDate: "2025-08-03", difficulty: "Intermediate", category: "JavaScript", prerequisite: "Functions and Scope", order: 3, isViewed: false },
-  { chapterID: 100014, chapterSlug: "js-events", roadmapID: 100003, title: "Events and Listeners", description: "Handle user interactions using events.", modifiedDate: "2025-08-04", difficulty: "Intermediate", category: "JavaScript", prerequisite: "DOM Manipulation", order: 4, isViewed: false },
-  { chapterID: 100015, chapterSlug: "js-async", roadmapID: 100003, title: "Asynchronous JavaScript", description: "Learn callbacks, promises, and async/await.", modifiedDate: "2025-08-05", difficulty: "Advanced", category: "JavaScript", prerequisite: "Events and Listeners", order: 5, isViewed: false },
+  { chapterID: 100011, chapterSlug: "js-intro", roadmapID: 100003, title: "Introduction to JavaScript", description: "Learn JS basics, variables, and operators.", difficulty: "Beginner", category: "JavaScript", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100012, chapterSlug: "js-functions", roadmapID: 100003, title: "Functions and Scope", description: "Understand functions, closures, and variable scope.", difficulty: "Intermediate", category: "JavaScript", prerequisite: "Introduction to JavaScript", order: 2, isViewed: false },
+  { chapterID: 100013, chapterSlug: "js-dom", roadmapID: 100003, title: "DOM Manipulation", description: "Interact with web pages using the DOM.", difficulty: "Intermediate", category: "JavaScript", prerequisite: "Functions and Scope", order: 3, isViewed: false },
+  { chapterID: 100014, chapterSlug: "js-events", roadmapID: 100003, title: "Events and Listeners", description: "Handle user interactions using events.", difficulty: "Intermediate", category: "JavaScript", prerequisite: "DOM Manipulation", order: 4, isViewed: false },
+  { chapterID: 100015, chapterSlug: "js-async", roadmapID: 100003, title: "Asynchronous JavaScript", description: "Learn callbacks, promises, and async/await.", difficulty: "Advanced", category: "JavaScript", prerequisite: "Events and Listeners", order: 5, isViewed: false },
 
   // React for Beginners (100004)
-  { chapterID: 100016, chapterSlug: "react-intro", roadmapID: 100004, title: "Introduction to React", description: "Understand React basics and JSX.", modifiedDate: "2025-09-01", difficulty: "Beginner", category: "React", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100017, chapterSlug: "react-components", roadmapID: 100004, title: "Components and Props", description: "Create reusable components and pass data via props.", modifiedDate: "2025-09-02", difficulty: "Intermediate", category: "React", prerequisite: "Introduction to React", order: 2, isViewed: false },
-  { chapterID: 100018, chapterSlug: "react-state", roadmapID: 100004, title: "State Management", description: "Learn useState and managing component state.", modifiedDate: "2025-09-03", difficulty: "Intermediate", category: "React", prerequisite: "Components and Props", order: 3, isViewed: false },
-  { chapterID: 100019, chapterSlug: "react-hooks", roadmapID: 100004, title: "React Hooks", description: "Learn useEffect and other hooks for side effects.", modifiedDate: "2025-09-04", difficulty: "Intermediate", category: "React", prerequisite: "State Management", order: 4, isViewed: false },
-  { chapterID: 100020, chapterSlug: "react-api", roadmapID: 100004, title: "Fetching Data with APIs", description: "Learn how to fetch data from APIs using React.", modifiedDate: "2025-09-05", difficulty: "Advanced", category: "React", prerequisite: "React Hooks", order: 5, isViewed: false },
+  { chapterID: 100016, chapterSlug: "react-intro", roadmapID: 100004, title: "Introduction to React", description: "Understand React basics and JSX.", difficulty: "Beginner", category: "React", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100017, chapterSlug: "react-components", roadmapID: 100004, title: "Components and Props", description: "Create reusable components and pass data via props.", difficulty: "Intermediate", category: "React", prerequisite: "Introduction to React", order: 2, isViewed: false },
+  { chapterID: 100018, chapterSlug: "react-state", roadmapID: 100004, title: "State Management", description: "Learn useState and managing component state.", difficulty: "Intermediate", category: "React", prerequisite: "Components and Props", order: 3, isViewed: false },
+  { chapterID: 100019, chapterSlug: "react-hooks", roadmapID: 100004, title: "React Hooks", description: "Learn useEffect and other hooks for side effects.", difficulty: "Intermediate", category: "React", prerequisite: "State Management", order: 4, isViewed: false },
+  { chapterID: 100020, chapterSlug: "react-api", roadmapID: 100004, title: "Fetching Data with APIs", description: "Learn how to fetch data from APIs using React.", difficulty: "Advanced", category: "React", prerequisite: "React Hooks", order: 5, isViewed: false },
 
   // Node.js Fundamentals (100005)
-  // { chapterID: 100021, chapterSlug: "node-intro", roadmapID: 100005, title: "Introduction to Node.js", description: "Learn Node.js runtime and setup.", modifiedDate: "2025-11-01", difficulty: "Beginner", category: "Node.js", prerequisite: "None", order: 1, isViewed: false },
-  // { chapterID: 100022, chapterSlug: "node-modules", roadmapID: 100005, title: "Node.js Modules", description: "Understand built-in modules and npm packages.", modifiedDate: "2025-11-02", difficulty: "Intermediate", category: "Node.js", prerequisite: "Introduction to Node.js", order: 2, isViewed: false },
-  // { chapterID: 100023, chapterSlug: "node-server", roadmapID: 100005, title: "Creating Servers", description: "Build simple HTTP servers in Node.js.", modifiedDate: "2025-11-03", difficulty: "Intermediate", category: "Node.js", prerequisite: "Node.js Modules", order: 3, isViewed: false },
-  // { chapterID: 100024, chapterSlug: "node-async", roadmapID: 100005, title: "Asynchronous Programming", description: "Learn callbacks, promises, and async patterns.", modifiedDate: "2025-11-04", difficulty: "Advanced", category: "Node.js", prerequisite: "Creating Servers", order: 4, isViewed: false },
-  // { chapterID: 100025, chapterSlug: "node-express", roadmapID: 100005, title: "Express.js Basics", description: "Build RESTful APIs using Express framework.", modifiedDate: "2025-11-05", difficulty: "Advanced", category: "Node.js", prerequisite: "Asynchronous Programming", order: 5, isViewed: false },
+  // { chapterID: 100021, chapterSlug: "node-intro", roadmapID: 100005, title: "Introduction to Node.js", description: "Learn Node.js runtime and setup.", difficulty: "Beginner", category: "Node.js", prerequisite: "None", order: 1, isViewed: false },
+  // { chapterID: 100022, chapterSlug: "node-modules", roadmapID: 100005, title: "Node.js Modules", description: "Understand built-in modules and npm packages.", difficulty: "Intermediate", category: "Node.js", prerequisite: "Introduction to Node.js", order: 2, isViewed: false },
+  // { chapterID: 100023, chapterSlug: "node-server", roadmapID: 100005, title: "Creating Servers", description: "Build simple HTTP servers in Node.js.", difficulty: "Intermediate", category: "Node.js", prerequisite: "Node.js Modules", order: 3, isViewed: false },
+  // { chapterID: 100024, chapterSlug: "node-async", roadmapID: 100005, title: "Asynchronous Programming", description: "Learn callbacks, promises, and async patterns.", difficulty: "Advanced", category: "Node.js", prerequisite: "Creating Servers", order: 4, isViewed: false },
+  // { chapterID: 100025, chapterSlug: "node-express", roadmapID: 100005, title: "Express.js Basics", description: "Build RESTful APIs using Express framework.", difficulty: "Advanced", category: "Node.js", prerequisite: "Asynchronous Programming", order: 5, isViewed: false },
 
   // SQL Basics (100006)
-  { chapterID: 100026, chapterSlug: "sql-intro", roadmapID: 100006, title: "Introduction to SQL", description: "Learn SQL syntax, setup, and basic queries.", modifiedDate: "2025-12-01", difficulty: "Beginner", category: "SQL", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100027, chapterSlug: "sql-select-queries", roadmapID: 100006, title: "SELECT Queries", description: "Retrieve data from databases using SELECT statements.", modifiedDate: "2025-12-02", difficulty: "Beginner", category: "SQL", prerequisite: "Introduction to SQL", order: 2, isViewed: false },
-  { chapterID: 100028, chapterSlug: "sql-joins", roadmapID: 100006, title: "Joins", description: "Combine tables using INNER, LEFT, RIGHT, and FULL joins.", modifiedDate: "2025-12-03", difficulty: "Intermediate", category: "SQL", prerequisite: "SELECT Queries", order: 3, isViewed: false },
-  { chapterID: 100029, chapterSlug: "sql-aggregate-functions", roadmapID: 100006, title: "Aggregate Functions", description: "Use COUNT, SUM, AVG, MIN, MAX for data analysis.", modifiedDate: "2025-12-04", difficulty: "Intermediate", category: "SQL", prerequisite: "Joins", order: 4, isViewed: false },
-  { chapterID: 100030, chapterSlug: "sql-indexing", roadmapID: 100006, title: "Indexing and Optimization", description: "Learn how indexing improves query performance.", modifiedDate: "2025-12-05", difficulty: "Advanced", category: "SQL", prerequisite: "Aggregate Functions", order: 5, isViewed: false },
+  { chapterID: 100026, chapterSlug: "sql-intro", roadmapID: 100006, title: "Introduction to SQL", description: "Learn SQL syntax, setup, and basic queries.", difficulty: "Beginner", category: "SQL", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100027, chapterSlug: "sql-select-queries", roadmapID: 100006, title: "SELECT Queries", description: "Retrieve data from databases using SELECT statements.", difficulty: "Beginner", category: "SQL", prerequisite: "Introduction to SQL", order: 2, isViewed: false },
+  { chapterID: 100028, chapterSlug: "sql-joins", roadmapID: 100006, title: "Joins", description: "Combine tables using INNER, LEFT, RIGHT, and FULL joins.", difficulty: "Intermediate", category: "SQL", prerequisite: "SELECT Queries", order: 3, isViewed: false },
+  { chapterID: 100029, chapterSlug: "sql-aggregate-functions", roadmapID: 100006, title: "Aggregate Functions", description: "Use COUNT, SUM, AVG, MIN, MAX for data analysis.", difficulty: "Intermediate", category: "SQL", prerequisite: "Joins", order: 4, isViewed: false },
+  { chapterID: 100030, chapterSlug: "sql-indexing", roadmapID: 100006, title: "Indexing and Optimization", description: "Learn how indexing improves query performance.", difficulty: "Advanced", category: "SQL", prerequisite: "Aggregate Functions", order: 5, isViewed: false },
 
   // HTML & CSS Fundamentals (100007)
-  { chapterID: 100031, chapterSlug: "html-intro", roadmapID: 100007, title: "Introduction to HTML", description: "Learn the structure of web pages using HTML.", modifiedDate: "2025-11-01", difficulty: "Beginner", category: "HTML/CSS", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100032, chapterSlug: "html-forms", roadmapID: 100007, title: "HTML Forms", description: "Create forms and gather user input effectively.", modifiedDate: "2025-11-02", difficulty: "Beginner", category: "HTML/CSS", prerequisite: "Introduction to HTML", order: 2, isViewed: false },
-  { chapterID: 100033, chapterSlug: "css-intro", roadmapID: 100007, title: "CSS Basics", description: "Style web pages using colors, fonts, and layouts.", modifiedDate: "2025-11-03", difficulty: "Intermediate", category: "HTML/CSS", prerequisite: "HTML Forms", order: 3, isViewed: false },
-  { chapterID: 100034, chapterSlug: "css-flexbox-grid", roadmapID: 100007, title: "Flexbox and Grid", description: "Create responsive layouts using Flexbox and Grid.", modifiedDate: "2025-11-04", difficulty: "Intermediate", category: "HTML/CSS", prerequisite: "CSS Basics", order: 4, isViewed: false },
-  { chapterID: 100035, chapterSlug: "css-animations", roadmapID: 100007, title: "Animations and Transitions", description: "Add animations and transitions for interactive UI.", modifiedDate: "2025-11-05", difficulty: "Advanced", category: "HTML/CSS", prerequisite: "Flexbox and Grid", order: 5, isViewed: false },
+  { chapterID: 100031, chapterSlug: "html-intro", roadmapID: 100007, title: "Introduction to HTML", description: "Learn the structure of web pages using HTML.", difficulty: "Beginner", category: "HTML/CSS", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100032, chapterSlug: "html-forms", roadmapID: 100007, title: "HTML Forms", description: "Create forms and gather user input effectively.", difficulty: "Beginner", category: "HTML/CSS", prerequisite: "Introduction to HTML", order: 2, isViewed: false },
+  { chapterID: 100033, chapterSlug: "css-intro", roadmapID: 100007, title: "CSS Basics", description: "Style web pages using colors, fonts, and layouts.", difficulty: "Intermediate", category: "HTML/CSS", prerequisite: "HTML Forms", order: 3, isViewed: false },
+  { chapterID: 100034, chapterSlug: "css-flexbox-grid", roadmapID: 100007, title: "Flexbox and Grid", description: "Create responsive layouts using Flexbox and Grid.", difficulty: "Intermediate", category: "HTML/CSS", prerequisite: "CSS Basics", order: 4, isViewed: false },
+  { chapterID: 100035, chapterSlug: "css-animations", roadmapID: 100007, title: "Animations and Transitions", description: "Add animations and transitions for interactive UI.", difficulty: "Advanced", category: "HTML/CSS", prerequisite: "Flexbox and Grid", order: 5, isViewed: false },
 
   // TypeScript Basics (100008)
-  { chapterID: 100036, chapterSlug: "ts-intro", roadmapID: 100008, title: "Introduction to TypeScript", description: "Learn TypeScript syntax, types, and setup.", modifiedDate: "2025-12-01", difficulty: "Beginner", category: "TypeScript", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100037, chapterSlug: "ts-types", roadmapID: 100008, title: "Types and Interfaces", description: "Use strong typing with interfaces and type annotations.", modifiedDate: "2025-12-02", difficulty: "Intermediate", category: "TypeScript", prerequisite: "Introduction to TypeScript", order: 2, isViewed: false },
-  { chapterID: 100038, chapterSlug: "ts-classes", roadmapID: 100008, title: "Classes and Objects", description: "Understand classes, inheritance, and OOP in TypeScript.", modifiedDate: "2025-12-03", difficulty: "Intermediate", category: "TypeScript", prerequisite: "Types and Interfaces", order: 3, isViewed: false },
-  { chapterID: 100039, chapterSlug: "ts-generics", roadmapID: 100008, title: "Generics", description: "Create reusable code with generics.", modifiedDate: "2025-12-04", difficulty: "Advanced", category: "TypeScript", prerequisite: "Classes and Objects", order: 4, isViewed: false },
-  { chapterID: 100040, chapterSlug: "ts-advanced", roadmapID: 100008, title: "Advanced TypeScript Features", description: "Learn advanced types, decorators, and type guards.", modifiedDate: "2025-12-05", difficulty: "Advanced", category: "TypeScript", prerequisite: "Generics", order: 5, isViewed: false },
+  { chapterID: 100036, chapterSlug: "ts-intro", roadmapID: 100008, title: "Introduction to TypeScript", description: "Learn TypeScript syntax, types, and setup.", difficulty: "Beginner", category: "TypeScript", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100037, chapterSlug: "ts-types", roadmapID: 100008, title: "Types and Interfaces", description: "Use strong typing with interfaces and type annotations.", difficulty: "Intermediate", category: "TypeScript", prerequisite: "Introduction to TypeScript", order: 2, isViewed: false },
+  { chapterID: 100038, chapterSlug: "ts-classes", roadmapID: 100008, title: "Classes and Objects", description: "Understand classes, inheritance, and OOP in TypeScript.", difficulty: "Intermediate", category: "TypeScript", prerequisite: "Types and Interfaces", order: 3, isViewed: false },
+  { chapterID: 100039, chapterSlug: "ts-generics", roadmapID: 100008, title: "Generics", description: "Create reusable code with generics.", difficulty: "Advanced", category: "TypeScript", prerequisite: "Classes and Objects", order: 4, isViewed: false },
+  { chapterID: 100040, chapterSlug: "ts-advanced", roadmapID: 100008, title: "Advanced TypeScript Features", description: "Learn advanced types, decorators, and type guards.", difficulty: "Advanced", category: "TypeScript", prerequisite: "Generics", order: 5, isViewed: false },
 
   // Angular Fundamentals (100009)
-  { chapterID: 100041, chapterSlug: "angular-intro", roadmapID: 100009, title: "Introduction to Angular", description: "Learn Angular setup, modules, and architecture.", modifiedDate: "2025-01-01", difficulty: "Beginner", category: "Angular", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100042, chapterSlug: "angular-components", roadmapID: 100009, title: "Components and Templates", description: "Create components and bind templates in Angular.", modifiedDate: "2025-01-02", difficulty: "Intermediate", category: "Angular", prerequisite: "Introduction to Angular", order: 2, isViewed: false },
-  { chapterID: 100043, chapterSlug: "angular-services", roadmapID: 100009, title: "Services and Dependency Injection", description: "Manage data and services efficiently.", modifiedDate: "2025-01-03", difficulty: "Intermediate", category: "Angular", prerequisite: "Components and Templates", order: 3, isViewed: false },
-  { chapterID: 100044, chapterSlug: "angular-routing", roadmapID: 100009, title: "Routing and Navigation", description: "Handle page navigation and dynamic routes.", modifiedDate: "2025-01-04", difficulty: "Intermediate", category: "Angular", prerequisite: "Services and DI", order: 4, isViewed: false },
-  { chapterID: 100045, chapterSlug: "angular-forms", roadmapID: 100009, title: "Forms and Validation", description: "Create forms with validation in Angular.", modifiedDate: "2025-01-05", difficulty: "Advanced", category: "Angular", prerequisite: "Routing and Navigation", order: 5, isViewed: false },
+  { chapterID: 100041, chapterSlug: "angular-intro", roadmapID: 100009, title: "Introduction to Angular", description: "Learn Angular setup, modules, and architecture.", difficulty: "Beginner", category: "Angular", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100042, chapterSlug: "angular-components", roadmapID: 100009, title: "Components and Templates", description: "Create components and bind templates in Angular.", difficulty: "Intermediate", category: "Angular", prerequisite: "Introduction to Angular", order: 2, isViewed: false },
+  { chapterID: 100043, chapterSlug: "angular-services", roadmapID: 100009, title: "Services and Dependency Injection", description: "Manage data and services efficiently.", difficulty: "Intermediate", category: "Angular", prerequisite: "Components and Templates", order: 3, isViewed: false },
+  { chapterID: 100044, chapterSlug: "angular-routing", roadmapID: 100009, title: "Routing and Navigation", description: "Handle page navigation and dynamic routes.", difficulty: "Intermediate", category: "Angular", prerequisite: "Services and DI", order: 4, isViewed: false },
+  { chapterID: 100045, chapterSlug: "angular-forms", roadmapID: 100009, title: "Forms and Validation", description: "Create forms with validation in Angular.", difficulty: "Advanced", category: "Angular", prerequisite: "Routing and Navigation", order: 5, isViewed: false },
 
   // Python Advanced Concepts (100010)
-  { chapterID: 100046, chapterSlug: "python-decorators", roadmapID: 100010, title: "Decorators", description: "Learn how decorators modify functions and classes.", modifiedDate: "2026-03-01", difficulty: "Advanced", category: "Python", prerequisite: "Functions and Modules", order: 1, isViewed: false },
-  { chapterID: 100047, chapterSlug: "python-generators", roadmapID: 100010, title: "Generators", description: "Understand lazy evaluation using Python generators.", modifiedDate: "2026-03-02", difficulty: "Advanced", category: "Python", prerequisite: "Decorators", order: 2, isViewed: false },
-  { chapterID: 100048, chapterSlug: "python-context-managers", roadmapID: 100010, title: "Context Managers", description: "Manage resources efficiently with context managers.", modifiedDate: "2026-03-03", difficulty: "Advanced", category: "Python", prerequisite: "Generators", order: 3, isViewed: false },
-  { chapterID: 100049, chapterSlug: "python-metaclasses", roadmapID: 100010, title: "Metaclasses", description: "Dive into Python metaclasses and dynamic class creation.", modifiedDate: "2026-03-04", difficulty: "Advanced", category: "Python", prerequisite: "Context Managers", order: 4, isViewed: false },
-  { chapterID: 100050, chapterSlug: "python-concurrency", roadmapID: 100010, title: "Concurrency", description: "Explore threading, asyncio, and multiprocessing.", modifiedDate: "2026-03-05", difficulty: "Advanced", category: "Python", prerequisite: "Metaclasses", order: 5, isViewed: false },
+  { chapterID: 100046, chapterSlug: "python-decorators", roadmapID: 100010, title: "Decorators", description: "Learn how decorators modify functions and classes.", difficulty: "Advanced", category: "Python", prerequisite: "Functions and Modules", order: 1, isViewed: false },
+  { chapterID: 100047, chapterSlug: "python-generators", roadmapID: 100010, title: "Generators", description: "Understand lazy evaluation using Python generators.", difficulty: "Advanced", category: "Python", prerequisite: "Decorators", order: 2, isViewed: false },
+  { chapterID: 100048, chapterSlug: "python-context-managers", roadmapID: 100010, title: "Context Managers", description: "Manage resources efficiently with context managers.", difficulty: "Advanced", category: "Python", prerequisite: "Generators", order: 3, isViewed: false },
+  { chapterID: 100049, chapterSlug: "python-metaclasses", roadmapID: 100010, title: "Metaclasses", description: "Dive into Python metaclasses and dynamic class creation.", difficulty: "Advanced", category: "Python", prerequisite: "Context Managers", order: 4, isViewed: false },
+  { chapterID: 100050, chapterSlug: "python-concurrency", roadmapID: 100010, title: "Concurrency", description: "Explore threading, asyncio, and multiprocessing.", difficulty: "Advanced", category: "Python", prerequisite: "Metaclasses", order: 5, isViewed: false },
 
   // Java Advanced Topics (100011)
-  { chapterID: 100051, chapterSlug: "java-concurrency", roadmapID: 100011, title: "Concurrency in Java", description: "Learn multithreading, Executors, and thread safety.", modifiedDate: "2026-03-06", difficulty: "Advanced", category: "Java", prerequisite: "Intermediate Java Knowledge", order: 1, isViewed: false },
-  { chapterID: 100052, chapterSlug: "java-jvm-internals", roadmapID: 100011, title: "JVM Internals", description: "Understand JVM memory, class loading, and bytecode.", modifiedDate: "2026-03-07", difficulty: "Advanced", category: "Java", prerequisite: "Concurrency in Java", order: 2, isViewed: false },
-  { chapterID: 100053, chapterSlug: "java-garbage-collection", roadmapID: 100011, title: "Garbage Collection", description: "Learn GC algorithms, tuning, and memory management.", modifiedDate: "2026-03-08", difficulty: "Advanced", category: "Java", prerequisite: "JVM Internals", order: 3, isViewed: false },
-  { chapterID: 100054, chapterSlug: "java-performance", roadmapID: 100011, title: "Performance Tuning", description: "Optimize Java applications for speed and scalability.", modifiedDate: "2026-03-09", difficulty: "Advanced", category: "Java", prerequisite: "Garbage Collection", order: 4, isViewed: false },
+  { chapterID: 100051, chapterSlug: "java-concurrency", roadmapID: 100011, title: "Concurrency in Java", description: "Learn multithreading, Executors, and thread safety.", difficulty: "Advanced", category: "Java", prerequisite: "Intermediate Java Knowledge", order: 1, isViewed: false },
+  { chapterID: 100052, chapterSlug: "java-jvm-internals", roadmapID: 100011, title: "JVM Internals", description: "Understand JVM memory, class loading, and bytecode.", difficulty: "Advanced", category: "Java", prerequisite: "Concurrency in Java", order: 2, isViewed: false },
+  { chapterID: 100053, chapterSlug: "java-garbage-collection", roadmapID: 100011, title: "Garbage Collection", description: "Learn GC algorithms, tuning, and memory management.", difficulty: "Advanced", category: "Java", prerequisite: "JVM Internals", order: 3, isViewed: false },
+  { chapterID: 100054, chapterSlug: "java-performance", roadmapID: 100011, title: "Performance Tuning", description: "Optimize Java applications for speed and scalability.", difficulty: "Advanced", category: "Java", prerequisite: "Garbage Collection", order: 4, isViewed: false },
 
   // React Advanced Patterns (100012)
-  { chapterID: 100055, chapterSlug: "react-hoc", roadmapID: 100012, title: "Higher-Order Components", description: "Learn HOCs to reuse component logic.", modifiedDate: "2026-03-10", difficulty: "Advanced", category: "React", prerequisite: "React Basics", order: 1, isViewed: false },
-  { chapterID: 100056, chapterSlug: "react-render-props", roadmapID: 100012, title: "Render Props", description: "Use render props for flexible component composition.", modifiedDate: "2026-03-11", difficulty: "Advanced", category: "React", prerequisite: "Higher-Order Components", order: 2, isViewed: false },
-  { chapterID: 100057, chapterSlug: "react-context-api", roadmapID: 100012, title: "Context API", description: "Manage state globally using React Context.", modifiedDate: "2026-03-12", difficulty: "Advanced", category: "React", prerequisite: "Render Props", order: 3, isViewed: false },
-  { chapterID: 100058, chapterSlug: "react-hooks-advanced", roadmapID: 100012, title: "Advanced Hooks", description: "Master useReducer, useMemo, useCallback for performance.", modifiedDate: "2026-03-13", difficulty: "Advanced", category: "React", prerequisite: "Context API", order: 4, isViewed: false },
-  { chapterID: 100059, chapterSlug: "react-performance-optimization", roadmapID: 100012, title: "Performance Optimization", description: "Improve React app performance and best practices.", modifiedDate: "2026-03-14", difficulty: "Advanced", category: "React", prerequisite: "Advanced Hooks", order: 5, isViewed: false },
+  { chapterID: 100055, chapterSlug: "react-hoc", roadmapID: 100012, title: "Higher-Order Components", description: "Learn HOCs to reuse component logic.", difficulty: "Advanced", category: "React", prerequisite: "React Basics", order: 1, isViewed: false },
+  { chapterID: 100056, chapterSlug: "react-render-props", roadmapID: 100012, title: "Render Props", description: "Use render props for flexible component composition.", difficulty: "Advanced", category: "React", prerequisite: "Higher-Order Components", order: 2, isViewed: false },
+  { chapterID: 100057, chapterSlug: "react-context-api", roadmapID: 100012, title: "Context API", description: "Manage state globally using React Context.", difficulty: "Advanced", category: "React", prerequisite: "Render Props", order: 3, isViewed: false },
+  { chapterID: 100058, chapterSlug: "react-hooks-advanced", roadmapID: 100012, title: "Advanced Hooks", description: "Master useReducer, useMemo, useCallback for performance.", difficulty: "Advanced", category: "React", prerequisite: "Context API", order: 4, isViewed: false },
+  { chapterID: 100059, chapterSlug: "react-performance-optimization", roadmapID: 100012, title: "Performance Optimization", description: "Improve React app performance and best practices.", difficulty: "Advanced", category: "React", prerequisite: "Advanced Hooks", order: 5, isViewed: false },
 
   // API Design and Development (100013)
-  { chapterID: 100060, chapterSlug: "restful-api-design", roadmapID: 100013, title: "RESTful API Design", description: "Learn principles and best practices for designing RESTful APIs.", modifiedDate: "2026-03-01", difficulty: "Intermediate", category: "API", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100061, chapterSlug: "graphql-fundamentals", roadmapID: 100013, title: "GraphQL Fundamentals", description: "Understand GraphQL schema, queries, mutations, and subscriptions.", modifiedDate: "2026-03-02", difficulty: "Intermediate", category: "API", prerequisite: "RESTful API Design", order: 2, isViewed: false },
-  { chapterID: 100062, chapterSlug: "api-authentication", roadmapID: 100013, title: "API Authentication", description: "Implement OAuth2, JWT, and other authentication mechanisms.", modifiedDate: "2026-03-03", difficulty: "Advanced", category: "API", prerequisite: "GraphQL Fundamentals", order: 3, isViewed: false },
-  { chapterID: 100063, chapterSlug: "api-documentation", roadmapID: 100013, title: "API Documentation", description: "Generate API docs using Swagger/OpenAPI for clarity and collaboration.", modifiedDate: "2026-03-04", difficulty: "Intermediate", category: "API", prerequisite: "API Authentication", order: 4, isViewed: false },
-  { chapterID: 100064, chapterSlug: "api-performance-testing", roadmapID: 100013, title: "API Performance Testing", description: "Test APIs for scalability, latency, and reliability.", modifiedDate: "2026-03-05", difficulty: "Advanced", category: "API", prerequisite: "API Documentation", order: 5, isViewed: false },
+  { chapterID: 100060, chapterSlug: "restful-api-design", roadmapID: 100013, title: "RESTful API Design", description: "Learn principles and best practices for designing RESTful APIs.", difficulty: "Intermediate", category: "API", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100061, chapterSlug: "graphql-fundamentals", roadmapID: 100013, title: "GraphQL Fundamentals", description: "Understand GraphQL schema, queries, mutations, and subscriptions.", difficulty: "Intermediate", category: "API", prerequisite: "RESTful API Design", order: 2, isViewed: false },
+  { chapterID: 100062, chapterSlug: "api-authentication", roadmapID: 100013, title: "API Authentication", description: "Implement OAuth2, JWT, and other authentication mechanisms.", difficulty: "Advanced", category: "API", prerequisite: "GraphQL Fundamentals", order: 3, isViewed: false },
+  { chapterID: 100063, chapterSlug: "api-documentation", roadmapID: 100013, title: "API Documentation", description: "Generate API docs using Swagger/OpenAPI for clarity and collaboration.", difficulty: "Intermediate", category: "API", prerequisite: "API Authentication", order: 4, isViewed: false },
+  { chapterID: 100064, chapterSlug: "api-performance-testing", roadmapID: 100013, title: "API Performance Testing", description: "Test APIs for scalability, latency, and reliability.", difficulty: "Advanced", category: "API", prerequisite: "API Documentation", order: 5, isViewed: false },
 
   // Modern Frontend Development (100014)
-  { chapterID: 100065, chapterSlug: "html-css-advanced", roadmapID: 100014, title: "HTML5 & CSS3 Advanced", description: "Master advanced HTML5 features and CSS3 layouts (Flexbox, Grid).", modifiedDate: "2026-04-10", difficulty: "Intermediate", category: "Frontend", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100066, chapterSlug: "javascript-es6-plus", roadmapID: 100014, title: "JavaScript ES6+", description: "Learn modern JavaScript syntax, modules, and asynchronous programming.", modifiedDate: "2026-04-11", difficulty: "Intermediate", category: "Frontend", prerequisite: "HTML5 & CSS3 Advanced", order: 2, isViewed: false },
-  { chapterID: 100067, chapterSlug: "vue-svelte-frameworks", roadmapID: 100014, title: "Vue.js & Svelte", description: "Build applications using Vue.js and Svelte frameworks.", modifiedDate: "2026-04-12", difficulty: "Advanced", category: "Frontend", prerequisite: "JavaScript ES6+", order: 3, isViewed: false },
-  { chapterID: 100068, chapterSlug: "state-management", roadmapID: 100014, title: "State Management", description: "Manage application state using Vuex, Pinia, or Svelte stores.", modifiedDate: "2026-04-13", difficulty: "Advanced", category: "Frontend", prerequisite: "Vue.js & Svelte", order: 4, isViewed: false },
-  { chapterID: 100069, chapterSlug: "frontend-build-tools", roadmapID: 100014, title: "Frontend Build Tools", description: "Use Webpack, Vite, and other tools to optimize frontend projects.", modifiedDate: "2026-04-14", difficulty: "Advanced", category: "Frontend", prerequisite: "State Management", order: 5, isViewed: false },
+  { chapterID: 100065, chapterSlug: "html-css-advanced", roadmapID: 100014, title: "HTML5 & CSS3 Advanced", description: "Master advanced HTML5 features and CSS3 layouts (Flexbox, Grid).", difficulty: "Intermediate", category: "Frontend", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100066, chapterSlug: "javascript-es6-plus", roadmapID: 100014, title: "JavaScript ES6+", description: "Learn modern JavaScript syntax, modules, and asynchronous programming.", difficulty: "Intermediate", category: "Frontend", prerequisite: "HTML5 & CSS3 Advanced", order: 2, isViewed: false },
+  { chapterID: 100067, chapterSlug: "vue-svelte-frameworks", roadmapID: 100014, title: "Vue.js & Svelte", description: "Build applications using Vue.js and Svelte frameworks.", difficulty: "Advanced", category: "Frontend", prerequisite: "JavaScript ES6+", order: 3, isViewed: false },
+  { chapterID: 100068, chapterSlug: "state-management", roadmapID: 100014, title: "State Management", description: "Manage application state using Vuex, Pinia, or Svelte stores.", difficulty: "Advanced", category: "Frontend", prerequisite: "Vue.js & Svelte", order: 4, isViewed: false },
+  { chapterID: 100069, chapterSlug: "frontend-build-tools", roadmapID: 100014, title: "Frontend Build Tools", description: "Use Webpack, Vite, and other tools to optimize frontend projects.", difficulty: "Advanced", category: "Frontend", prerequisite: "State Management", order: 5, isViewed: false },
 
   // Scalable Backend Engineering (100015)
-  { chapterID: 100070, chapterSlug: "backend-architecture", roadmapID: 100015, title: "Backend Architecture", description: "Understand backend architecture patterns and microservices.", modifiedDate: "2026-05-20", difficulty: "Intermediate", category: "Backend", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100071, chapterSlug: "databases-sql-nosql", roadmapID: 100015, title: "Databases (SQL & NoSQL)", description: "Learn relational and non-relational database design and queries.", modifiedDate: "2026-05-21", difficulty: "Intermediate", category: "Backend", prerequisite: "Backend Architecture", order: 2, isViewed: false },
-  { chapterID: 100072, chapterSlug: "backend-languages", roadmapID: 100015, title: "Backend Languages", description: "Use Node.js, Go, or Python for building scalable backends.", modifiedDate: "2026-05-22", difficulty: "Intermediate", category: "Backend", prerequisite: "Databases (SQL & NoSQL)", order: 3, isViewed: false },
-  { chapterID: 100073, chapterSlug: "caching-strategies", roadmapID: 100015, title: "Caching Strategies", description: "Implement caching to improve backend performance.", modifiedDate: "2026-05-23", difficulty: "Advanced", category: "Backend", prerequisite: "Backend Languages", order: 4, isViewed: false },
-  { chapterID: 100074, chapterSlug: "backend-security", roadmapID: 100015, title: "Backend Security", description: "Secure APIs, databases, and servers with best practices.", modifiedDate: "2026-05-24", difficulty: "Advanced", category: "Backend", prerequisite: "Caching Strategies", order: 5, isViewed: false },
+  { chapterID: 100070, chapterSlug: "backend-architecture", roadmapID: 100015, title: "Backend Architecture", description: "Understand backend architecture patterns and microservices.", difficulty: "Intermediate", category: "Backend", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100071, chapterSlug: "databases-sql-nosql", roadmapID: 100015, title: "Databases (SQL & NoSQL)", description: "Learn relational and non-relational database design and queries.", difficulty: "Intermediate", category: "Backend", prerequisite: "Backend Architecture", order: 2, isViewed: false },
+  { chapterID: 100072, chapterSlug: "backend-languages", roadmapID: 100015, title: "Backend Languages", description: "Use Node.js, Go, or Python for building scalable backends.", difficulty: "Intermediate", category: "Backend", prerequisite: "Databases (SQL & NoSQL)", order: 3, isViewed: false },
+  { chapterID: 100073, chapterSlug: "caching-strategies", roadmapID: 100015, title: "Caching Strategies", description: "Implement caching to improve backend performance.", difficulty: "Advanced", category: "Backend", prerequisite: "Backend Languages", order: 4, isViewed: false },
+  { chapterID: 100074, chapterSlug: "backend-security", roadmapID: 100015, title: "Backend Security", description: "Secure APIs, databases, and servers with best practices.", difficulty: "Advanced", category: "Backend", prerequisite: "Caching Strategies", order: 5, isViewed: false },
 
   // DevOps Fundamentals and CI/CD (100016)
-  { chapterID: 100075, chapterSlug: "devops-intro", roadmapID: 100016, title: "Introduction to DevOps", description: "Understand DevOps principles, culture, and benefits.", modifiedDate: "2026-06-05", difficulty: "Beginner", category: "DevOps", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100076, chapterSlug: "infrastructure-as-code", roadmapID: 100016, title: "Infrastructure as Code (Terraform)", description: "Learn to automate infrastructure using Terraform.", modifiedDate: "2026-06-06", difficulty: "Intermediate", category: "DevOps", prerequisite: "Introduction to DevOps", order: 2, isViewed: false },
-  { chapterID: 100077, chapterSlug: "containerization", roadmapID: 100016, title: "Containerization with Docker & Kubernetes", description: "Use Docker and Kubernetes for container orchestration.", modifiedDate: "2026-06-07", difficulty: "Intermediate", category: "DevOps", prerequisite: "Infrastructure as Code (Terraform)", order: 3, isViewed: false },
-  { chapterID: 100078, chapterSlug: "ci-cd-pipelines", roadmapID: 100016, title: "CI/CD Pipelines", description: "Build CI/CD pipelines using Jenkins, GitLab CI, or GitHub Actions.", modifiedDate: "2026-06-08", difficulty: "Advanced", category: "DevOps", prerequisite: "Containerization with Docker & Kubernetes", order: 4, isViewed: false },
-  { chapterID: 100079, chapterSlug: "devops-monitoring", roadmapID: 100016, title: "Monitoring and Logging", description: "Implement monitoring and logging to ensure system reliability.", modifiedDate: "2026-06-09", difficulty: "Advanced", category: "DevOps", prerequisite: "CI/CD Pipelines", order: 5, isViewed: false },
+  { chapterID: 100075, chapterSlug: "devops-intro", roadmapID: 100016, title: "Introduction to DevOps", description: "Understand DevOps principles, culture, and benefits.", difficulty: "Beginner", category: "DevOps", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100076, chapterSlug: "infrastructure-as-code", roadmapID: 100016, title: "Infrastructure as Code (Terraform)", description: "Learn to automate infrastructure using Terraform.", difficulty: "Intermediate", category: "DevOps", prerequisite: "Introduction to DevOps", order: 2, isViewed: false },
+  { chapterID: 100077, chapterSlug: "containerization", roadmapID: 100016, title: "Containerization with Docker & Kubernetes", description: "Use Docker and Kubernetes for container orchestration.", difficulty: "Intermediate", category: "DevOps", prerequisite: "Infrastructure as Code (Terraform)", order: 3, isViewed: false },
+  { chapterID: 100078, chapterSlug: "ci-cd-pipelines", roadmapID: 100016, title: "CI/CD Pipelines", description: "Build CI/CD pipelines using Jenkins, GitLab CI, or GitHub Actions.", difficulty: "Advanced", category: "DevOps", prerequisite: "Containerization with Docker & Kubernetes", order: 4, isViewed: false },
+  { chapterID: 100079, chapterSlug: "devops-monitoring", roadmapID: 100016, title: "Monitoring and Logging", description: "Implement monitoring and logging to ensure system reliability.", difficulty: "Advanced", category: "DevOps", prerequisite: "CI/CD Pipelines", order: 5, isViewed: false },
 
   // Machine Learning Engineering (100017)
-  { chapterID: 100080, chapterSlug: "ml-intro", roadmapID: 100017, title: "Introduction to Machine Learning", description: "Learn core ML concepts, algorithms, and workflows.", modifiedDate: "2026-07-12", difficulty: "Beginner", category: "Machine Learning", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100081, chapterSlug: "data-preprocessing", roadmapID: 100017, title: "Data Preprocessing", description: "Clean, transform, and prepare data for ML models.", modifiedDate: "2026-07-13", difficulty: "Intermediate", category: "Machine Learning", prerequisite: "Introduction to Machine Learning", order: 2, isViewed: false },
-  { chapterID: 100082, chapterSlug: "model-development", roadmapID: 100017, title: "Model Development and Training", description: "Develop and train ML models using popular libraries.", modifiedDate: "2026-07-14", difficulty: "Intermediate", category: "Machine Learning", prerequisite: "Data Preprocessing", order: 3, isViewed: false },
-  { chapterID: 100083, chapterSlug: "mlops-deployment", roadmapID: 100017, title: "MLOps and Model Deployment", description: "Deploy ML models and manage production pipelines with MLOps.", modifiedDate: "2026-07-15", difficulty: "Advanced", category: "Machine Learning", prerequisite: "Model Development and Training", order: 4, isViewed: false },
-  { chapterID: 100084, chapterSlug: "ml-optimization", roadmapID: 100017, title: "Performance Optimization", description: "Optimize ML models for performance, scalability, and cost.", modifiedDate: "2026-07-16", difficulty: "Advanced", category: "Machine Learning", prerequisite: "MLOps and Model Deployment", order: 5, isViewed: false },
+  { chapterID: 100080, chapterSlug: "ml-intro", roadmapID: 100017, title: "Introduction to Machine Learning", description: "Learn core ML concepts, algorithms, and workflows.", difficulty: "Beginner", category: "Machine Learning", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100081, chapterSlug: "data-preprocessing", roadmapID: 100017, title: "Data Preprocessing", description: "Clean, transform, and prepare data for ML models.", difficulty: "Intermediate", category: "Machine Learning", prerequisite: "Introduction to Machine Learning", order: 2, isViewed: false },
+  { chapterID: 100082, chapterSlug: "model-development", roadmapID: 100017, title: "Model Development and Training", description: "Develop and train ML models using popular libraries.", difficulty: "Intermediate", category: "Machine Learning", prerequisite: "Data Preprocessing", order: 3, isViewed: false },
+  { chapterID: 100083, chapterSlug: "mlops-deployment", roadmapID: 100017, title: "MLOps and Model Deployment", description: "Deploy ML models and manage production pipelines with MLOps.", difficulty: "Advanced", category: "Machine Learning", prerequisite: "Model Development and Training", order: 4, isViewed: false },
+  { chapterID: 100084, chapterSlug: "ml-optimization", roadmapID: 100017, title: "Performance Optimization", description: "Optimize ML models for performance, scalability, and cost.", difficulty: "Advanced", category: "Machine Learning", prerequisite: "MLOps and Model Deployment", order: 5, isViewed: false },
 
   // Modern C++ Programming (100018)
-  { chapterID: 100085, chapterSlug: "cpp-modern-intro", roadmapID: 100018, title: "Modern C++ Introduction", description: "Learn C++17/20 features and modern coding standards.", modifiedDate: "2026-08-25", difficulty: "Beginner", category: "C++", prerequisite: "None", order: 1, isViewed: false },
-  { chapterID: 100086, chapterSlug: "cpp-oop", roadmapID: 100018, title: "Object-Oriented Programming", description: "Master classes, inheritance, and polymorphism in C++.", modifiedDate: "2026-08-26", difficulty: "Intermediate", category: "C++", prerequisite: "Modern C++ Introduction", order: 2, isViewed: false },
-  { chapterID: 100087, chapterSlug: "cpp-stl", roadmapID: 100018, title: "Standard Template Library (STL)", description: "Use STL containers, algorithms, and iterators effectively.", modifiedDate: "2026-08-27", difficulty: "Intermediate", category: "C++", prerequisite: "Object-Oriented Programming", order: 3, isViewed: false },
-  { chapterID: 100088, chapterSlug: "cpp-multithreading", roadmapID: 100018, title: "Multithreading and Concurrency", description: "Implement multithreading and asynchronous programming in C++.", modifiedDate: "2026-08-28", difficulty: "Advanced", category: "C++", prerequisite: "Standard Template Library (STL)", order: 4, isViewed: false },
-  { chapterID: 100089, chapterSlug: "cpp-best-practices", roadmapID: 100018, title: "C++ Best Practices", description: "Learn high-performance coding, memory management, and low-latency design.", modifiedDate: "2026-08-29", difficulty: "Advanced", category: "C++", prerequisite: "Multithreading and Concurrency", order: 5, isViewed: false },
+  { chapterID: 100085, chapterSlug: "cpp-modern-intro", roadmapID: 100018, title: "Modern C++ Introduction", description: "Learn C++17/20 features and modern coding standards.", difficulty: "Beginner", category: "C++", prerequisite: "None", order: 1, isViewed: false },
+  { chapterID: 100086, chapterSlug: "cpp-oop", roadmapID: 100018, title: "Object-Oriented Programming", description: "Master classes, inheritance, and polymorphism in C++.", difficulty: "Intermediate", category: "C++", prerequisite: "Modern C++ Introduction", order: 2, isViewed: false },
+  { chapterID: 100087, chapterSlug: "cpp-stl", roadmapID: 100018, title: "Standard Template Library (STL)", description: "Use STL containers, algorithms, and iterators effectively.", difficulty: "Intermediate", category: "C++", prerequisite: "Object-Oriented Programming", order: 3, isViewed: false },
+  { chapterID: 100088, chapterSlug: "cpp-multithreading", roadmapID: 100018, title: "Multithreading and Concurrency", description: "Implement multithreading and asynchronous programming in C++.", difficulty: "Advanced", category: "C++", prerequisite: "Standard Template Library (STL)", order: 4, isViewed: false },
+  { chapterID: 100089, chapterSlug: "cpp-best-practices", roadmapID: 100018, title: "C++ Best Practices", description: "Learn high-performance coding, memory management, and low-latency design.", difficulty: "Advanced", category: "C++", prerequisite: "Multithreading and Concurrency", order: 5, isViewed: false },
 ];
 
 export const linksData: LinkType[] = [

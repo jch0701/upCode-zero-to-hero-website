@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { linksData } from "@/dummy";
-import { touchPillar, touchRoadmap } from "./action";
 
 export interface LinkType {
     nodeID: number;
     chapterID: number;
     title: string;
+    createdDate?: string;
     modifiedDate: string;
     order: number;
     link: string;
@@ -42,6 +42,7 @@ const linkSlice = createSlice({
             const newLink: LinkType = {
                 ...action.payload,
                 nodeID: generateNodeID(),
+                createdDate: new Date().toISOString().slice(0, 10),
                 modifiedDate: new Date().toISOString().slice(0, 10),
                 isViewed: false,
             };
@@ -83,36 +84,4 @@ const linkSlice = createSlice({
 });
 
 export const { addLink, editLink, deleteLink, toggleView, autosetViewTrue } = linkSlice.actions;
-// Thunks that update the related pillar's modified date after link changes
-export const addLinkAndTouch = (payload: InitialLinkType) => (dispatch: any, getState: any) => {
-    dispatch(addLink(payload));
-    // touch the pillar
-    dispatch(touchPillar(payload.chapterID));
-    // also touch the roadmap that owns the pillar (if any)
-    const state: any = getState();
-    const pillar = state.chapter?.pillarList?.find((p: any) => p.chapterID === payload.chapterID);
-    if (pillar?.roadmapID !== undefined) dispatch(touchRoadmap(pillar.roadmapID));
-};
-
-export const editLinkAndTouch = (payload: LinkType) => (dispatch: any, getState: any) => {
-    dispatch(editLink(payload));
-    dispatch(touchPillar(payload.chapterID));
-    const state: any = getState();
-    const pillar = state.chapter?.pillarList?.find((p: any) => p.chapterID === payload.chapterID);
-    if (pillar?.roadmapID !== undefined) dispatch(touchRoadmap(pillar.roadmapID));
-};
-
-export const deleteLinkAndTouch = (nodeID: number) => (dispatch: any, getState: any) => {
-    // find the link to get its chapterID before deletion
-    const state: any = getState();
-    const link = state.link?.linkList?.find((l: any) => l.nodeID === nodeID);
-    const chapterID = link?.chapterID;
-    // find roadmapID before deleting the chapter (deleting link won't remove chapter)
-    const pillar = chapterID !== undefined ? state.chapter?.pillarList?.find((p: any) => p.chapterID === chapterID) : undefined;
-    const roadmapID = pillar?.roadmapID;
-    dispatch(deleteLink(nodeID));
-    if (chapterID !== undefined) dispatch(touchPillar(chapterID));
-    if (roadmapID !== undefined) dispatch(touchRoadmap(roadmapID));
-};
-
 export default linkSlice.reducer;

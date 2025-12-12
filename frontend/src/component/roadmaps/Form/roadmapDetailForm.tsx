@@ -81,7 +81,6 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                         title: queryTitle,
                         description: queryDescription,
                         createdDate: "",
-                        modifiedDate: "",
                         isFavourite: false,
                     })
                 )

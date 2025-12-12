@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import type { UserListType } from "@/store/userListSlice";
 import type { RoadmapType } from "@/store/roadmapSlice";
 import type { PillarType } from "@/store/pillarsSlice";
+import type { LinkType } from "@/store/linksSlice";
 
 interface PillarDescription {
     selectedChapterID: number;
@@ -20,12 +21,25 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const userData = useSelector((state: any) => state.userList.userList) as UserListType[];
     const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
     const pillarData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+    const linksData = useSelector((state: any) => state.link.linkList) as LinkType[];
     const chapterItem = pillarData.find(p => p.chapterID === selectedChapterID);
     if (!chapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;
     const imageSrc = roadmapData.find(r => r.roadmapID === chapterItem.roadmapID)?.imageSrc || 'placeholder-image.jpg';
     const creator = roadmapData.find(r => r.roadmapID === chapterItem.roadmapID)?.creatorID || 'Unknown Creator';
     const username = userData.find(user => user.userId === creator)?.username || 'Unknown Username';
     const roadmapSlug = roadmapData.find(r => r.roadmapID === chapterItem.roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
+
+    const filterLinksData = linksData.filter(data => data.chapterID === selectedChapterID);
+    const uniqueModifiedDate = [...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
+    let latestModifiedDate: string;
+    if (uniqueModifiedDate.length > 0) {
+        const maxTimestamp: number = Math.max(...uniqueModifiedDate);
+        const latestDateObject: Date = new Date(maxTimestamp);
+        latestModifiedDate = latestDateObject.toISOString().slice(0,10);
+
+    } 
+    else latestModifiedDate = chapterItem.createdDate ?? "";
+
     const tags: Tag[] = [
         { type: 'Difficulty', label: chapterItem.difficulty },
         { type: 'Category', label: chapterItem.category },
@@ -86,7 +100,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
                         </div>)}
                         <div>
                             <h3 className="font-semibold text-left">Last Modified</h3>
-                            <p className="mt-1 text-gray-300">{chapterItem.modifiedDate}</p>
+                            <p className="mt-1 text-gray-300">{latestModifiedDate}</p>
                         </div>
                     </div>
                     {/* Description */}

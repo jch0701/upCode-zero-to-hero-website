@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { toggleFavourite, type RoadmapType } from "@/store/roadmapSlice";
 import type { UserListType } from "@/store/userListSlice";
 import type { PillarType } from "@/store/pillarsSlice";
+import type { LinkType } from "@/store/linksSlice";
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     selectedRoadmapID}) => {
@@ -18,6 +19,23 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     const userData = useSelector((state: any) => state.userList.userList) as UserListType[];
     const username = userData.find(user => user.userId === roadmapItem.creatorID)?.username || 'Unknown Username';
     const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+    const linksData = useSelector((state: any) => state.link.linkList) as LinkType[];
+    const filterPillarsData = pillarsData.filter(data => data.roadmapID === selectedRoadmapID);
+    const uniqueChapterID = [...new Set(filterPillarsData.map(data => data.chapterID))];
+    const filterLinksData = linksData.filter(data => {
+        return uniqueChapterID.includes(data.chapterID);
+    });
+    const uniqueModifiedDate = [...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
+    let latestModifiedDate: string;
+    if (uniqueModifiedDate.length > 0) {
+        const maxTimestamp: number = Math.max(...uniqueModifiedDate);
+        const latestDateObject: Date = new Date(maxTimestamp);
+        latestModifiedDate = latestDateObject.toISOString().slice(0,10);
+
+    } 
+    else {
+        latestModifiedDate = roadmapItem.createdDate;
+    }
     const dispatch = useDispatch();
     
     const location = useLocation();
@@ -101,7 +119,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                 <div className="w-full md:w-[60%]">
                     {/* Tags Section */}
                     <div className="flex flex-wrap gap-2 down mb-6 text-black">
-                        {(generateTags(selectedRoadmapID, pillarsData)
+                        {(generateTags(selectedRoadmapID, filterPillarsData)
                         ).map((tag, index) => (
                                 <TagPill key={index} tag={tag} />
                         ))}
@@ -123,7 +141,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                         </div>
                         <div>
                             <h3 className="font-semibold text-left">Last Modified</h3>
-                            <p className="mt-1 text-gray-300">{roadmapItem.modifiedDate}</p>
+                            <p className="mt-1 text-gray-300">{latestModifiedDate}</p>
                         </div>
                     </div>
                     {/* Description Section */}
