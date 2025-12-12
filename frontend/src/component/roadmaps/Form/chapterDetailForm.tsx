@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { X } from 'lucide-react';
-import FormBar, { type SelectorOption } from "../formBox";
-import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "../validateFormBox";
-import { defaultImageSrc, bin } from "../image";
+import FormBar, { type SelectorOption } from "../../formBox";
+import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "../../validateFormBox";
+import { defaultImageSrc, bin } from "../../../lib/image";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store";
 import { addChapterAndTouch, editChapterAndTouch, deleteChapterAndTouch, type PillarType } from "@/store/pillarsSlice";
