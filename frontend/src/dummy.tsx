@@ -1,7 +1,7 @@
 import { defaultImageSrc, javaImage, pythonImage, javaScriptImage, cImage, machinelearningImage,
          devopsImage, frontendImage, backendImage, reactImage, apiImage, angularImage,
          typeScriptImage, htmlcssImage, sqlImage
- } from "./component/roadmaps/image";
+ } from "./lib/image";
 import type { LinkType } from "./store/linksSlice";
 import type { PillarType } from "./store/pillarsSlice";
 import type { RoadmapType } from "./store/roadmapSlice";

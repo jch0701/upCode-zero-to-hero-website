@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from 'lucide-react';
-import FormBar from "../formBox";
-import { validateDescription, validateTitle } from "../validateFormBox";
-import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "../image";
+import FormBar from "../../formBox";
+import { validateDescription, validateTitle } from "../../validateFormBox";
+import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "../../../lib/image";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch } from "@/store";
 import { addRoadmap, editRoadmap, deleteRoadmapAndCascade, type RoadmapType } from "@/store/roadmapSlice";

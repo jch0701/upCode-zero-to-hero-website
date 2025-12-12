@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
-import type { CareerItemCardProps } from "@/component/roadmaps/Selector/careerCard";
+import type { CareerItemCardProps } from "@/component/career/Selector/careerCard";
 import { TagPill } from "@/component/tag";
 
 const CareerDetailsModal: React.FC = () => {

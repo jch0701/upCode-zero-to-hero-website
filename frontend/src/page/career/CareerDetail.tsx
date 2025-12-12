@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { CareerItem } from "@/store/careerSlice";
-import { CareerItemCard } from "@/component/roadmaps/Selector/careerCard";
+import { CareerItemCard } from "@/component/career/Selector/careerCard";
 
 export const CareerDetails: React.FC = () => {
   const careerList = useSelector(

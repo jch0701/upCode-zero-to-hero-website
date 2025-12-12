@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { useNavigate, Link } from "react-router-dom";
-import CareerItemList from "@/component/roadmaps/Selector/careerList";
-import type { CareerItemCardProps } from "@/component/roadmaps/Selector/careerCard";
+import CareerItemList from "@/component/career/Selector/careerList";
+import type { CareerItemCardProps } from "@/component/career/Selector/careerCard";
 
 const CareerRouter: React.FC = () => {
   const navigate = useNavigate();

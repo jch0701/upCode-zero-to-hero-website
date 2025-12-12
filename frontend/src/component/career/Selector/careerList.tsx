@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   CareerItemCard,
   type CareerItemCardProps,
-} from "@/component/roadmaps/Selector/careerCard";
+} from "@/component/career/Selector/careerCard";
 
 interface CareerItemListProps {
   items: CareerItemCardProps[];

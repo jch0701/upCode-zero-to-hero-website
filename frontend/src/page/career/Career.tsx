@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import RoadmapSidebar from "@/component/roadmaps/sidebar";
 import SectionBlock from "@/component/roadmaps/sectionBlock";
 import SearchBar from "@/component/searchBar";
-import CareerItemList from "@/component/roadmaps/Selector/careerList";
+import CareerItemList from "@/component/career/Selector/careerList";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom"; // ✅ for navigation
 import { Button } from "@/component/shadcn/button"; // ✅ styled button
