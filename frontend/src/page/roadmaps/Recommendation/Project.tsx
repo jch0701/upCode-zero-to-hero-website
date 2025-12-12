@@ -29,7 +29,7 @@ export const RecommendedProject: React.FC = () => {
                     </button>
                 </div>
                 <div className="pb-5">
-                    <SearchBar query={query} setQuery={setQuery} placeholder="Coming Soon" />
+                    <SearchBar query={query} setQuery={setQuery} placeholder="Enter title of project to see what project come true..." />
                 </div>
                 {sections.map((section) => {
                 return (

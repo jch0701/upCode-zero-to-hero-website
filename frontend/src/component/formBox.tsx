@@ -24,7 +24,7 @@ const FormBar: React.FC<FormBarProps> = ({ query, setQuery, placeholder, classNa
         <select
           value = {query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex-grow border-none text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:text-black"
+          className="flex-grow border-none text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-800/70"
         >
           <option value="" disabled>
               {placeholder || "Select option"}

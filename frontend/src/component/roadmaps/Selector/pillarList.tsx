@@ -75,9 +75,10 @@ function toggleProjectsVisibility(chapterID: number) {
                     />
                     {openChapterId === pillar.chapterID && (
                         <Recommendation
-                            pillar={pillar}
+                            mode="project"
+                            selectedID={pillar.chapterID}
                             projects={projects}
-                            navigateToProjectDetails={navigateToProjectDetails}
+                            navigateDetails={navigateToProjectDetails}
                             creator={creator.toString()}
                         />
                     )}
