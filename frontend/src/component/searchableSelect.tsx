@@ -47,7 +47,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({ query, setQuery, pl
     // Handle when an option is clicked/selected
     const handleOptionSelect = (option: SelectorOption) => {
         // Normalize selected value to lowercase (parent forms expect lowercase)
-        const newValue = String(option.value).toLowerCase();
+        const newValue = String(option.value);
         setQuery(newValue);
         setSearchTerm(option.label);
         setIsOpen(false);
