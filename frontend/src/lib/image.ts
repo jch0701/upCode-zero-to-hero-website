@@ -21,7 +21,7 @@ const IMAGE_KEYWORD_MAP: { [key: string]: string } = {
     "c++": cImage,
     "java": javaImage, 
     "python": pythonImage,
-    "machine-learning": machinelearningImage,
+    "machine learning": machinelearningImage,
     "devops": devopsImage,
     "frontend": frontendImage,
     "backend": backendImage,

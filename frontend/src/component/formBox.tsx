@@ -1,4 +1,5 @@
 import React from "react";
+import SearchableSelect from "./searchableSelect";
 
 export type SelectorOption = {
     value: string | number;
@@ -16,25 +17,19 @@ type FormBarProps = {
 };
 
 const FormBar: React.FC<FormBarProps> = ({ query, setQuery, placeholder, className="w-full", isDescription = false, isOption = false, options}) => {
+  const hasOptions = isOption && options && options.length > 0;
   return (
     <div
       className={`p-2 rounded-md border border-white-400 flex items-center ${className}`}
     > 
-      { isOption ? (
-        <select
-          value = {query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-grow border-none text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-800/70"
-        >
-          <option value="" disabled>
-              {placeholder || "Select option"}
-          </option>
-              {options && options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                      {option.label}
-                  </option>
-              ))}
-        </select>
+      { hasOptions ? (
+        <SearchableSelect
+                    query={query}
+                    setQuery={setQuery}
+                    placeholder={placeholder}
+                    options={options!} // The ! asserts options is present based on hasOptions check
+                    className="bg-transparent" // Pass through classes for input styling
+                />
       )
       :            
       (isDescription ? (
@@ -43,7 +38,7 @@ const FormBar: React.FC<FormBarProps> = ({ query, setQuery, placeholder, classNa
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder || "Enter description..."}
-          className="flex-grow h-50 text-white placeholder-white bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          className="flex-grow h-50 text-white bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
         />
       ) : (
         /** Normal single-line input */
@@ -52,7 +47,7 @@ const FormBar: React.FC<FormBarProps> = ({ query, setQuery, placeholder, classNa
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder || "Search..."}
-          className="flex-grow text-white placeholder-white bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-grow text-white bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       ))}
     </div>

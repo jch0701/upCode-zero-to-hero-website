@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { X } from 'lucide-react';
-import FormBar, { type SelectorOption } from "../../formBox";
+import FormBar from "../../formBox";
+import { difficultyOptions, roadmapCategoryOptions } from "@/lib/types";
 import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "../../validateFormBox";
 import { defaultImageSrc, bin } from "../../../lib/image";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,11 +29,6 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
         const [queryCategory, setQueryCategory] = useState(mode === "edit" ? chapterItem!.category ?? "" : "")
         const [queryPrerequisite, setQueryPrerequisite] = useState(mode === "edit" ? chapterItem!.prerequisite ?? "" : "")
         const [errors, setErrors] = React.useState<string[]>([]);
-        const difficultyOptions: SelectorOption[] = [
-            { value: 'beginner', label: 'Beginner' },
-            { value: 'intermediate', label: 'Intermediate' },
-            { value: 'advanced', label: 'Advanced' },
-        ];
         const handleSubmit = (e: React.FormEvent) => {
             e.preventDefault()
             // validate title
@@ -129,7 +125,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         </p>
                         {/* Category Section */}
                         <h3 className="text-xl font-bold mb-2 text-left">Category</h3>
-                        <FormBar query={queryCategory} setQuery={setQueryCategory} placeholder="Enter tag category" />
+                        <FormBar query={queryCategory} setQuery={setQueryCategory} placeholder="Select category" isOption={true} options={roadmapCategoryOptions}/>
                         <p className="min-h-3 text-left text-[#f60101] text-[12px]" >
                             {errors.find((e) => e.startsWith("- Category"))}
                         </p>
