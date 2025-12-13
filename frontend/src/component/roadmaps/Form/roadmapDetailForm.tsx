@@ -139,7 +139,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                                 />
                             </div>
                             <button 
-                                className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl"
+                                className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl hidden sm:block"
                                 onClick={handleSubmit}
                             >
                                 { mode === "add" ? "Add Roadmap" : "Apply Change" }
@@ -160,6 +160,12 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                                 <p className="min-h-3 text-left text-[#f60101] text-[12px]" >
                                     {errors.find((e) => e.startsWith("- Description"))}
                                 </p>
+                                <button 
+                                    className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl lg:hidden"
+                                    onClick={handleSubmit}
+                                >
+                                    { mode === "add" ? "Add Roadmap" : "Apply Change" }
+                                </button>
                         </div>
                     </div>
                     </form>

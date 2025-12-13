@@ -99,7 +99,7 @@ const Recommendation: React.FC<RecommendationProps> =
                 ) : (
                 <>
                 {userID === creator ?
-                    (<AddRecommendation extraClass=' flex flex-nowrap w-full hover:scale-105 transform transition duration-300' 
+                    (<AddRecommendation extraClass=' flex flex-nowrap w-full hover:scale-105 transform' 
                                         link={`/roadmap/${roadmapID}/${roadmapSlug}/recommend-career`}/>)
                     :
                     (<p className="pl-5 text-sm text-gray-400">No suggested career found.</p>)}

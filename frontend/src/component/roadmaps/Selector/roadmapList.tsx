@@ -36,7 +36,7 @@ export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterT
 
   return (
   <div>
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {visibleItems.map((item, index) => (
         <RoadmapItemCard 
             key={index} 

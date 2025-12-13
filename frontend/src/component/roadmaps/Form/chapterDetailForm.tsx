@@ -139,6 +139,12 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         <p className="min-h-3 text-left text-[#f60101] text-[12px]" >
                             {errors.find((e) => e.startsWith("- Prerequisite"))}
                         </p>
+                        <button 
+                            className="w-full mt-5 bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl lg:hidden"
+                            onClick={handleSubmit}
+                        >
+                            { mode === "add" ? "Add Chapter" : "Apply Change" }
+                        </button>
                     </div>
                     {/* Right Section: Tags */}
                     <div className="w-full md:w-[45%] order-first md:order-none">
@@ -151,13 +157,15 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         {/* Description Section */}
                         <h3 className="text-xl font-bold mb-2 text-left">Description</h3>
                         <FormBar query={queryDescription} setQuery={setQueryDescription} isDescription={true} />
-                        <br></br>
-                        <button 
-                            className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl"
-                            onClick={handleSubmit}
-                        >
-                            { mode === "add" ? "Add Chapter" : "Apply Change" }
-                        </button>
+                        <div className="hidden sm:block">
+                            <br></br>
+                            <button 
+                                className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl"
+                                onClick={handleSubmit}
+                            >
+                                { mode === "add" ? "Add Chapter" : "Apply Change" }
+                            </button>
+                        </div>
                     </div>
                 </div>
                 </form>

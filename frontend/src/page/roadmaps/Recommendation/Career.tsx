@@ -28,7 +28,7 @@ export const RecommendedCareer: React.FC = () => {
                     </button>
                 </div>
                 <div className="pb-5">
-                    <SearchBar query={query} setQuery={setQuery} placeholder="Enter title of career to see what project come true..." />
+                    <SearchBar query={query} setQuery={setQuery} placeholder="Enter title of career / tags to see what career come true..." />
                 </div>
                 {sections.map((section) => {
                 return (
