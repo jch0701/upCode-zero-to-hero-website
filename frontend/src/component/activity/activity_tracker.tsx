@@ -9,7 +9,7 @@ export function update_Activity(
   if (!raw) return;
 
   const user = JSON.parse(raw);
-  const key = `activity_${user.email}`;
+  const key = `activity_${user.userId}`;
 
   let activity: completion_activity_type;
 

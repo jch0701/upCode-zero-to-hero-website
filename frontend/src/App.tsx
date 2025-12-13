@@ -82,7 +82,12 @@ const router = createBrowserRouter([
           
         ],
       },
-      { path: "profile", element: <All /> },
+      { path: "profile",
+        children: [
+          {index: true, element: <All />},
+          {path: ":userId", element: <All/>},
+        ],
+      },
       { path: "signup", element: <Signup_Pg /> },
       { path: "forgot-password", element: <ForgotPassword_Pg /> },
       { path: "reset-password", element: <ResetPassword_Pg /> },

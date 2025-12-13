@@ -85,10 +85,7 @@ const Login_Pg: FC = () => {
 
     // Login logic
     const login_acc = handleLogin(email,password);
-    if(login_acc === false ){
-      alert("Please reenter again");
-      return;
-    }else if( login_acc === "admin"){
+    if( login_acc === "admin"){
       alert(`Admin Login Successful.\nEmail: ${email}`);
       navigate("/admin");
     }else if(login_acc === "user"){

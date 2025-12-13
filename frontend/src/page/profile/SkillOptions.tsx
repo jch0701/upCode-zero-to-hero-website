@@ -1,8 +1,11 @@
 import { useState, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "@/store/profileSlice";
-
-export default function SkillOptions({ userEmail }: { userEmail: string }) {
+type skillOptionsProps = {
+  userId: number;
+  editable: boolean;
+};
+export default function SkillOptions({ userId, editable }: skillOptionsProps) {
   const dispatch = useDispatch();
 
   const defaultSkills = [
@@ -23,7 +26,7 @@ export default function SkillOptions({ userEmail }: { userEmail: string }) {
     "C#"
   ];
 
-  const key = `userProfile_${userEmail}`;
+  const key = `userProfile_${userId}`;
   const saved = localStorage.getItem(key);
 
   const profile = useMemo(() => {
@@ -81,7 +84,7 @@ export default function SkillOptions({ userEmail }: { userEmail: string }) {
       </div>
 
       {/* Selection Panel */}
-      {selecting && (
+      {editable && selecting && (
         <div className="p-4 border rounded-lg bg-gray-300/70 shadow space-y-4">
           <h2 className="text-lg font-semibold">Choose Skills</h2>
 

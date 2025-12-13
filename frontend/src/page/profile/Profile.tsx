@@ -4,7 +4,9 @@ import descip_icon from "@/assets/profile/details.png";
 import user_icon from "@/assets/signuplogin/user.png";
 import email_icon from "@/assets/signuplogin/email.png"
 import role_icon from "@/assets/profile/role.png";
-
+type ProfileContentProps ={
+    userId: number;
+}; 
 function ProfileRow({
     label, 
     icon, 
@@ -45,7 +47,7 @@ function ProfileRow({
         </div>
     );
 }
-export function ProfileContent(){
+export function ProfileContent({userId}: ProfileContentProps){
     
     const avatarOptions = [
         "/src/assets/profile/bear_avatar.png",
@@ -61,13 +63,13 @@ export function ProfileContent(){
     const activeUserRaw = localStorage.getItem("activeUser");
     const activeUser = JSON.parse(activeUserRaw as string);
     
-    const localKey = `userProfile_${activeUser.email}`;
+    const localKey = `userProfile_${userId}`;
     const storedProfile = localStorage.getItem(localKey);
-    
+    const isOwner = activeUser.userId === userId;
     const baseProfile = {
-        username: activeUser.username,        
-        email: activeUser.email,                         
-        role: activeUser.role,                                
+        username: isOwner?activeUser.username: "Unknow User",        
+        email: isOwner?activeUser.email: "",                         
+        role: isOwner?activeUser.role: "",                                
         avatar: activeUser.avatar||"/src/assets/profile/bear_avatar.png",
         bio: "",
     };
@@ -116,7 +118,7 @@ export function ProfileContent(){
             
                 <div className="flex flex-col items-center space-y-4">
                     <img src={profile.avatar} alt="" className="w-50 h-50 rounded-full border-4 border-white/50 object-cover shadow-lg bg-fuchsia-200"/>
-                    {isEditing && !showAvatar && (
+                    {isOwner && isEditing && !showAvatar && (
                         <button className="text-sm text-indigo-400 hover:text-purple-200" onClick={() => setshowAvatar(true)}>
                             Change Picture
                         </button>
@@ -138,7 +140,7 @@ export function ProfileContent(){
                     )}
                 
                 </div>
-            {!isEditing && (
+            {isOwner && !isEditing && (
                 <div className="flex justify-end">
                     <button
                         onClick={() => setisEditing(true)}
@@ -154,7 +156,7 @@ export function ProfileContent(){
                 <ProfileRow label= "Email" icon= {email_icon} desc = {profile.email}/>
                 <ProfileRow label= "Bio" icon= {descip_icon} desc= {profile.bio} editable={isEditing} onChange={(val) => handleChange("bio", val)}/>
             </div>
-            {isEditing && (
+            {isOwner && isEditing && (
                 <div className="flex justify-end gap-4">
                     <button
                         onClick={() => {
