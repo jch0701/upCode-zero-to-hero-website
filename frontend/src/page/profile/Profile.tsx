@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import edit_icon from "@/assets/profile/edit.png";
 import descip_icon from "@/assets/profile/details.png";
 import user_icon from "@/assets/signuplogin/user.png";
@@ -59,34 +59,52 @@ export function ProfileContent({userId}: ProfileContentProps){
         "/src/assets/profile/lion_avatar.png",
         "/src/assets/profile/dinasour_avatar.png"
     ];
-
+    //guard
     const activeUserRaw = localStorage.getItem("activeUser");
-    const activeUser = JSON.parse(activeUserRaw as string);
-    
-    const localKey = `userProfile_${userId}`;
-    const storedProfile = localStorage.getItem(localKey);
+    if (!activeUserRaw) {
+        return (
+            <div className="text-white text-center py-20">
+                Please login to view your profile.
+            </div>
+        );}
+    //parse
+    const activeUser = JSON.parse(activeUserRaw);
+    //ownership
     const isOwner = activeUser.userId === userId;
-    const baseProfile = {
-        username: isOwner?activeUser.username: "Unknow User",        
-        email: isOwner?activeUser.email: "",                         
-        role: isOwner?activeUser.role: "",                                
-        avatar: activeUser.avatar||"/src/assets/profile/bear_avatar.png",
-        bio: "",
-    };
+    //resolved viewed user
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const viewedUser = users.find((u: any) => u.userId === userId) ?? (activeUser.userId === userId ? activeUser : null);
+
+    //resolve profilekey
+    const profileKey = isOwner? `userProfile_${userId}`: viewedUser? `userProfile_${userId}`: null;
+    //load profile
+    const storedProfile = profileKey ? localStorage.getItem(profileKey): null;
+    //base profile
+    const baseProfile = storedProfile
+    ? JSON.parse(storedProfile)
+    : {
+        username: viewedUser?.username ?? "Unknown User",
+        email: viewedUser?.email ?? "",
+        role: viewedUser?.role ?? activeUser.role ?? "",
+        avatar: "/src/assets/profile/bear_avatar.png",
+        bio: viewedUser?.bio ?? activeUser.bio ?? "",
+        skills:[],
+        };
+    useEffect(() => {
+        setProfile(baseProfile);
+        setisEditing(false);
+        setshowAvatar(false);
+    }, [userId]);
+
     if (storedProfile) {
         const parsed = JSON.parse(storedProfile);
     
-    if (!parsed.avatar) {
+    if (!parsed.avatar && profileKey) {
         parsed.avatar = "/src/assets/profile/bear_avatar.png";
-        localStorage.setItem(localKey, JSON.stringify(parsed));
+        localStorage.setItem(profileKey, JSON.stringify(parsed));
     }
     }
-    const initialProfile = storedProfile
-    ? JSON.parse(localStorage.getItem(localKey)!)
-    : baseProfile;
-
-
-    const [profile, setProfile] = useState(initialProfile);
+    const [profile, setProfile] = useState(baseProfile);
     const [showAvatar, setshowAvatar] = useState(false);
     const [isEditing,setisEditing] = useState(false);
 
@@ -95,20 +113,26 @@ export function ProfileContent({userId}: ProfileContentProps){
         setProfile((prev: any) => ({ ...prev, [field]: value }));
     };
 
-    const handlesaveProfile = () =>{
-        console.log("Saved data:" ,profile);
-        alert("Profile saved!");
-        localStorage.setItem(localKey, JSON.stringify(profile));
-        setProfile(profile);
-        setisEditing(false);
-    }
-    if (!activeUserRaw) {
-        return (
-            <div className="text-white text-center py-20">
-            Please login to view your profile.
-            </div>
-        );
-    }
+    const handlesaveProfile = () => {
+    if (!isOwner || !profileKey) return;
+
+    localStorage.setItem(profileKey, JSON.stringify(profile));
+    setisEditing(false);
+    setshowAvatar(false);
+    alert("Profile saved successfully!");
+    };
+
+    useEffect(() => {
+        const reload = () => {
+            if (profileKey) {
+            const updated = localStorage.getItem(profileKey);
+            if (updated) setProfile(JSON.parse(updated));
+            }
+        } ;
+        window.addEventListener("profile-updated", reload);
+        return () => window.removeEventListener("profile-updated", reload);
+    }, [profileKey]);
+
 
     return (
         <div>
@@ -160,8 +184,8 @@ export function ProfileContent({userId}: ProfileContentProps){
                 <div className="flex justify-end gap-4">
                     <button
                         onClick={() => {
-                        const stored = localStorage.getItem(localKey);    
-                        setProfile(stored ? JSON.parse(stored) : initialProfile);
+                        const stored = profileKey? localStorage.getItem(profileKey): null;    
+                        setProfile(stored ? JSON.parse(stored) : baseProfile);
                         setisEditing(false);
                         setshowAvatar(false);
                         }}

@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { dashboardList } from "@/lib/types";
 import { useParams } from "react-router-dom";
 
 import RadioGroup from "@/component/projects/radioGroup";
@@ -8,7 +7,7 @@ import { ProfileContent } from "./Profile";
 import { ActivityContent } from "./Activity";
 import { SkillContent } from "./Skill";
 import { SettingContent } from "./Setting";
-import { canViewProfile, sendFriendRequest } from "@/component/friend/friendsService";
+import { canViewProfile } from "@/component/friend/friendsService";
 import FriendRequests from "../friend/friendRequest";
 import FriendActionButton from "@/component/friend/friendButton";
 import AddFriendBox from "@/component/friend/addFriendBox";
@@ -20,19 +19,7 @@ export const All: React.FC = () => {
     // Load the active user from localStorage
     const activeUserRaw = localStorage.getItem("activeUser");
     const activeUser = activeUserRaw ? JSON.parse(activeUserRaw) : null;
-
-    const profileUserId = userId ? Number(userId) : activeUser.userId;
-    const isOwner = activeUser.userId === profileUserId;
-
-    const canView = isOwner || canViewProfile(activeUser.userId, profileUserId);
-
-    const click = isOwner? ["All", "Profile", "Activity", "Skill", "Setting"]: ["All", "Profile", "Activity", "Skill"];
-    const [category, setCategory] = useState<string>(click[0]);
-
-    function handleCategoryChange(value: string){
-        setCategory(value);
-    }
-
+    const [friendsVersion, setFriendsVersion] = useState(0);
     if(!activeUser){
         return(
             <div className="text-white p-10">
@@ -40,6 +27,16 @@ export const All: React.FC = () => {
             <a href="/login" className="text-blue-300 underline">Go to Login</a>
             </div>
         );
+    }
+    const profileUserId = userId ? Number(userId) : activeUser.userId;
+    const isOwner = activeUser.userId === profileUserId;
+
+    const canView = isOwner || canViewProfile(activeUser.userId, profileUserId);
+
+    const click = isOwner? ["All", "Profile", "Activity", "Skill", "Setting"]: ["All", "Profile", "Activity", "Skill"];
+    const [category, setCategory] = useState<string>(click[0]);
+    function handleCategoryChange(value: string){
+        setCategory(value);
     }
 
     return (
@@ -91,10 +88,10 @@ export const All: React.FC = () => {
                 <>
                         <AddFriendBox currentUserId={activeUser.userId} />
                     <div className="mt-6">
-                        <FriendRequests currentUserId={activeUser.userId} />
+                        <FriendRequests currentUserId={activeUser.userId} onChange={() => setFriendsVersion(v => v + 1)}/>
                     </div>
                     <div className="mt-6">
-                        <FriendsList currentUserId={activeUser.userId} />
+                        <FriendsList currentUserId={activeUser.userId} version={friendsVersion}/>
                     </div>
                 </>
                 )}
