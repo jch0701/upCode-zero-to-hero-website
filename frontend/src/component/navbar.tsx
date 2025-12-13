@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
             </div>
 
             {/* Navigation Links */}
-            <div className="hidden md:flex space-x-15 mr-25">
+            <div className="hidden md:flex space-x-5">
                 {navItems.map((item) => (
                     <Link
                         key={item}
