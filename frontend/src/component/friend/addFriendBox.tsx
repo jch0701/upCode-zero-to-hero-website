@@ -27,8 +27,8 @@ export default function AddFriendBox({ currentUserId }: Props) {
   };
 
   return (
-    <div className="bg-gray-800/70 p-4 rounded-xl mb-6">
-      <h3 className="text-lg font-semibold text-white mb-2">
+    <div className="bg-white/40 border border-white/20 p-4 rounded-xl mb-6">
+      <h3 className="text-lg font-semibold text-black mb-2">
         Add New Friend
       </h3>
 
@@ -38,12 +38,12 @@ export default function AddFriendBox({ currentUserId }: Props) {
           placeholder="Enter user ID"
           value={input}
           onChange={e => setInput(e.target.value)}
-          className="flex-1 px-3 py-2 rounded bg-white/80"
+          className="flex-1 px-3 py-2 rounded bg-gray-200/90 border border-white/50"
         />
 
         <button
           onClick={handleSend}
-          className="bg-blue-500 px-4 py-2 rounded text-white"
+          className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-white border border-white/50"
         >
           Send
         </button>

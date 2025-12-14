@@ -64,15 +64,17 @@ export default function FriendRequests({ currentUserId, onChange}: Props) {
 
   if (requests.length === 0 && !message) {
     return (
-      <p className="text-gray-400">
+      <div className="bg-white/40 backdrop-blur-lg border border-white/40 rounded-xl text-black p-4">
+      <p className="text-black">
         No incoming friend requests
       </p>
+      </div>
     );
   }
 
   return (
-    <div className="bg-gray-800/70 p-4 rounded-xl">
-      <h3 className="text-lg font-semibold text-white mb-3">
+    <div className="bg-white/40 p-4 rounded-xl">
+      <h3 className="text-lg font-semibold text-black  mb-3">
         Incoming Friend Requests
       </h3>
       {/*Feedback msg */}
