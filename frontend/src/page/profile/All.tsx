@@ -31,7 +31,7 @@ export const All: React.FC = () => {
 
     const canView = isOwner || canViewProfile(activeUser.userId, profileUserId);
 
-    const click = isOwner? ["All", "Profile", "Friends" ,"Activity", "Skill", "Setting"]: ["All", "Profile" ,"Activity", "Skill"];
+    const click = isOwner? ["All", "Profile","Activity", "Skill", "Setting"]: ["All", "Profile" ,"Activity", "Skill"];
     const [category, setCategory] = useState<string>(click[0]);
     function handleCategoryChange(value: string){
         setCategory(value);
