@@ -131,7 +131,9 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                         <>
                             <div>
                                 <h3 className="font-semibold text-left">Creator</h3>
-                                <p className="mt-1 text-gray-300">{username}</p>
+                                <Link to={`/profile/${roadmapItem.creatorID}`}>
+                                    <p className="mt-1 text-gray-300">{username}</p>
+                                </Link>
                             </div>
                             <br></br>
                         </>)}

@@ -96,7 +96,9 @@ const ChapterDescription: React.FC<PillarDescription> = ({
                         {((Number(userID) !== creator) && 
                         <div>
                             <h3 className="font-semibold text-left">Creator</h3>
-                            <p className="mt-1 text-gray-300">{username}</p>
+                            <Link to={`/profile/${creator}`}>
+                                <p className="mt-1 text-gray-300">{username}</p>
+                            </Link>
                         </div>)}
                         <div>
                             <h3 className="font-semibold text-left">Last Modified</h3>
