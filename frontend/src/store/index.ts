@@ -8,6 +8,7 @@ import pillarReducer from "./pillarsSlice";
 import linkReducer from "./linksSlice";
 import projectTrackingReducer from "./projectTrackingSlice";
 import recommendationReducer from "./recommendationSlice";
+import careerReducer from "./careerSlice";
 // Import your reducers here
 // Example: import userReducer from "./slices/userSlice";
 
@@ -46,6 +47,7 @@ export const store = configureStore({
     link: linkReducer,
     projectTracking: projectTrackingReducer,
     recommendations: recommendationReducer,
+    career: careerReducer,
   } as any,
   preloadedState,
 });

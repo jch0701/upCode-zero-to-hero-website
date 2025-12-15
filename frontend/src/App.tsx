@@ -5,6 +5,8 @@ import { Roadmap } from "./page/roadmaps/Roadmap";
 import { RoadmapDetails } from "./page/roadmaps/RoadmapDetails";
 import { Project } from "./page/projects/Project";
 import { Career } from "./page/career/Career";
+import { AddCareer } from "./page/career/AddCareer";
+import { CareerDetails } from "./page/career/CareerDetail";
 import { All } from "./page/profile/All";
 import Login_Pg from "./page/signuplogin/Login_Pg";
 import Signup_Pg from "./page/signuplogin/Signup_Pg";
@@ -66,7 +68,14 @@ const router = createBrowserRouter([
           { path: "submission/:submissionId", element: <SubmissionDetails /> },
         ],
       },
-      { path: "career", element: <Career /> },
+      {
+        path: "career",
+        children: [
+          { index: true, element: <Career /> },
+          { path: "addCareer", element: <AddCareer /> },
+          { path: ":id/:slug", element: <CareerDetails /> },
+        ],
+      },
       { path: "profile", element: <All /> },
       { path: "signup", element: <Signup_Pg /> },
       { path: "forgot-password", element: <ForgotPassword_Pg /> },

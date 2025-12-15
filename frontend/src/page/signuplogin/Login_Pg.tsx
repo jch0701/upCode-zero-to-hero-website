@@ -1,10 +1,13 @@
 import React from "react";
 import type { FC } from "react";
-import {login} from "@/store/profileSlice";
+import { login } from "@/store/profileSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import "@/component/Signup_Login/Login_Signup_Pg.css";
-import { Validate_Email, Validate_Password } from "@/component/Signup_Login/Validate_Signup_Login";
+import {
+  Validate_Email,
+  Validate_Password,
+} from "@/component/Signup_Login/Validate_Signup_Login";
 import TextInput from "@/component/Signup_Login/TextInput";
 import PasswordInput from "@/component/Signup_Login/PasswordInput";
 
@@ -23,11 +26,13 @@ const Login_Pg: FC = () => {
   const location = useLocation();
   const fromPath = location.state?.from || "/";
 
-  const userData = useSelector((state: any) => state.userList.userList) as UserListType[];
+  const userData = useSelector(
+    (state: any) => state.userList.userList
+  ) as UserListType[];
   const DEFAULT_AVATAR = "/src/assets/profile/bear_avatar.png";
-  
+
   const handleLogin = (email: string, password: string) => {
-    const userDetail = userData.find(user => user.email === email);
+    const userDetail = userData.find((user) => user.email === email);
 
     if (!userDetail) {
       alert("User not found");
@@ -43,30 +48,29 @@ const Login_Pg: FC = () => {
     const savedProfile = localStorage.getItem(key);
     let profileToUse;
 
-      if (savedProfile) {
-        profileToUse = JSON.parse(savedProfile);
-        if (!profileToUse.avatar) {
-          profileToUse.avatar = DEFAULT_AVATAR;
-        }
-      } else {
-        profileToUse = {
-          ...userDetail,
-          avatar: DEFAULT_AVATAR,
-          bio: "",
-          skills: userDetail.skill ?? [],
-        };
-        localStorage.setItem(key, JSON.stringify(profileToUse));
+    if (savedProfile) {
+      profileToUse = JSON.parse(savedProfile);
+      if (!profileToUse.avatar) {
+        profileToUse.avatar = DEFAULT_AVATAR;
       }
+    } else {
+      profileToUse = {
+        ...userDetail,
+        avatar: DEFAULT_AVATAR,
+        bio: "",
+        skills: userDetail.skill ?? [],
+      };
+      localStorage.setItem(key, JSON.stringify(profileToUse));
+    }
 
-      localStorage.setItem("activeUser", JSON.stringify(profileToUse));
-      localStorage.setItem("userID", profileToUse.userId.toString());
+    localStorage.setItem("activeUser", JSON.stringify(profileToUse));
+    localStorage.setItem("userID", profileToUse.userId.toString());
 
-      dispatch(login(profileToUse));
-      return true;
-    };
+    dispatch(login(profileToUse));
+    return true;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-
     // validate email & password separately
     e.preventDefault();
 
@@ -100,45 +104,44 @@ const Login_Pg: FC = () => {
           <form onSubmit={handleSubmit}>
             {/*email input field*/}
             <TextInput
-            label="Email"
-            icon={email_icon}
-            value={email}
-            onChange={(v) => setEmail(v)}
-            placeholder="Enter your email"
-          />
-          <p className="error-box" >
-            {errors.find((e) => e.startsWith("- Email"))}
-          </p>
+              label="Email"
+              icon={email_icon}
+              value={email}
+              onChange={(v) => setEmail(v)}
+              placeholder="Enter your email"
+            />
+            <p className="error-box">
+              {errors.find((e) => e.startsWith("- Email"))}
+            </p>
 
-          {/*password input field*/}
+            {/*password input field*/}
             <PasswordInput
-            label="Password"
-            value={password}
-            onChange={setPassword}
-            placeholder="Enter your password"
-          />
-          <p className="error-box" >
-            {errors.find((e) => e.startsWith("- Password"))}
-          </p>
+              label="Password"
+              value={password}
+              onChange={setPassword}
+              placeholder="Enter your password"
+            />
+            <p className="error-box">
+              {errors.find((e) => e.startsWith("- Password"))}
+            </p>
 
-          {/*forgot password link*/}
-          <div className="forgotpass-text">
-            <Link to="/forgot-password" className="forgot-link">
-              Forgot Password?
-            </Link>
-          </div>
+            {/*forgot password link*/}
+            <div className="forgotpass-text">
+              <Link to="/forgot-password" className="forgot-link">
+                Forgot Password?
+              </Link>
+            </div>
 
             <button className="button-container" type="submit">
               Sign In
             </button>
 
-          <div className="login-text">
-            Don't have an account?{" "}
-            <Link to="/signup" className="signup-login-link">
-              Register
-            </Link>
-          </div>
-
+            <div className="login-text">
+              Don't have an account?{" "}
+              <Link to="/signup" className="signup-login-link">
+                Register
+              </Link>
+            </div>
           </form>
         </div>
         <div className="signup-login-container">
@@ -148,7 +151,6 @@ const Login_Pg: FC = () => {
         </div>
       </div>
     </div>
-    
   );
 };
 export default Login_Pg;
