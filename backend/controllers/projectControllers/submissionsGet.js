@@ -47,6 +47,42 @@ export const getAllSubmissions = async (req, res) => {
 
   return res.json({ submissions: enrichedData });
 }
+/* 
+Controller to get all submissions by a user
+Input:
+  Params: userId: number
+Output:
+  {
+    submissions: [...submission]
+  }
+*/
+
+export const getAllSubmissionsByUser = async (req, res) => {
+  const { userId } = req.params;
+  const { data: submissions, error } = await supabase
+    .from("Submissions")
+    .select(`
+      submissionId,
+      projectId,
+      postedOn,
+      title,
+      repoLink,
+      Projects!projectId(title)
+    `)
+    .eq("creatorId", userId);
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+  const enrichedData = submissions.map(submission => ({
+    submissionId: submission.submissionId,
+    projectId: submission.projectId,
+    postedOn: submission.postedOn,
+    title: submission.title,
+    repoLink: submission.repoLink,
+    projectTitle: submission.Projects ? submission.Projects.title : null,
+  }));
+  return res.json({ submissions: enrichedData });
+}
 
 // Controller to get specific submission for a project (full details)
 /*

@@ -4,23 +4,26 @@ import submission_icon from "../../assets/projects/submission_icon_2.png";
 import { TagPill } from "@/component/tag";
 import { commonIconStyles } from "@/lib/styles";
 import { ellipsifyText } from "@/lib/utils";
-import { useSelector } from "react-redux";
 
 type ProjectCardProps = {
   projectId: number;
+  title: string;
+  shortDescription: string;
+  difficulty: string;
+  category: string;
+  trackCount: number;
+  submissionCount: number;
+  creatorName: string;
   onClick?: () => void;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ projectId, onClick }) => {
-  const {creatorId, title, shortDescription, difficulty, category, trackCount, submissionCount} = 
-  useSelector((state: any) => {
-    return state.projects.projectsList.find((project: any) => project.projectId === projectId);
-  });
+const ProjectCard: React.FC<ProjectCardProps> = ({ projectId, title, shortDescription, 
+  difficulty, category, trackCount, submissionCount, creatorName, onClick }) => {
+  // const {creatorId, title, shortDescription, difficulty, category, trackCount, submissionCount} = 
+  // useSelector((state: any) => {
+  //   return state.projects.projectsList.find((project: any) => project.projectId === projectId);
+  // });
   const customIconStyles = `${commonIconStyles} inline-block mr-1`;
-  const creator = useSelector((state: any) => {
-    const user = state.userList.userList.find((u: any) => u.userId === creatorId);
-    return user ? user.username : "Unknown";
-  });
   return (
     <Card
       key={projectId}
@@ -33,7 +36,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ projectId, onClick }) => {
       </CardTitle>
       <CardDescription className="text-gray-300/80 mb-2">
         <div>
-          <p className="text-left mb-3 text-[1rem]">Created by: <span className="italic">{creator}</span></p>
+          <p className="text-left mb-3 text-[1rem]">Created by: <span className="italic">{creatorName}</span></p>
           <ul className="flex gap-2 mb-2 list-none text-black">
             <li><TagPill tag={{ label: difficulty, type: "Difficulty" }} /></li>
             <li><TagPill tag={{ label: category, type: "Category" }} /></li>

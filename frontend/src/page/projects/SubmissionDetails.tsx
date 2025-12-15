@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useGetCommitHistory } from "@/api/getCommitHistory";
+import { useGetSubmissionById } from "@/api/projects/submissionsAPI";
 import { formatDate, base64ToString } from "@/lib/utils";
 import RadioGroup from "@/component/projects/radioGroup";
 import ReactMarkdown from "react-markdown";
@@ -16,14 +17,14 @@ import { GitHubLink } from "@/component/projects/gitHubLink";
 const SubmissionDetails: React.FC = () => {
   const { submissionId } = useParams<{ submissionId: string }>();
 
-  const submission = useSelector((state: any) => state.submissions.submissionsList.find((sub: any) => sub.submissionId === Number(submissionId)));
+  const { data: submission } = useGetSubmissionById(0, Number(submissionId));
   const {
     data: commitHistory,
     isLoading: commitsIsLoading,
     isError: getCommitsIsError,
     error: getCommitsError
   } = useGetCommitHistory(submission?.repoLink || "");
-  const creatorId = submission.creatorId;
+  const creatorId = submission!.creatorId;
   const creatorName = useSelector((state: any) => state.userList.userList.find((user: any) => user.userId === creatorId))?.username;
   const userName = useSelector((state: any) => state.profile.username);
   const projectId = submission?.projectId;
@@ -43,7 +44,7 @@ const SubmissionDetails: React.FC = () => {
       <h1 className="text-left mt-2 text-4xl font-extralight text-white">{submission?.title}</h1>
       <p className="text-white text-[1.5rem] font-light">Submission by: {creatorName}</p>
       <p className="text-white text-[1.2rem]">
-        Project: {projectTitle} | Created By: {submission?.creator}
+        Project: {projectTitle} | Created By: {submission?.creatorName}
       </p>
       <p className="text-white text-[1rem]">
         <span>Submitted On: {submission?.postedOn && formatDate(new Date(submission.postedOn))} </span>

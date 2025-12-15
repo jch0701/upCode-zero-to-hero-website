@@ -1,29 +1,26 @@
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { RoadmapItemCard } from "../roadmaps/Selector/roadmapCard";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import search_icon from "../../assets/search_icon.png"
 interface InterModuleRelationsProps {
   projectId: number;
+  recommendations?: any[];
 }
 
-export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({projectId}) => {
+export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({projectId, recommendations}) => {
   const navigate = useNavigate();
-  const recommendations = useSelector((state: any) => state.recommendations.recommendations.filter((rec: any) =>{
-    if (rec.sourceType !== "project" && rec.targetType !== "project")
-      return false;
-    return rec;
-  }));
-  const relatedRoadmaps = recommendations.filter((rec: any) => rec.sourceId === projectId && rec.targetType === "roadmap");
-  const relatedCareers = recommendations.filter((rec: any) => rec.sourceId === projectId && rec.targetType === "career");
+  const relatedRoadmaps = recommendations?.filter((rec: any) => rec.sourceId === projectId && rec.targetType === "roadmap" || 
+  rec.targetId === projectId && rec.sourceType === "roadmap");
+  const relatedCareers = recommendations?.filter((rec: any) => rec.sourceId === projectId && rec.targetType === "career" ||
+  rec.targetId === projectId && rec.sourceType === "career");
   
-  console.log("Recommendations:", useSelector((state: any) => state.recommendations.recommendations));
-  const roadmapsData = useSelector((state: any) => state.roadmap.roadmapList.filter((roadmap: any) => {
-    return relatedRoadmaps.some((rec: any) => rec.targetId === roadmap.roadmapID 
-    || rec.sourceId === roadmap.roadmapID);
-  }));
+  // const roadmapsData = useSelector((state: any) => state.roadmap.roadmapList.filter((roadmap: any) => {
+  //   return relatedRoadmaps?.some((rec: any) => rec.targetId === roadmap.roadmapID 
+  //   || rec.sourceId === roadmap.roadmapID);
+  // }));
 
-  const careersData = []; // Assume careers data is fetched similarly
+
   return(
     <Collapsible className="w-[90%] rounded-2xl p-[0.1rem] text-sm font-semibold bg-gray-800 text-white">
       <div className="flex items-center pl-5 justify-between gap-4 px-4 text-white">
@@ -39,9 +36,9 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({proje
             Don't know how to start? Perhaps explore these roadmaps to learn the skills you need.
           </span>
           <div className="mt-2">
-            {relatedRoadmaps.length === 0 ? <p>No related roadmaps found.</p> :
+            {relatedRoadmaps?.length === 0 ? <p>No related roadmaps found.</p> :
               <div className="flex flex-wrap gap-4 mt-4">
-                {roadmapsData.map((rec: any) => (
+                {relatedRoadmaps?.map((rec: any) => (
                   <div key={rec.id} onClick={() => navigate(`/roadmaps/${rec.targetId}`)}>
                     <RoadmapItemCard
                       selectedRoadmapID={rec.roadmapID}
@@ -58,7 +55,7 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({proje
             Look at all these career opportunities that require skills from this project!
           </span>
           <div className="mt-2">
-            {relatedCareers.length === 0 && <p>No related careers found.</p>}
+            {relatedCareers?.length === 0 && <p>No related careers found.</p>}
           </div>
         </div>
       </CollapsibleContent>

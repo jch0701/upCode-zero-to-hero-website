@@ -12,7 +12,8 @@ import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from "@
 import { Textarea } from "@/component/shadcn/textarea";
 import { Button } from "@/component/shadcn/button";
 import { categoryList } from "@/lib/types";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useCreateProject } from "@/api/projects/projectsAPI";
 import type { AppDispatch } from "@/store"; // Import AppDispatch from your store
 import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
 import { addProjectAndRecommendations } from "@/store/projectsSlice";
@@ -25,6 +26,7 @@ type ProjectFormProps = {
 
 export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { mutateAsync: createProject } = useCreateProject(useSelector((state: any) => state.profile.userId));
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState<any>({
@@ -37,7 +39,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) =
     roadmaps: initialData?.roadmaps || [],
     careers: initialData?.careers || [],
   });
-  const dispatchThunk = useDispatch<AppDispatch>();
   const creatorId = useSelector((state: any) => state.profile.userId);
   const roadmaps = useSelector((state: any) => state.roadmap.roadmapList);
   // const careers = useSelector((state: any) => state.careers.careerList);
@@ -63,7 +64,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) =
       finalFormData.detailsFile = uint8ToBase64(uint8Array);
     }
     
-    dispatchThunk(addProjectAndRecommendations(finalFormData));
+    await createProject(finalFormData);
     close();
   }
 

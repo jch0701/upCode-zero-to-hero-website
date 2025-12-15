@@ -7,6 +7,7 @@ import folder_icon from "../../assets/projects/folder_icon.png";
 import RadioGroup from "../../component/projects/radioGroup.tsx";
 import type { ProjectType } from "../../store/projectsSlice.ts";
 import { useSelector } from "react-redux";
+import { useGetAllBasicDetailsOnly } from "@/api/projects/projectsAPI.ts";
 import { categoryList } from "@/lib/types.ts";
 import { commonButtonStyles, commonIconStyles } from "../../lib/styles.ts";
 import { useNavigate } from "react-router";
@@ -14,21 +15,22 @@ import ProjectCard from "../../component/projects/projectCard.tsx";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { ProjectForm } from "./projectForm.tsx";
 import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
 } from "@/component/shadcn/dialog";
 import { FieldGroup } from "@/component/shadcn/field";
 import { commonBackgroundClass } from "@/lib/styles";
 
 
 export const Project: React.FC = () => {
+    const userId = useSelector((state: any) => state.profile.userId);
     const selections = ["All", ...categoryList];
     const [query, setQuery] = useState("");
     const [category, setCategory] = useState(selections[0]);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const projects = useSelector((state: any) => state.projects.projectsList);
+    const { data: projects = [] } = useGetAllBasicDetailsOnly(userId);
     const navigate = useNavigate();
 
     function handleCategoryChange(value: string) {
@@ -99,14 +101,23 @@ export const Project: React.FC = () => {
                 {
                     hasProjectsToShow ?
                         <div className="grid grid-cols-3 gap-2">
-                            {projects.map((project: ProjectType) => {
+                            {projects.map((project: ProjectType & { creatorName: string }) => {
                                 if (category !== "All" && project.category !== category) return null;
                                 if (query && !project.title.toLowerCase().includes(query.toLowerCase()) &&
                                     !project.shortDescription.toLowerCase().includes(query.toLowerCase())) {
                                     return null;
                                 }
                                 return (
-                                    <ProjectCard key={project.projectId} projectId={project.projectId}
+                                    <ProjectCard
+                                        key={project.projectId}
+                                        projectId={project.projectId}
+                                        title={project.title}
+                                        shortDescription={project.shortDescription}
+                                        difficulty={project.difficulty}
+                                        category={project.category}
+                                        trackCount={project.trackCount}
+                                        submissionCount={project.submissionCount}
+                                        creatorName={project.creatorName}
                                         onClick={() => navigateToProjectDetails(project.projectId)}
                                     />
                                 );
