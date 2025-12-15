@@ -51,4 +51,5 @@ export const roadmapCategoryOptions: SelectorOption[] = [
     { value: 'iOS Native', label: 'iOS (Swift/Objective-C)' },
     { value: 'React Native', label: 'React Native' },
     { value: 'Flutter', label: 'Flutter / Dart' },
-]
+];
+

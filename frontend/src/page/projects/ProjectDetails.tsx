@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { formatDate, base64ToString } from "@/lib/utils";
 import { commonMarkDownClass } from "@/lib/styles";
 import ReactMarkdown from 'react-markdown';
-
+import { useGetByIdComplete } from "@/api/projects/projectsAPI";
+import { useGetSubmissionsSurfaceDataOnly } from "@/api/projects/submissionsAPI";
 import RadioGroup from "@/component/projects/radioGroup";
 import SubmissionCard from "@/component/projects/submissionCard";
 import { TagPill } from "@/component/tag";
@@ -17,19 +18,13 @@ import { ProjectInteractive } from "@/component/projects/projectInteractive";
 export const ProjectDetails: React.FC = () => {
   const navigate = useNavigate();
   const [submissionDialogOpen, setSubmissionDialogOpen] = useState(false);
-  
   let { projectId: projectIdParam } = useParams<{ projectId: string }>();
+  
+  const { data: project } = useGetByIdComplete(Number(projectIdParam));
+  const { data: submissions = [] } = useGetSubmissionsSurfaceDataOnly(Number(projectIdParam));
   const projectId = Number(projectIdParam);
-  const project = useSelector((state: any) =>
-    state.projects.projectsList.find((proj: any) => proj.projectId === projectId)
-  );
-  const creatorId = project?.creatorId;
-  const creatorName = useSelector((state: any) => state.userList.userList.find((user: any) => user.userId === creatorId))?.username;
   // const userId = useSelector((state: any) => state.profile.userId);
   const userId = 1;
-  const submissions = useSelector((state: any) => state.submissions.submissionsList
-    .filter((sub: any) => Number(sub.projectId) === projectId)
-  );
   const communitySubmissions: any[] = [], mySubmissions: any[] = []; // Placeholder arrays for submissions
   submissions.map((sub: any) => {
     if (sub.creatorId === userId) {
@@ -51,11 +46,11 @@ export const ProjectDetails: React.FC = () => {
       <h1 className="text-left mt-2 text-4xl font-extralight text-white">{project?.title}</h1>
       <p className="text-white text-[1.5rem] font-light">{project?.shortDescription}</p>
       <div className="text-white text-[1.2rem]">
-        <span>Created By: {creatorName} </span> |
-        <span> Last Update: {project.lastUpdated && formatDate(new Date(project.lastUpdated))}</span>
+        <span>Created By: {project!.creatorName} </span> |
+        <span> Last Update: {project?.lastUpdated && formatDate(new Date(project.lastUpdated))}</span>
         <span className="space-x-2 ml-4">
-          <TagPill tag={{ type: "Difficulty", label: project.difficulty, className: "text-black h-7 w-auto text-2xl" }} />
-          <TagPill tag={{ type: "Category", label: project.category, className: "text-black h-7 w-auto text-2xl" }} />
+          <TagPill tag={{ type: "Difficulty", label: project!.difficulty, className: "text-black h-7 w-auto text-2xl" }} />
+          <TagPill tag={{ type: "Category", label: project!.category, className: "text-black h-7 w-auto text-2xl" }} />
         </span>
       </div>
 
@@ -76,6 +71,7 @@ export const ProjectDetails: React.FC = () => {
 
       <InterModuleRelations
         projectId={projectId}
+        recommendations={project?.recommendations}
       />
 
       <div>

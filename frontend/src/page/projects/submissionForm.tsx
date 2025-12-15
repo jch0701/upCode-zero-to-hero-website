@@ -8,8 +8,9 @@ import {
 import { Input } from "@/component/shadcn/input";
 import { Button } from "@/component/shadcn/button";
 import { Form } from "@/component/form";
-import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef } from "react";
+import { useSelector } from "react-redux";
+import { useCreateSubmission } from "@/api/projects/submissionsAPI";
 import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
 import { update_Activity } from "@/component/activity/activity_tracker";
 type SubmissionFormProps = {
@@ -22,10 +23,10 @@ type SubmissionFormProps = {
 export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm, close, initialData, projectId }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileInput, setFileInput] = useState<File | null>(null);
-  const dispatch = useDispatch();
+  const creatorId = useSelector((state: any) => state.profile.userId);
+  const { mutateAsync: createSubmission } = useCreateSubmission(creatorId, projectId);
   // Currently creatorId is bugged
   // const creatorId = useSelector((state: any) => state.profile.userId); 
-  const creatorId = 1;
   const submissionCounted = useRef(false);
  
   async function handleSubmit(fd: FormData) {
@@ -42,7 +43,7 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
     }
 
     console.log("Submitting payload:", payload);
-    dispatch({ type: openAsCreateForm ? "submissions/addSubmission" : "submissions/editSubmission", payload });
+    await createSubmission(payload);
 
     //Profile usage
     if (openAsCreateForm && !submissionCounted.current) {
