@@ -67,9 +67,8 @@ const RecommendationCard: React.FC<RecommendProps> =({
                 })
             )
             dispatch(
-                mode === "project" ?
-                updateChapterDate(Number(chapterID)):
-                updateRoadmapDate(Number(roadmapID))
+                updateRoadmapDate(Number(roadmapID)),
+                mode === "project" && updateChapterDate(Number(chapterID))
             )
         }
         else {
@@ -77,9 +76,8 @@ const RecommendationCard: React.FC<RecommendProps> =({
                 removeRecommendation(Number(recommendedID))
             )
             dispatch(
-                mode === "project" ?
-                updateChapterDate(Number(chapterID)):
-                updateRoadmapDate(Number(roadmapID))
+                updateRoadmapDate(Number(roadmapID)),
+                mode === "project" && updateChapterDate(Number(chapterID))
             )
         }
     }
