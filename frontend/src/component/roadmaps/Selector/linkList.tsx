@@ -1,9 +1,10 @@
 import React from 'react';
-import LinkCard, { type LinkCardProps } from './linkCard';
+import LinkCard from './linkCard';
 import { useSelector } from "react-redux";
 import { Link, useLocation } from 'react-router-dom';
-import type { RoadmapItemCardProps } from './roadmapCard';
-import type { PillarCardProps } from './pillarCard';
+import type { RoadmapType } from '@/store/roadmapSlice';
+import type { PillarType } from '@/store/pillarsSlice';
+import type { LinkType } from '@/store/linksSlice';
 
 interface linkListProps{
     selectedChapterId: number
@@ -11,9 +12,9 @@ interface linkListProps{
 
 const LinkList: React.FC<linkListProps> = ({ selectedChapterId }) => {
 // Filter pillars based on selectedRoadmapId
-const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapItemCardProps[];
-const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
-const linksData = useSelector((state: any) => state.link.linkList) as LinkCardProps[];
+const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
+const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+const linksData = useSelector((state: any) => state.link.linkList) as LinkType[];
 const filteredLinks = linksData.filter(links => links.chapterID === selectedChapterId);
 const chapterSlug = pillarsData.find(p => p.chapterID === selectedChapterId)?.chapterSlug || 'Unknown Chapter Slug';
 const chapterTitle = pillarsData.find(p => p.chapterID === selectedChapterId)?.title || 'Unknown Chapter';
@@ -43,8 +44,8 @@ return (
             ) : (filteredLinks.map((links) => (
                 <div className='mb-4'>
                     <LinkCard 
-                        key={links.chapterID}
-                        {...links}
+                        key={links.nodeID}
+                        selectedNodeID={links.nodeID}
                     />
                 </div>
             )))}

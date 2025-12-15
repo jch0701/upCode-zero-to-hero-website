@@ -26,6 +26,14 @@ import { AddChapter } from "./page/roadmaps/AddChapter";
 import { AddNode } from "./page/roadmaps/AddNode";
 import { RecommendedProject } from "./page/roadmaps/Recommendation/Project";
 import { RecommendedCareer } from "./page/roadmaps/Recommendation/Career";
+import AdminLayout from "./page/admin/adminLayout";
+import AdminDashboard from "./page/admin/ad_dashboard";
+import Admin_Users from "./page/admin/ad_user";
+import Admin_Roadmaps from "./page/admin/ad_roadmap";
+import Admin_Projects from "./page/admin/ad_project";
+import Admin_Analytics from "./page/admin/ad_analytics";
+import { AddCareer } from "./page/career/AddCareer.tsx";
+import CareerDetailsModal from "@/page/career/CareerInfoSub";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +49,10 @@ const router = createBrowserRouter([
           { index: true, element: <Roadmap /> },
           { path: "add-roadmap", element: <AddRoadmap /> },
           { path: ":roadmapID/:roadmapSlug", element: <RoadmapDetails /> },
+          {
+            path: ":roadmapID/:roadmapSlug/recommend-career",
+            element: <RecommendedCareer />,
+          },
           { path: ":roadmapID/:roadmapSlug/edit", element: <EditRoadmap /> },
           {
             path: ":roadmapID/:roadmapSlug/add-chapter",
@@ -54,7 +66,6 @@ const router = createBrowserRouter([
               { path: "add-node", element: <AddNode /> },
               { path: ":nodeID/edit", element: <EditNode /> },
               { path: "recommend-project", element: <RecommendedProject /> },
-              { path: "recommend-career", element: <RecommendedCareer /> },
             ],
           },
         ],
@@ -76,12 +87,30 @@ const router = createBrowserRouter([
           { path: ":id/:slug", element: <CareerDetails /> },
         ],
       },
-      { path: "profile", element: <All /> },
+      {
+        path: "profile",
+        children: [
+          { index: true, element: <All /> },
+          { path: ":userId", element: <All /> },
+        ],
+      },
       { path: "signup", element: <Signup_Pg /> },
       { path: "forgot-password", element: <ForgotPassword_Pg /> },
       { path: "reset-password", element: <ResetPassword_Pg /> },
       // fallback route still optional; errorElement will catch unknown paths
       { path: "*", element: <ErrorBoundary /> },
+    ],
+  },
+  //Admin
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      { index: true, element: <AdminDashboard /> },
+      { path: "users_admin", element: <Admin_Users /> },
+      { path: "roadmaps_admin", element: <Admin_Roadmaps /> },
+      { path: "projects_admin", element: <Admin_Projects /> },
+      { path: "analytics_admin", element: <Admin_Analytics /> },
     ],
   },
 ]);

@@ -2,7 +2,9 @@ import React from "react";
 import type { FC } from "react";
 import { login } from "@/store/profileSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
+import type { UserListType } from "@/store/userListSlice";
 import "@/component/Signup_Login/Login_Signup_Pg.css";
 import {
   Validate_Email,
@@ -10,12 +12,10 @@ import {
 } from "@/component/Signup_Login/Validate_Signup_Login";
 import TextInput from "@/component/Signup_Login/TextInput";
 import PasswordInput from "@/component/Signup_Login/PasswordInput";
+import { syncUserToUsers } from "@/component/friend/userSync";
 
 import email_icon from "@/assets/signuplogin/email.png";
 import hero_img from "@/assets/signuplogin/Hero.png";
-
-import { useDispatch, useSelector } from "react-redux";
-import type { UserListType } from "@/store/userListSlice";
 
 const Login_Pg: FC = () => {
   const [email, setEmail] = React.useState("");
@@ -43,7 +43,7 @@ const Login_Pg: FC = () => {
       alert("Wrong password");
       return false;
     }
-    const key = `userProfile_${userDetail.email}`;
+    const key = `userProfile_${userDetail.userId}`;
     // 1. Load existing saved profile if available
     const savedProfile = localStorage.getItem(key);
     let profileToUse;
@@ -55,19 +55,30 @@ const Login_Pg: FC = () => {
       }
     } else {
       profileToUse = {
-        ...userDetail,
+        userId: userDetail.userId,
+        username: userDetail.username,
+        email: userDetail.email,
+        role: userDetail.role ?? "",
         avatar: DEFAULT_AVATAR,
         bio: "",
-        skills: userDetail.skill ?? [],
+        skills: [],
       };
       localStorage.setItem(key, JSON.stringify(profileToUse));
     }
 
     localStorage.setItem("activeUser", JSON.stringify(profileToUse));
     localStorage.setItem("userID", profileToUse.userId.toString());
-
+    syncUserToUsers({
+      userId: profileToUse.userId,
+      username: profileToUse.username,
+      email: profileToUse.email,
+    });
     dispatch(login(profileToUse));
-    return true;
+    if (userDetail.role === "Admin") {
+      return "admin";
+    } else {
+      return "user";
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,9 +95,15 @@ const Login_Pg: FC = () => {
     if (errormsg.length > 0) return;
 
     // Login logic
-    if (handleLogin(email, password)) {
-      alert(`Login Successfully.\nEmail: ${email}`);
+    const login_acc = handleLogin(email, password);
+    if (login_acc === "admin") {
+      alert(`Admin Login Successful.\nEmail: ${email}`);
+      navigate("/admin");
+    } else if (login_acc === "user") {
+      alert(` Login Successful.\nEmail: ${email}`);
       navigate(fromPath, { replace: true });
+    } else {
+      console.error("Unexpected login role:", login_acc);
     }
   };
 

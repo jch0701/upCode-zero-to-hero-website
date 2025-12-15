@@ -1,5 +1,5 @@
 import React from "react";
-import CareerDetailForm from "@/component/roadmaps/Form/CareerDetailForm";
+import CareerDetailForm from "@/component/career/Form/CareerDetailForm";
 
 export const AddCareer: React.FC = () => {
   return (

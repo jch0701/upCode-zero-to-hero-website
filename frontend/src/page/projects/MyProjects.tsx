@@ -106,7 +106,7 @@ export const MyProjects: React.FC = () => {
                     creator={submission.creator}
                     date={submission.postedOn}
                     title={submission.title}
-                    tag={project.category}
+                    repoLink={submission.repoLink}
                     onClick={() => navigateToDetails("project/submission", submission.submissionId)}
                   />
                 );

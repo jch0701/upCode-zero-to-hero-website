@@ -1,121 +1,143 @@
-import { useState, useMemo } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "@/store/profileSlice";
+import { useEffect, useState } from "react";
 
-export default function SkillOptions({ userEmail }: { userEmail: string }) {
-  const dispatch = useDispatch();
+type SkillOptionsProps = {
+  userId: number;
+  editable: boolean;
+};
 
+export default function SkillOptions({ userId, editable }: SkillOptionsProps) {
   const defaultSkills = [
-    "Python",
-    "C++",
-    "JavaScript",
-    "React",
-    "HTML",
+    "Python", 
+    "C++", 
+    "JavaScript", 
+    "React", 
+    "HTML", 
     "CSS",
-    "Node.js",
-    "UI/UX",
-    "SQL",
-    "R",
-    "Suparbase",
-    "TypeScript",
-    "Java",
-    "C",
+    "Node.js", 
+    "UI/UX", 
+    "SQL", 
+    "R", 
+    "Supabase",
+    "TypeScript", 
+    "Java", 
+    "C", 
     "C#"
   ];
 
-  const key = `userProfile_${userEmail}`;
-  const saved = localStorage.getItem(key);
+  const profileKey = `userProfile_${userId}`;
 
-  const profile = useMemo(() => {
-    return saved ? JSON.parse(saved) : { skill: [] };
-  }, [saved]);
-
-  const [skills, setSkills] = useState<string[]>(profile.skill ?? []);
-  const [otwSkills, setOtwSkills] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [draftSkills, setDraftSkills] = useState<string[]>([]);
   const [selecting, setSelecting] = useState(false);
 
+  /* Load skills whenever userId changes */
+  useEffect(() => {
+    const stored = localStorage.getItem(profileKey);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setSkills(parsed.skills ?? []);
+    } else {
+      setSkills([]);
+    }
+    setSelecting(false);
+  }, [profileKey]);
+
   const toggleSkill = (skill: string) => {
-    setOtwSkills((prev) =>
+    setDraftSkills(prev =>
       prev.includes(skill)
-        ? prev.filter((s) => s !== skill)
+        ? prev.filter(s => s !== skill)
         : [...prev, skill]
     );
   };
 
   const handleSave = () => {
-    setSkills(otwSkills);
+    const stored = localStorage.getItem(profileKey)
+    if (!stored) return;
 
-    const updatedProfile = { ...profile, skill: otwSkills };
-    localStorage.setItem(key, JSON.stringify(updatedProfile));
-    dispatch(login(updatedProfile));
+    const profile = JSON.parse(stored);
+    const updatedProfile = { ...profile, role: profile.role ?? "" ,skills: draftSkills };
 
+    localStorage.setItem(profileKey, JSON.stringify(updatedProfile));
+    setSkills(draftSkills);
     setSelecting(false);
-    alert("Skills saved!");
+
+    window.dispatchEvent(new Event("profile-updated"));
+    alert("Skills saved succesfuly!");
   };
+
 
   const handleCancel = () => {
     setSelecting(false);
+    setDraftSkills([]);
   };
 
   return (
-    <div className="space-y-2">
-      {/* Display saved skills */}
+    <div className="space-y-4 ml-4">
+      {/* Display text when no skills added */}
       <div className="flex flex-wrap gap-2">
-        {skills.map((skill) => (
+         {skills.length === 0 && (
+          <span className="text-gray-400 italic">
+            {editable ? "You haven’t added any skills yet": "No skills added yet"}
+          </span>
+        )}
+
+        {/* Display skills */}
+        {skills.map(skill => (
           <span
             key={skill}
-            className="px-4 py-1.5 text-sm font-medium bg-purple-500 text-white rounded-full">
+            className="px-4 py-1.5 text-sm bg-purple-500 text-white rounded-full"
+          >
             {skill}
           </span>
         ))}
 
-        {/* + New */}
-        <span
-          onClick={() => {
-            setOtwSkills(skills); // Load current skills into temp state
-            setSelecting(true);
-          }}
-          className="px-3 py-1 text-sm bg-gray-300 hover:bg-gray-400 cursor-pointer rounded-full">
-          + New
-        </span>
+        {/* Owner-only add button */}
+        {editable && (
+          <span
+            onClick={() => {
+              setDraftSkills(skills);
+              setSelecting(true);
+            }}
+            className="px-3 py-1 text-sm bg-gray-300 hover:bg-gray-400 cursor-pointer rounded-full"
+          >
+            + New
+          </span>
+        )}
       </div>
 
-      {/* Selection Panel */}
-      {selecting && (
-        <div className="p-4 border rounded-lg bg-gray-300/70 shadow space-y-4">
-          <h2 className="text-lg font-semibold">Choose Skills</h2>
+      {/* Skill picker */}
+      {editable && selecting && (
+        <div className="p-4 bg-gray-300/70 rounded-lg space-y-4">
+          <h3 className="font-semibold">Choose Skills</h3>
 
           <div className="flex flex-wrap gap-2">
-            {defaultSkills.map((skill) => {
-              const active = otwSkills.includes(skill);
-
+            {defaultSkills.map(skill => {
+              const active = draftSkills.includes(skill);
               return (
                 <span
                   key={skill}
                   onClick={() => toggleSkill(skill)}
-                  className={
-                    "px-4 py-1.5 text-sm font-medium rounded-full cursor-pointer transition-all duration-200 select-none  " +
-                    (active
-                      ? "bg-blue-500 hover:bg-blue-600 text-white"
-                      : "bg-gray-300 hover:bg-gray-400 text-black")
-                  }>
+                  className={`px-4 py-1.5 rounded-full cursor-pointer ${
+                    active? "bg-blue-500 text-white": "bg-gray-200 text-black"}`}>
                   {skill}
                 </span>
               );
             })}
           </div>
 
-          {/* Buttons */}
-          <div className="flex gap-4 pt-2 justify-end">
+          <div className="flex justify-end gap-3">
             <button
+            type= "button"
               onClick={handleCancel}
-              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">
+              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded"
+            >
               Cancel
             </button>
-
             <button
+              type= "button"
               onClick={handleSave}
-              className="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
+              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded"
+            >
               Save
             </button>
           </div>

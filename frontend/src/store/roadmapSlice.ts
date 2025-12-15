@@ -2,9 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { roadmapData } from "@/dummy";
 import { generateSlug } from "@/lib/utils";
-import { touchRoadmap } from "./action";
-import { deleteChapter } from "./pillarsSlice";
-import { deleteLink } from "./linksSlice";
 
 export interface RoadmapType {
     roadmapID: number;
@@ -18,7 +15,7 @@ export interface RoadmapType {
     isFavourite: boolean;
 }
 
-type InitialRoadmapOmits = "roadmapID" | "createdDate" | "modifiedDate" | "roadmapSlug";
+type InitialRoadmapOmits = "roadmapID" | "createdDate" | "modifiedDate" | "roadmapSlug" | "isFavoutite";
 
 export type InitialRoadmapType = Omit<RoadmapType, InitialRoadmapOmits>;
 
@@ -52,6 +49,7 @@ const roadmapSlice = createSlice({
                 roadmapSlug: generateSlug(action.payload.title),
                 createdDate: new Date().toISOString().slice(0, 10),
                 modifiedDate: new Date().toISOString().slice(0, 10),
+                isFavourite: false,
             }
             state.roadmapList.push(newRoadmap);
         },
@@ -64,8 +62,10 @@ const roadmapSlice = createSlice({
                 state.roadmapList[index] = {
                     ...action.payload,
                     roadmapSlug: generateSlug(action.payload.title),
+                    creatorID: existing.creatorID,
                     createdDate: existing.createdDate,
                     modifiedDate: new Date().toISOString().slice(0, 10),
+                    isFavourite: existing.isFavourite,
                 };
             }
         },
@@ -81,32 +81,17 @@ const roadmapSlice = createSlice({
             if (index !== -1){
                 state.roadmapList[index].isFavourite = !state.roadmapList[index].isFavourite;
             }
+        },
+        updateRoadmapDate: (state, action: PayloadAction<number>) => {
+            const index = state.roadmapList.findIndex(
+                (submission) => submission.roadmapID === action.payload
+            );
+            if (index !== -1){
+                state.roadmapList[index].modifiedDate = new Date().toISOString().slice(0, 10);
+            }
         }
     },
-    extraReducers: (builder) => {
-    builder.addCase(touchRoadmap, (state,action) => {
-        const idx = state.roadmapList.findIndex(r => r.roadmapID === action.payload);
-        if (idx !== -1) state.roadmapList[idx].modifiedDate = new Date().toISOString().slice(0, 10);
-        });
-    }
 });
 
-export const { addRoadmap, editRoadmap, deleteRoadmap, toggleFavourite } = roadmapSlice.actions;
+export const { addRoadmap, editRoadmap, deleteRoadmap, toggleFavourite, updateRoadmapDate } = roadmapSlice.actions;
 export default roadmapSlice.reducer;
-
-// Delete roadmap and cascade delete chapters and links belonging to it
-export const deleteRoadmapAndCascade = (roadmapID: number) => (dispatch: any, getState: any) => {
-    const state: any = getState();
-    // find chapters that belong to this roadmap
-    const chapters: any[] = state.chapter?.pillarList?.filter((c: any) => c.roadmapID === roadmapID) ?? [];
-    for (const ch of chapters) {
-        // delete links under each chapter
-        const links: any[] = state.link?.linkList?.filter((l: any) => l.chapterID === ch.chapterID) ?? [];
-        for (const l of links) {
-            dispatch(deleteLink(l.nodeID));
-        }
-        dispatch(deleteChapter(ch.chapterID));
-    }
-    // finally delete the roadmap itself
-    dispatch(deleteRoadmap(roadmapID));
-};

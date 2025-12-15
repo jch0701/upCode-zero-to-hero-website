@@ -108,7 +108,7 @@ const dummyState: UserSlice = {
       username: "Admin",
       email: "admin@example.com",
       password: "12345678",
-      role:"Company",
+      role:"Admin",
       skill: []
     },
   ],

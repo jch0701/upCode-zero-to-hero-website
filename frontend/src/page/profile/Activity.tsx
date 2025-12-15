@@ -4,13 +4,17 @@ import { getWeeklyStats, getMonthlyStats } from "@/component/activity/weekly_mon
 import WeeklyChart from "@/component/activity/weeklyChart";
 import MonthlyChart from "@/component/activity/monthlyChart";
 
-export function ActivityContent(){
+type ActivityContentProps = {
+  userId : number;
+};
+export function ActivityContent({userId}: ActivityContentProps){
   const activeUserRaw = localStorage.getItem("activeUser");
   const topic_name = useSelector((state:any) => state.roadmap.roadmapList);
   const chapters_name = useSelector((state:any) => state.chapter.pillarList);
     if(!activeUserRaw) return;
   const activeUser = JSON.parse(activeUserRaw);
-  const key = `activity_${activeUser.email}`;
+  const isOwner = activeUser.userId === userId;
+  const key = `activity_${userId}`;
   const saved = localStorage.getItem(key);
   const activity = saved? JSON.parse(saved):{...initial_Completion, ...(saved ? JSON.parse(saved) : {})};
   const main_topic_stat = Object.entries(activity.opened.main_topic as Record<string,number>).sort((a,b) => b[1] - a[1]);
@@ -76,9 +80,19 @@ export function ActivityContent(){
               ))}
             </ul>
           )}
-            <label className="block text-center text-indigo-500 text-4xl font-semibold pt-1 pl-7 mb-2 mt-5 ">Activity Graph</label>
-            <WeeklyChart data={weeklyGraphData} />
-            <MonthlyChart data={monthlyGraphData} />
+            {isOwner ? (
+              <>
+                <label className="block text-center text-indigo-500 text-4xl font-semibold mt-5">
+                  Activity Graph
+                </label>
+                <WeeklyChart data={weeklyGraphData} />
+                <MonthlyChart data={monthlyGraphData} />
+              </>
+            ) : (
+              <p className="text-center text-gray-400 mt-6">
+                Activity graphs are visible to the profile owner only.
+              </p>
+            )}
         </div>
       </div>
     </div>

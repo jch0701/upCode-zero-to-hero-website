@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 import { generateTags } from '../groupTag.tsx';
 import { useSelector } from "react-redux";
-import type { PillarCardProps } from "./pillarCard.tsx";
+import type { PillarType } from '@/store/pillarsSlice.ts';
 import { RoadmapItemCard, type RoadmapItemCardProps } from "./roadmapCard.tsx";
 
+interface ListRoadmapItem {
+  roadmapID: number;
+  createdDate: string;
+  tags?: RoadmapItemCardProps['tags']; 
+}
+
 interface RoadmapItemListProps {
-  items: RoadmapItemCardProps[];
+  items: ListRoadmapItem[];
   filterTag?: string; // Optional filter tag
 }
 
 export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterTag }) => {
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
-  const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarCardProps[];
+  const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
   // reorder items by date descending
   const sortedItems = [...items].sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
 
@@ -30,9 +36,12 @@ export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterT
 
   return (
   <div>
-    <div className="grid grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {visibleItems.map((item, index) => (
-        <RoadmapItemCard key={index} {...item}
+        <RoadmapItemCard 
+            key={index} 
+            selectedRoadmapID={item.roadmapID}
+            tags={item.tags}
         />
       ))}
     </div>

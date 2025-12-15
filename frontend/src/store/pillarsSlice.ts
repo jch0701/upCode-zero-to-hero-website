@@ -2,8 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { pillarsData } from "@/dummy";
 import { generateSlug } from "@/lib/utils";
-import { touchPillar, touchRoadmap } from "./action";
-import { deleteLink } from "./linksSlice";
 
 export interface PillarType{
     chapterID: number;
@@ -11,12 +9,12 @@ export interface PillarType{
     roadmapID: number;
     title: string;
     description?: string;
-    modifiedDate: string;
     difficulty: string;
     category: string;
     prerequisite: string;
     order: number;
     isViewed: boolean;
+    modifiedDate: string;
 }
 
 type InitialPillarOmits = "chapterID" | "chapterSlug" | "modifiedDate" | "isViewed";
@@ -49,8 +47,8 @@ const pillarSlice = createSlice({
                 ...action.payload,
                 chapterID: generateChapterID(),
                 chapterSlug: generateSlug(action.payload.title),
+                isViewed: false,
                 modifiedDate: new Date().toISOString().slice(0, 10),
-                isViewed: false
             }
             state.pillarList.push(newPillar);
         },
@@ -61,8 +59,9 @@ const pillarSlice = createSlice({
             if (index !== -1){
                 state.pillarList[index] = {
                     ...action.payload,
+                    chapterSlug: generateSlug(action.payload.title),
                     modifiedDate: new Date().toISOString().slice(0, 10),
-                    chapterSlug: generateSlug(action.payload.title)
+                    isViewed: false,
                 };
             }
         },
@@ -87,40 +86,17 @@ const pillarSlice = createSlice({
                 state.pillarList[index].isViewed = true;
             }
         },
+        updateChapterDate: (state, action: PayloadAction<number>) => {
+            const index = state.pillarList.findIndex(
+                (submission) => submission.chapterID === action.payload
+            );
+            if (index !== -1){
+                state.pillarList[index].modifiedDate = new Date().toISOString().slice(0, 10);
+            }
+        }
     },
-    extraReducers: (builder) => {
-    builder.addCase(touchPillar, (state, action) => {
-      const idx = state.pillarList.findIndex(p => p.chapterID === action.payload);
-      if (idx !== -1) state.pillarList[idx].modifiedDate = new Date().toISOString().slice(0, 10);
-    });
-    }
 });
 
-export const { addChapter, editChapter, deleteChapter, toggleView, autosetViewTrue } = pillarSlice.actions;
+export const { addChapter, editChapter, deleteChapter, toggleView, autosetViewTrue, updateChapterDate } = pillarSlice.actions;
 export default pillarSlice.reducer;
-
-// Thunks that update the related roadmap's modified date after chapter changes
-export const addChapterAndTouch = (payload: InitialPillarType) => (dispatch: any) => {
-    dispatch(addChapter(payload));
-    dispatch(touchRoadmap(payload.roadmapID));
-};
-
-export const editChapterAndTouch = (payload: PillarType) => (dispatch: any) => {
-    dispatch(editChapter(payload));
-    dispatch(touchRoadmap(payload.roadmapID));
-};
-
-export const deleteChapterAndTouch = (chapterID: number) => (dispatch: any, getState: any) => {
-    // find pillar to get roadmapID before deletion
-    const state: any = getState();
-    const pillar = state.chapter?.pillarList?.find((p: any) => p.chapterID === chapterID);
-    const roadmapID = pillar?.roadmapID;
-    // delete any links that belong to this chapter
-    const links: any[] = state.link?.linkList?.filter((l: any) => l.chapterID === chapterID) ?? [];
-    for (const l of links) {
-        dispatch(deleteLink(l.nodeID));
-    }
-    dispatch(deleteChapter(chapterID));
-    if (roadmapID !== undefined) dispatch(touchRoadmap(roadmapID));
-};
 

@@ -19,6 +19,15 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 // Create and export the Supabase client
-const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export default supabase;
+export const initDB = async () => {
+  try {
+    // Test connection by querying a simple table (adjust table name as needed)
+    const { error } = await supabase.from('Projects').select('*').limit(1);
+    if (error) throw error;
+    console.log('Supabase connection successful');
+  } catch (err) {
+    throw new Error(`Supabase connection failed: ${err.message}`);
+  }
+};

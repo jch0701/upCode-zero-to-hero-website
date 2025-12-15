@@ -1,9 +1,9 @@
 import express from 'express';
-import { getAllBasicDetailsOnly, getByTitleComplete } from '../controllers/projectControllers/projectsGet';
-import { createProject, putTrackingData, updateProject, deleteProject } from '../controllers/projectControllers/projectsCUD';
-import { getAllSubmissions, getSubmissionById } from '../controllers/projectControllers/submissions';
-import { submitProject, updateSubmission, deleteSubmission } from '../controllers/projectControllers/submissionsCUD';
-import { getAllRecommendations, addRecommendation, updateRecommendation, deleteRecommendation } from '../controllers/projectControllers/recommendations';
+import { getAllBasicDetailsOnly, getByTitleComplete } from '../controllers/projectControllers/projectsGet.js';
+import { createProject, putTrackingData, updateProject, deleteProject } from '../controllers/projectControllers/projectsCUD.js';
+import { getAllSubmissions, getSubmissionById } from '../controllers/projectControllers/submissionsGet.js';
+import { submitProject, updateSubmission, deleteSubmission } from '../controllers/projectControllers/submissionsCUD.js';
+import { getAllRecommendations, addRecommendation, updateRecommendation, deleteRecommendation } from '../controllers/projectControllers/recommendations.js';
 
 const router = express.Router();
 

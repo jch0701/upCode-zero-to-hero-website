@@ -1,31 +1,53 @@
+import type { CareerItem } from "@/store/careerSlice";
+import { updateChapterDate } from "@/store/pillarsSlice";
 import type { ProjectType } from "@/store/projectsSlice";
 import { createRecommendation, removeRecommendation, type RecommendationType } from "@/store/recommendationSlice";
+import { updateRoadmapDate } from "@/store/roadmapSlice";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 
 interface RecommendProps {
+  mode: "career" | "project"
   selectedId: number;
-  mode?: "career" | "project"
 }
 
 const RecommendationCard: React.FC<RecommendProps> =({
-   selectedId
+   mode, selectedId
 }) => {
     const dispatch = useDispatch();
-    const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
-    const projectTitle = projects.find(p => p.projectId === selectedId)?.title || 'Unknown Title';
-    const { chapterID } = useParams<{ chapterID: string }>();
+    const { chapterID: chapterIdParam, roadmapID: roadmapIdParam } = useParams<{ chapterID: string, roadmapID: string}>();
+    const chapterID = chapterIdParam ? Number(chapterIdParam) : 0;
+    const roadmapID = roadmapIdParam ? Number(roadmapIdParam) : 0;
     const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
-    const recommendedID = recommendedData.find(data => (
-        data.sourceId === Number(chapterID) && 
-        data.sourceType === "Roadmap" && 
+    const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
+    const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];
+
+    const title =
+    mode === "project"
+      ? projects.find(p => p.projectId === selectedId)?.title || "Unknown Title"
+      : careers.find(c => c.id === selectedId)?.title || "Unknown Title";
+
+    const isRecommended = recommendedData.some(data => {
+    return (
+        data.sourceId === (mode === "project" ? chapterID : roadmapID) &&
+        data.sourceType === (mode === "project" ? "Chapter" : "Roadmap") &&
         data.targetId === selectedId &&
-        data.targetType === "Project"
-    ))?.recommendationId;
-    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === Number(chapterID) && data.sourceType === "Roadmap"));
-    const uniqueProjectIds = [...new Set(filterRecommendedData.map(data => data.targetId))];
-    const isRecommended = uniqueProjectIds.includes(selectedId);
+        data.targetType === (mode === "project" ? "Project" : "Career")
+        );
+    });
+    
+    const recommendedID =
+    recommendedData.find(data => {
+      return (
+        data.sourceId === (mode === "project" ? chapterID : roadmapID) &&
+        data.sourceType === (mode === "project" ? "Chapter" : "Roadmap") &&
+        data.targetId === selectedId &&
+        data.targetType === (mode === "project" ? "Project" : "Career")
+      );
+    })?.recommendationId ?? 0;
+
+
     const colorClasses = isRecommended
         ? "bg-purple-600/70 border-purple-600 hover:bg-purple-600/90"
         : "bg-pink-100/70 border-pink-300 hover:bg-pink-200/90";
@@ -38,16 +60,24 @@ const RecommendationCard: React.FC<RecommendProps> =({
         if (!isRecommended){
             dispatch(
                 createRecommendation({
-                    sourceId: Number(chapterID),
-                    sourceType: "Roadmap",
+                    sourceId: mode === "project" ? chapterID : roadmapID,
+                    sourceType: mode === "project" ? "Chapter" : "Roadmap",
                     targetId: selectedId,
-                    targetType: "Project"
+                    targetType: mode === "project" ? "Project" : "Career"
                 })
+            )
+            dispatch(
+                updateRoadmapDate(Number(roadmapID)),
+                mode === "project" && updateChapterDate(Number(chapterID))
             )
         }
         else {
             dispatch(
                 removeRecommendation(Number(recommendedID))
+            )
+            dispatch(
+                updateRoadmapDate(Number(roadmapID)),
+                mode === "project" && updateChapterDate(Number(chapterID))
             )
         }
     }
@@ -61,7 +91,7 @@ const RecommendationCard: React.FC<RecommendProps> =({
             >
                     {/* Title */}
                     <div className={`flex-grow text-lg font-medium ${colorText} text-left`}>
-                        {projectTitle}
+                        {title}
                     </div>
             </span>
     )

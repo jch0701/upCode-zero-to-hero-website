@@ -25,24 +25,45 @@ const initialState: RecommendationState = {
     {
       recommendationId: 1,
       sourceId: 100081,
-      sourceType: "Roadmap",
+      sourceType: "Chapter",
       targetId: 1,
       targetType: "Project"
     },
     {
       recommendationId: 2,
       sourceId: 100081,
-      sourceType: "Roadmap",
+      sourceType: "Chapter",
       targetId: 2,
       targetType: "Project"
     },
     {
       recommendationId: 3,
       sourceId: 100081,
-      sourceType: "Roadmap",
+      sourceType: "Chapter",
       targetId: 3,
       targetType: "Project"
-    }
+    },
+    {
+      recommendationId: 4,
+      sourceId: 100017,
+      sourceType: "Roadmap",
+      targetId: 2,
+      targetType: "Career"
+    },
+    {
+      recommendationId: 5,
+      sourceId: 100017,
+      sourceType: "Roadmap",
+      targetId: 3,
+      targetType: "Career"
+    },
+    {
+      recommendationId: 6,
+      sourceId: 100017,
+      sourceType: "Roadmap",
+      targetId: 4,
+      targetType: "Career"
+    },
   ],
 };
 

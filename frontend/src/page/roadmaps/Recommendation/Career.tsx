@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { X } from 'lucide-react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import type { Section } from "../Roadmap";
 import SectionBlock from "@/component/roadmaps/sectionBlock";
+import SearchBar from "@/component/searchBar";
+import RecommendedList from "@/component/roadmaps/Selector/recommendedList";
 
 export const RecommendedCareer: React.FC = () => {
+    const [query, setQuery] = useState("");
     const navigate = useNavigate();
+    const { roadmapID } = useParams<{ roadmapID: string }>();
     const sections: Section[] = [
             { id: "highly-recommended", title: "Highly Recommended" },
             { id: "fairly-recommended", title: "Fairly Recommended" },
@@ -23,10 +27,16 @@ export const RecommendedCareer: React.FC = () => {
                         <X size={20} />
                     </button>
                 </div>
+                <div className="pb-5">
+                    <SearchBar query={query} setQuery={setQuery} placeholder="Enter title of career / tags to see what career come true..." />
+                </div>
                 {sections.map((section) => {
                 return (
                     <SectionBlock key={section.id} id={section.id} title={section.title}>
-                        <p className="font-bold text-gray-800/70">Coming Soon</p>
+                        <RecommendedList mode = "career"
+                                         selectedID={Number(roadmapID)} 
+                                         selectedSection={section.id}
+                                         searchQuery={query} />
                     </SectionBlock>
                 );
                 })}

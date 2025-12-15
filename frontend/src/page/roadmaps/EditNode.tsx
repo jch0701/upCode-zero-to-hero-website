@@ -2,11 +2,11 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LinkDetailForm from "@/component/roadmaps/Form/linkDetailForm";
-import type { LinkCardProps } from "@/component/roadmaps/Selector/linkCard";
+import type { LinkType } from "@/store/linksSlice";
 
 export const EditNode: React.FC = () => {
     const { nodeID } = useParams<{ nodeID: string }>();
-    const linksData = useSelector((state: any) => state.link.linkList) as LinkCardProps[];
+    const linksData = useSelector((state: any) => state.link.linkList) as LinkType[];
     const nodeItem = linksData.find(r => r.nodeID === Number(nodeID));
     if (!nodeItem) return <p className="text-white text-center mt-10">Link not found</p>;
     
@@ -15,9 +15,7 @@ export const EditNode: React.FC = () => {
             <div className="bg-gray-700/70 w-full max-w-2xl rounded-xl shadow-2xl p-6">
                 <LinkDetailForm 
                     mode="edit"
-                    title={nodeItem.title} 
-                    order={nodeItem.order} 
-                    link={nodeItem.link}
+                    selectedLinkID={nodeItem.nodeID}
                 />
             </div>
         </div>

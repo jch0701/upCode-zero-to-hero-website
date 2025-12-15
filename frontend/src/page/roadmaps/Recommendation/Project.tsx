@@ -29,12 +29,13 @@ export const RecommendedProject: React.FC = () => {
                     </button>
                 </div>
                 <div className="pb-5">
-                    <SearchBar query={query} setQuery={setQuery} placeholder="Coming Soon" />
+                    <SearchBar query={query} setQuery={setQuery} placeholder="Enter title of project / tag to see what project come true..." />
                 </div>
                 {sections.map((section) => {
                 return (
                     <SectionBlock key={section.id} id={section.id} title={section.title}>
-                        <RecommendedList selectedChapterID={Number(chapterID)} 
+                        <RecommendedList mode = "project"
+                                         selectedID={Number(chapterID)} 
                                          selectedSection={section.id}
                                          searchQuery={query} />
                     </SectionBlock>

@@ -1,30 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { X } from 'lucide-react';
-import FormBar from "../formBox";
-import { validateDescription, validateTitle } from "../validateFormBox";
-import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "../image";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/store";
-import { addRoadmap, editRoadmap, deleteRoadmapAndCascade } from "@/store/roadmapSlice";
+import FormBar from "../../formBox";
+import { validateDescription, validateTitle } from "../../validateFormBox";
+import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "../../../lib/image";
+import { useDispatch, useSelector } from "react-redux";
+import { addRoadmap, editRoadmap, deleteRoadmap, type RoadmapType } from "@/store/roadmapSlice";
+import { update_Activity } from "@/component/activity/activity_tracker";
+import { deleteChapter, type PillarType } from "@/store/pillarsSlice";
+import { deleteLink, type LinkType } from "@/store/linksSlice";
 
 interface RoadmapDetailFormProps{
     mode: "add" | "edit";
-    imageSrc?: string;
-    title?: string;
-    description?: string;
+    selectedRoadmapID? : number;
 }
 
 const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
-    mode, imageSrc, title, description}) => {
+    mode, selectedRoadmapID}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch<AppDispatch>();
+        const dispatch = useDispatch();
+        const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
+        const pillarData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+        const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
+        const roadmapItem = roadmapData.find(p => p.roadmapID === selectedRoadmapID);
+        if (!roadmapItem && mode==="edit" ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
         const userID = localStorage.getItem("userID");
-        const {roadmapID} = useParams<{ roadmapID: string}>();
-        const [queryTitle, setQueryTitle] = useState(mode === "edit" ? title ?? "" : "");
-        const [queryDescription, setQueryDescription] = useState( mode === "edit" ? description ?? "" : "")
-        const [currentImageSrc, setCurrentImageSrc] = useState(mode === "edit" ? (imageSrc ?? defaultImageSrc) : defaultImageSrc);
+        const [queryTitle, setQueryTitle] = useState(mode === "edit" ? roadmapItem!.title ?? "" : "");
+        const [queryDescription, setQueryDescription] = useState( mode === "edit" ? roadmapItem!.description ?? "" : "")
+        const [currentImageSrc, setCurrentImageSrc] = useState(mode === "edit" ? (roadmapItem!.imageSrc ?? defaultImageSrc) : defaultImageSrc);
         const [errors, setErrors] = React.useState<string[]>([]);
+
+        const filterChapterData = pillarData.filter(data => data.roadmapID === selectedRoadmapID);
+        const uniqueChapterIDs = [...new Set(filterChapterData.map(data => data.chapterID))];
+        const filterLinkData = linkData.filter(data => {
+            return uniqueChapterIDs.includes(data.chapterID);
+        })
+        const uniqueLinkIDs = [...new Set(filterLinkData.map(data => data.nodeID))];
+
         // Function to find the image URL based on the title keyword
         const getDynamicImageSrc = (inputTitle: string): string => {
             const lowerTitle = inputTitle.toLowerCase();
@@ -66,11 +78,14 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                         isFavourite: false,
                     })
                 )
+                 update_Activity((activity) => {
+                    activity.roadmap_created = (activity.roadmap_created || 0) + 1;
+                }, { type: "roadmap_created", id: queryTitle });
             }
             if (mode === 'edit'){
                 dispatch(
                     editRoadmap({
-                        roadmapID: Number(roadmapID),
+                        roadmapID: Number(roadmapItem!.roadmapID),
                         roadmapSlug: "",
                         creatorID: Number(userID),
                         imageSrc:currentImageSrc,
@@ -86,8 +101,20 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
         }
 
         const handleDelete = () => {
-            if (roadmapID) {
-            dispatch(deleteRoadmapAndCascade(Number(roadmapID)));
+            if (selectedRoadmapID) {
+            for (const l of uniqueLinkIDs) {
+                dispatch(deleteLink(l));
+                console.log("Delete link:", l);
+            }
+            for (const c of uniqueChapterIDs) {
+                dispatch(deleteChapter(c));
+                console.log("Delete chapter:", c);
+            }
+            dispatch(deleteRoadmap(selectedRoadmapID));
+            console.log("Delete roadmap:", selectedRoadmapID);
+            update_Activity((activity) => {
+            activity.roadmap_deleted = (activity.roadmap_deleted || 0) + 1;
+        }, { type: "roadmap_deleted", id: queryTitle });
         }
         navigate(-2);
         };
@@ -133,7 +160,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                                 />
                             </div>
                             <button 
-                                className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl"
+                                className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl hidden sm:block"
                                 onClick={handleSubmit}
                             >
                                 { mode === "add" ? "Add Roadmap" : "Apply Change" }
@@ -154,6 +181,12 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                                 <p className="min-h-3 text-left text-[#f60101] text-[12px]" >
                                     {errors.find((e) => e.startsWith("- Description"))}
                                 </p>
+                                <button 
+                                    className="w-full bg-gray-500/80 hover:bg-gray-500 rounded-lg font-semibold transition shadow-xl lg:hidden"
+                                    onClick={handleSubmit}
+                                >
+                                    { mode === "add" ? "Add Roadmap" : "Apply Change" }
+                                </button>
                         </div>
                     </div>
                     </form>
