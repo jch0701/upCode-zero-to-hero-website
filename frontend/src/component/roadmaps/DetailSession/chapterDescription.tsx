@@ -30,18 +30,16 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const roadmapSlug = roadmapData.find(r => r.roadmapID === chapterItem.roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
 
     const filterLinksData = linksData.filter(data => data.chapterID === selectedChapterID);
-
-    // Parse dates defensively: ignore any invalid dates to avoid throwing errors
-    const parsedTimestamps = [chapterItem.modifiedDate, ...filterLinksData.map(d => d.modifiedDate)]
-        .map((d) => Date.parse(d))
-        .filter((ts) => !isNaN(ts));
-
-    let latestModifiedDate: string = chapterItem.modifiedDate ?? "";
-    if (parsedTimestamps.length > 0) {
-        const maxTimestamp: number = Math.max(...parsedTimestamps);
+    const uniqueModifiedDate = [Date.parse(chapterItem.modifiedDate),
+                                ...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
+    let latestModifiedDate: string;
+    if (uniqueModifiedDate.length > 0) {
+        const maxTimestamp: number = Math.max(...uniqueModifiedDate);
         const latestDateObject: Date = new Date(maxTimestamp);
         latestModifiedDate = latestDateObject.toISOString().slice(0,10);
-    }
+
+    } 
+    else latestModifiedDate = chapterItem.modifiedDate ?? "";
 
     const tags: Tag[] = [
         { type: 'Difficulty', label: chapterItem.difficulty },
