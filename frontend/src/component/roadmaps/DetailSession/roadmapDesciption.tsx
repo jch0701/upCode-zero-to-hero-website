@@ -25,7 +25,9 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     const filterLinksData = linksData.filter(data => {
         return uniqueChapterID.includes(data.chapterID);
     });
-    const uniqueModifiedDate = [...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
+    const uniqueModifiedDate = [(Date.parse(roadmapItem.modifiedDate)),
+                                ...new Set(filterPillarsData.map(data => Date.parse(data.modifiedDate))),
+                                ...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
     let latestModifiedDate: string;
     if (uniqueModifiedDate.length > 0) {
         const maxTimestamp: number = Math.max(...uniqueModifiedDate);
@@ -34,7 +36,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
 
     } 
     else {
-        latestModifiedDate = roadmapItem.createdDate;
+        latestModifiedDate = roadmapItem.modifiedDate;
     }
     const dispatch = useDispatch();
     

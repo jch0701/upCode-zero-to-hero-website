@@ -6,8 +6,9 @@ import { difficultyOptions, roadmapCategoryOptions } from "@/lib/types";
 import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "../../validateFormBox";
 import { defaultImageSrc, bin } from "../../../lib/image";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch } from "@/store";
-import { addChapter, editChapter, deleteChapterAndCascade, type PillarType } from "@/store/pillarsSlice";
+import { addChapter, editChapter, deleteChapter , type PillarType} from "@/store/pillarsSlice";
+import { updateRoadmapDate } from "@/store/roadmapSlice";
+import { deleteLink, type LinkType } from "@/store/linksSlice";
 
 interface ChapterDetailFormProps{
     mode: "add" | "edit";
@@ -17,8 +18,9 @@ interface ChapterDetailFormProps{
 const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
     mode, selectedChapterID}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch<AppDispatch>();
+        const dispatch = useDispatch();
         const pillarData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+        const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
         const chapterItem = pillarData.find(p => p.chapterID === selectedChapterID);
         if (!chapterItem && mode==="edit" ) return <p className="text-white text-center mt-10">Chapter not found</p>;
         const {roadmapID} = useParams<{ roadmapID: string}>();
@@ -29,6 +31,9 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
         const [queryCategory, setQueryCategory] = useState(mode === "edit" ? chapterItem!.category ?? "" : "")
         const [queryPrerequisite, setQueryPrerequisite] = useState(mode === "edit" ? chapterItem!.prerequisite ?? "" : "")
         const [errors, setErrors] = React.useState<string[]>([]);
+        const filterLinksData = linkData.filter(data => data.chapterID === selectedChapterID);
+        const uniqueLinkIDs = [...new Set(filterLinksData.map(data => data.nodeID))];
+
         const handleSubmit = (e: React.FormEvent) => {
             e.preventDefault()
             // validate title
@@ -68,17 +73,29 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         prerequisite: queryPrerequisite,
                         order: Number(queryOrder),
                         isViewed:false,
+                        modifiedDate: ""
                     })
                 )
             }
+            dispatch(
+                updateRoadmapDate(Number(roadmapID))
+            )
             navigate(-1)
         }
 
         const handleDelete = () => {
         if (selectedChapterID) {
-            dispatch(deleteChapterAndCascade(Number(selectedChapterID)));
+            for (const l of uniqueLinkIDs) {
+                dispatch(deleteLink(l));
+                console.log("Delete link:", l);
+            }
+            dispatch(deleteChapter(selectedChapterID));
+            console.log("Delete chapter:", selectedChapterID);
         }
         navigate(-2);
+        dispatch(
+            updateRoadmapDate(Number(roadmapID))
+        )
         };
 
         return(

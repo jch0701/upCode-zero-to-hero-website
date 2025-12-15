@@ -6,7 +6,6 @@ export interface LinkType {
     nodeID: number;
     chapterID: number;
     title: string;
-    createdDate?: string;
     modifiedDate: string;
     order: number;
     link: string;
@@ -42,7 +41,6 @@ const linkSlice = createSlice({
             const newLink: LinkType = {
                 ...action.payload,
                 nodeID: generateNodeID(),
-                createdDate: new Date().toISOString().slice(0, 10),
                 modifiedDate: new Date().toISOString().slice(0, 10),
                 isViewed: false,
             };
@@ -56,6 +54,7 @@ const linkSlice = createSlice({
                 state.linkList[index] = {
                     ...action.payload,
                     modifiedDate: new Date().toISOString().slice(0, 10),
+                    isViewed: false,
                 };
             }
         },

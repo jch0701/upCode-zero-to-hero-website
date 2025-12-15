@@ -5,9 +5,10 @@ import FormBar from "../../formBox";
 import { validateDescription, validateTitle } from "../../validateFormBox";
 import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "../../../lib/image";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch } from "@/store";
-import { addRoadmap, editRoadmap, deleteRoadmapAndCascade, type RoadmapType } from "@/store/roadmapSlice";
+import { addRoadmap, editRoadmap, deleteRoadmap, type RoadmapType } from "@/store/roadmapSlice";
 import { update_Activity } from "@/component/activity/activity_tracker";
+import { deleteChapter, type PillarType } from "@/store/pillarsSlice";
+import { deleteLink, type LinkType } from "@/store/linksSlice";
 
 interface RoadmapDetailFormProps{
     mode: "add" | "edit";
@@ -17,8 +18,10 @@ interface RoadmapDetailFormProps{
 const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
     mode, selectedRoadmapID}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch<AppDispatch>();
+        const dispatch = useDispatch();
         const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
+        const pillarData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+        const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
         const roadmapItem = roadmapData.find(p => p.roadmapID === selectedRoadmapID);
         if (!roadmapItem && mode==="edit" ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
         const userID = localStorage.getItem("userID");
@@ -26,6 +29,14 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
         const [queryDescription, setQueryDescription] = useState( mode === "edit" ? roadmapItem!.description ?? "" : "")
         const [currentImageSrc, setCurrentImageSrc] = useState(mode === "edit" ? (roadmapItem!.imageSrc ?? defaultImageSrc) : defaultImageSrc);
         const [errors, setErrors] = React.useState<string[]>([]);
+
+        const filterChapterData = pillarData.filter(data => data.roadmapID === selectedRoadmapID);
+        const uniqueChapterIDs = [...new Set(filterChapterData.map(data => data.chapterID))];
+        const filterLinkData = linkData.filter(data => {
+            return uniqueChapterIDs.includes(data.chapterID);
+        })
+        const uniqueLinkIDs = [...new Set(filterLinkData.map(data => data.nodeID))];
+
         // Function to find the image URL based on the title keyword
         const getDynamicImageSrc = (inputTitle: string): string => {
             const lowerTitle = inputTitle.toLowerCase();
@@ -81,6 +92,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                         title: queryTitle,
                         description: queryDescription,
                         createdDate: "",
+                        modifiedDate: "",
                         isFavourite: false,
                     })
                 )
@@ -89,8 +101,17 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
         }
 
         const handleDelete = () => {
-            if (roadmapItem!.roadmapID) {
-            dispatch(deleteRoadmapAndCascade(Number(roadmapItem!.roadmapID)));
+            if (selectedRoadmapID) {
+            for (const l of uniqueLinkIDs) {
+                dispatch(deleteLink(l));
+                console.log("Delete link:", l);
+            }
+            for (const c of uniqueChapterIDs) {
+                dispatch(deleteChapter(c));
+                console.log("Delete chapter:", c);
+            }
+            dispatch(deleteRoadmap(selectedRoadmapID));
+            console.log("Delete roadmap:", selectedRoadmapID);
             update_Activity((activity) => {
             activity.roadmap_deleted = (activity.roadmap_deleted || 0) + 1;
         }, { type: "roadmap_deleted", id: queryTitle });

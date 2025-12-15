@@ -1,6 +1,8 @@
 import type { CareerItem } from "@/store/careerSlice";
+import { updateChapterDate } from "@/store/pillarsSlice";
 import type { ProjectType } from "@/store/projectsSlice";
 import { createRecommendation, removeRecommendation, type RecommendationType } from "@/store/recommendationSlice";
+import { updateRoadmapDate } from "@/store/roadmapSlice";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -64,10 +66,20 @@ const RecommendationCard: React.FC<RecommendProps> =({
                     targetType: mode === "project" ? "Project" : "Career"
                 })
             )
+            dispatch(
+                mode === "project" ?
+                updateChapterDate(Number(chapterID)):
+                updateRoadmapDate(Number(roadmapID))
+            )
         }
         else {
             dispatch(
                 removeRecommendation(Number(recommendedID))
+            )
+            dispatch(
+                mode === "project" ?
+                updateChapterDate(Number(chapterID)):
+                updateRoadmapDate(Number(roadmapID))
             )
         }
     }

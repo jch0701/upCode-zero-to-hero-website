@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { pillarsData } from "@/dummy";
 import { generateSlug } from "@/lib/utils";
-import { deleteLink } from "./linksSlice";
 
 export interface PillarType{
     chapterID: number;
@@ -15,7 +14,7 @@ export interface PillarType{
     prerequisite: string;
     order: number;
     isViewed: boolean;
-    createdDate?: string;
+    modifiedDate: string;
 }
 
 type InitialPillarOmits = "chapterID" | "chapterSlug" | "modifiedDate" | "isViewed";
@@ -49,7 +48,7 @@ const pillarSlice = createSlice({
                 chapterID: generateChapterID(),
                 chapterSlug: generateSlug(action.payload.title),
                 isViewed: false,
-                createdDate: new Date().toISOString().slice(0, 10),
+                modifiedDate: new Date().toISOString().slice(0, 10),
             }
             state.pillarList.push(newPillar);
         },
@@ -60,7 +59,9 @@ const pillarSlice = createSlice({
             if (index !== -1){
                 state.pillarList[index] = {
                     ...action.payload,
-                    chapterSlug: generateSlug(action.payload.title)
+                    chapterSlug: generateSlug(action.payload.title),
+                    modifiedDate: new Date().toISOString().slice(0, 10),
+                    isViewed: false,
                 };
             }
         },
@@ -85,21 +86,17 @@ const pillarSlice = createSlice({
                 state.pillarList[index].isViewed = true;
             }
         },
+        updateChapterDate: (state, action: PayloadAction<number>) => {
+            const index = state.pillarList.findIndex(
+                (submission) => submission.chapterID === action.payload
+            );
+            if (index !== -1){
+                state.pillarList[index].modifiedDate = new Date().toISOString().slice(0, 10);
+            }
+        }
     },
 });
 
-export const { addChapter, editChapter, deleteChapter, toggleView, autosetViewTrue } = pillarSlice.actions;
+export const { addChapter, editChapter, deleteChapter, toggleView, autosetViewTrue, updateChapterDate } = pillarSlice.actions;
 export default pillarSlice.reducer;
-
-export const deleteChapterAndCascade = (chapterID: number) => (dispatch: any, getState: any) => {
-    const state: any = getState();
-    // delete any links that belong to this chapter
-    const links: any[] = state.link?.linkList?.filter((l: any) => l.chapterID === chapterID) ?? [];
-    for (const l of links) {
-        dispatch(deleteLink(l.nodeID));
-        console.log("Delete link:", l.title);
-    }
-    dispatch(deleteChapter(chapterID));
-    console.log("Delete chapter:", chapterID);
-};
 
