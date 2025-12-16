@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/roadmaps', getRoadmap);
 router.post('/roadmaps', createRoadmap);
 router.put('/roadmaps/:roadmapID', editRoadmap);
-router.delete('/roadmaps/:roadmapID', deleteChapter)
+router.delete('/roadmaps/:roadmapID', deleteRoadmap);
 
 router.get('/roadmaps/:roadmapID/chapters', getChapter);
 router.post('/roadmaps/:roadmapID/chapters', createChapter);

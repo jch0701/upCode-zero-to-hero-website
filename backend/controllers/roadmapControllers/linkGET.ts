@@ -6,7 +6,7 @@ export const getLink = async(req: any, res: any) =>  {
     }
 
     // Get User ID from query parameter
-    const userID = req.query.user_id; 
+    const userID = req.headers['x-user-id']
     const isLoggedIn = !!userID;
 
     try {
