@@ -1,7 +1,7 @@
 import { supabase } from "../../config.js";
 import { generateSlug } from "../../util/generateSlug.js";
 
-export const createRoadmap = async(req: any, res: any) => {
+export const createRoadmap = async(req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use POST only.`);
     }
@@ -47,7 +47,7 @@ export const createRoadmap = async(req: any, res: any) => {
 
 
 
-export const editRoadmap = async(req: any, res: any) => {
+export const editRoadmap = async(req, res) => {
     if (req.method !== 'PUT') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use PUT only.`);
     }
@@ -93,7 +93,7 @@ export const editRoadmap = async(req: any, res: any) => {
 }
 
 
-export const deleteRoadmap = async(req: any, res: any) => {
+export const deleteRoadmap = async(req, res) => {
     if (req.method !== 'DELETE') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use DELETE only.`);
     }

@@ -1,6 +1,6 @@
 import { supabase } from "../../config.js";
 
-export const createLink = async(req: any, res: any) => {
+export const createLink = async(req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use POST only.`);
     }
@@ -43,7 +43,7 @@ export const createLink = async(req: any, res: any) => {
 }
 
 
-export const editLink = async(req: any, res: any) => {
+export const editLink = async(req, res) => {
     if (req.method !== 'PUT') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use PUT only.`);
     }
@@ -82,7 +82,7 @@ export const editLink = async(req: any, res: any) => {
 }
 
 
-export const deleteLink = async(req: any, res: any) => {
+export const deleteLink = async(req, res) => {
     if (req.method !== 'DELETE') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use DELETE only.`);
     }

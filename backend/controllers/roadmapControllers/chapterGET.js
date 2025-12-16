@@ -1,7 +1,7 @@
 import { supabase } from "../../config.js";
 import { generateSlug } from "../../util/generateSlug.js";
 
-export const getChapter = async(req: any, res: any) => {
+export const getChapter = async(req, res) => {
     if (req.method !== 'GET') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use GET only.`);
     }

@@ -1,7 +1,7 @@
 import { supabase } from "../../config.js";
 import { generateSlug } from "../../util/generateSlug.js";
 
-export const createChapter = async(req: any, res: any) => {
+export const createChapter = async(req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use POST only.`);
     }
@@ -48,7 +48,7 @@ export const createChapter = async(req: any, res: any) => {
 }
 
 
-export const editChapter = async(req: any, res: any) => {
+export const editChapter = async(req, res) => {
     if (req.method !== 'PUT') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use PUT only.`);
     }
@@ -95,7 +95,7 @@ export const editChapter = async(req: any, res: any) => {
     }
 }
 
-export const deleteChapter = async(req: any, res: any) => {
+export const deleteChapter = async(req, res) => {
     if (req.method !== 'DELETE') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use DELETE only.`);
     }
