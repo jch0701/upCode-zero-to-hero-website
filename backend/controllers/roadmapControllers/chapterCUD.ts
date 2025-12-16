@@ -1,115 +1,123 @@
 import { supabase } from "../../config.js";
 import { generateSlug } from "../../util/generateSlug.js";
 
-export default async function chapterCUD(req: any, res: any){
-    switch (req.method){
-        case 'POST':
-            const newChapter = req.body;
-            
-            if (!newChapter.title) {
-                return res.status(400).json({ message: 'Title are required.' });
-            }
+export const createChapter = async(req: any, res: any) => {
+    if (req.method !== 'POST') {
+        return res.status(405).end(`Method ${req.method} Not Allowed. Use POST only.`);
+    }
 
-            const payload = {
-                roadmapID: newChapter.roadmapID,
-                title: newChapter.title,
-                description: newChapter.description || '',
-                difficulty: newChapter.difficulty,
-                category: newChapter.category,
-                prerequisite: newChapter.prerequisite,
-                order: newChapter.order,
-                modifiedDate: new Date().toISOString().slice(0, 10),
-            };
+    const newChapter = req.body;
+    if (!newChapter.title) {
+        return res.status(400).json({ message: 'Title are required.' });
+    }
 
-            try {
-                const { data: chapter, error } = await supabase
-                    .from("Chapters")
-                    .insert(payload)
-                    .select()
-                    .single();
+    const payload = {
+        roadmapID: newChapter.roadmapID,
+        title: newChapter.title,
+        description: newChapter.description || '',
+        difficulty: newChapter.difficulty,
+        category: newChapter.category,
+        prerequisite: newChapter.prerequisite,
+        order: newChapter.order,
+        modifiedDate: new Date().toISOString().slice(0, 10),
+    };
 
-                if (error){
-                    console.error('POST Error:', error);
-                    return res.status(500).json({ message: 'Failed to insert chapter.' });
-                }
+    try {
+        const { data: chapter, error } = await supabase
+            .from("Chapters")
+            .insert(payload)
+            .select()
+            .single();
 
-                const finalChapter = { 
-                    ...chapter, 
-                    chapterSlug: generateSlug(payload.title), 
-                    isViewed: false,
-                };
+        if (error){
+            console.error('POST Error:', error);
+            return res.status(500).json({ message: 'Failed to insert chapter.' });
+        }
 
-                return res.status(201).json(finalChapter);
-            }
-            catch (error) {
-                return res.status(500).json({ message: 'Internal Server Error.' });
-            }
+        const finalChapter = { 
+            ...chapter, 
+            chapterSlug: generateSlug(payload.title), 
+            isViewed: false,
+        };
 
-        case 'PUT':
-            const updatedChapter = req.body;
-            const putChapterID = updatedChapter.chapterID;
+        return res.status(201).json(finalChapter);
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Internal Server Error.' });
+    }
+}
 
-            if (!putChapterID) {
-                return res.status(400).json({ message: 'Chapter ID is required for update.' });
-            }
 
-            const putPayload = {
-                title: updatedChapter.title,
-                description: updatedChapter.description,
-                difficulty: updatedChapter.difficulty,
-                category: updatedChapter.category,
-                prerequisite: updatedChapter.prerequisite,
-                order: updatedChapter.order,
-                modifiedDate: new Date().toISOString().slice(0, 10),
-            }
+export const editChapter = async(req: any, res: any) => {
+    if (req.method !== 'PUT') {
+        return res.status(405).end(`Method ${req.method} Not Allowed. Use PUT only.`);
+    }
 
-            try {
-                const { data: chapter, error } = await supabase
-                    .from('Chapters')
-                    .update(putPayload)
-                    .eq('chapterID', putChapterID)
-                    .select()
-                    .single();
+    const updatedChapter = req.body;
+    const putChapterID = updatedChapter.chapterID;
 
-                if (error) {
-                    console.error('PUT Error:', error);
-                    return res.status(500).json({ message: 'Failed to update chapter.' });
-                }
+    if (!putChapterID) {
+        return res.status(400).json({ message: 'Chapter ID is required for update.' });
+    }
 
-                const finalChapter = { 
-                    ...chapter, 
-                    chapterSlug: generateSlug(updatedChapter.title), 
-                };
+    const payload = {
+        title: updatedChapter.title,
+        description: updatedChapter.description,
+        difficulty: updatedChapter.difficulty,
+        category: updatedChapter.category,
+        prerequisite: updatedChapter.prerequisite,
+        order: updatedChapter.order,
+        modifiedDate: new Date().toISOString().slice(0, 10),
+    }
 
-                return res.status(200).json(finalChapter);
-            }
-            catch (error) {
-                 return res.status(500).json({ message: 'Internal Server Error.' });
-            }
+    try {
+        const { data: chapter, error } = await supabase
+            .from('Chapters')
+            .update(payload)
+            .eq('chapterID', putChapterID)
+            .select()
+            .single();
 
-        case 'DELETE':
-            const deleteChapterID = req.body.chapterID;
-            if (!deleteChapterID) {
-                return res.status(400).json({ message: 'Chapter ID is required for deletion.' });
-            }
+        if (error) {
+            console.error('PUT Error:', error);
+            return res.status(500).json({ message: 'Failed to update chapter.' });
+        }
 
-            try {
-                const { error } = await supabase
-                    .from('Chapters') 
-                    .delete()
-                    .eq('chapterID', deleteChapterID); 
+        const finalChapter = { 
+            ...chapter, 
+            chapterSlug: generateSlug(updatedChapter.title), 
+        };
 
-                if (error) {
-                    console.error('DELETE Error:', error);
-                    return res.status(500).json({ message: 'Failed to delete chapter.' });
-                }
-                return res.status(200).json({ deletedId: deleteChapterID, message: 'Chapter successfully deleted.' });
-            }
-            catch (error) {
-                return res.status(500).json({ message: 'Internal Server Error.' });
-            }
-        default: 
-            res.setHeader('Allow', ['POST', 'PUT', 'DELETE']);
-            return res.status(405).end(`Method ${req.method} Not Allowed`);
+        return res.status(200).json(finalChapter);
+    }
+    catch (error) {
+         return res.status(500).json({ message: 'Internal Server Error.' });
+    }
+}
+
+export const deleteChapter = async(req: any, res: any) => {
+    if (req.method !== 'DELETE') {
+        return res.status(405).end(`Method ${req.method} Not Allowed. Use DELETE only.`);
+    }
+
+    const deleteChapterID = req.body.chapterID;
+    if (!deleteChapterID) {
+        return res.status(400).json({ message: 'Chapter ID is required for deletion.' });
+    }
+
+    try {
+        const { error } = await supabase
+            .from('Chapters') 
+            .delete()
+            .eq('chapterID', deleteChapterID); 
+
+        if (error) {
+            console.error('DELETE Error:', error);
+            return res.status(500).json({ message: 'Failed to delete chapter.' });
+        }
+        return res.status(200).json({ deletedId: deleteChapterID, message: 'Chapter successfully deleted.' });
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Internal Server Error.' });
     }
 }

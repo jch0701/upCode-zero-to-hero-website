@@ -1,6 +1,6 @@
 import { supabase } from "../../config.js";
 
-export default async function getLink(req: any, res: any) {
+export const getLink = async(req: any, res: any) =>  {
     if (req.method !== 'GET') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use GET only.`);
     }

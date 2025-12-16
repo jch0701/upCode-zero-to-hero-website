@@ -1,7 +1,7 @@
 import { supabase } from "../../config.js";
 import { generateSlug } from "../../util/generateSlug.js";
 
-export default async function getRoadmap(req: any, res: any) {
+export const getRoadmap = async (req: any, res: any) => {
     if (req.method !== 'GET') {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use GET only.`);
     }
