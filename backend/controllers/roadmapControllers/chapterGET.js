@@ -6,6 +6,11 @@ export const getChapter = async(req, res) => {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use GET only.`);
     }
 
+    const { roadmapID } = req.query;
+    if (!roadmapID) {
+        return res.status(400).json({ message: 'Missing roadmap ID query parameter.' });
+    }
+
     // Get User ID from query parameter
     const userID = req.headers['x-user-id']
     const isLoggedIn = !!userID;
@@ -14,6 +19,7 @@ export const getChapter = async(req, res) => {
         const { data: chapters, error: chapterError } = await supabase
             .from("Chapters")
             .select('*')
+            .eq('roadmapID', roadmapID)
             .order('modifiedDate', { ascending: false });
         
         if (chapterError) {
