@@ -32,7 +32,6 @@ import Admin_Users from "./page/admin/ad_user";
 import Admin_Roadmaps from "./page/admin/ad_roadmap";
 import Admin_Projects from "./page/admin/ad_project";
 import Admin_Analytics from "./page/admin/ad_analytics";
-import { AddCareer } from "./page/career/AddCareer.tsx";
 import CareerDetailsModal from "@/page/career/CareerInfoSub";
 
 const router = createBrowserRouter([

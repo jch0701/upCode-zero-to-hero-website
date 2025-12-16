@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
-import FormBar, { type SelectorOption } from "../formBox";
-import { validateTitle, validateCategory } from "../validateFormBox";
-import { defaultImageSrc, bin } from "../image";
+import FormBar, { type SelectorOption } from "../../formBox";
+import { validateTitle, validateCategory } from "../../validateFormBox";
+import { defaultImageSrc, bin } from "../../../lib/image";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
 import { addCareer, editCareer, deleteCareer } from "@/store/careerSlice";
