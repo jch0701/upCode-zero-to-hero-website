@@ -1,11 +1,11 @@
 import express from 'express';
 
-import { getRoadmap } from '../controllers/roadmapControllers/roadmapGET.ts';
-import { createRoadmap, editRoadmap, deleteRoadmap } from '../controllers/roadmapControllers/roadmapCUD.ts';
-import { getChapter } from '../controllers/roadmapControllers/chapterGET.ts';
-import { createChapter, editChapter, deleteChapter } from '../controllers/roadmapControllers/chapterCUD.ts';
-import { getLink } from '../controllers/roadmapControllers/linkGET.ts';
-import { createLink, editLink, deleteLink } from '../controllers/roadmapControllers/linkCUD.ts';
+import { getRoadmap } from '../controllers/roadmapControllers/roadmapGET.js';
+import { createRoadmap, editRoadmap, deleteRoadmap } from '../controllers/roadmapControllers/roadmapCUD.js';
+import { getChapter } from '../controllers/roadmapControllers/chapterGET.js';
+import { createChapter, editChapter, deleteChapter } from '../controllers/roadmapControllers/chapterCUD.js';
+import { getLink } from '../controllers/roadmapControllers/linkGET.js';
+import { createLink, editLink, deleteLink } from '../controllers/roadmapControllers/linkCUD.js';
 
 const router = express.Router();
 router.get('/roadmaps', getRoadmap);
