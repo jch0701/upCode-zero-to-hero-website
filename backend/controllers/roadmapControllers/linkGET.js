@@ -5,6 +5,11 @@ export const getLink = async(req, res) =>  {
         return res.status(405).end(`Method ${req.method} Not Allowed. Use GET only.`);
     }
 
+    const { chapterID } = req.query;
+    if (!chapterID) {
+        return res.status(400).json({ message: 'Missing chapter ID query parameter.' });
+    }
+    
     // Get User ID from query parameter
     const userID = req.headers['x-user-id']
     const isLoggedIn = !!userID;
@@ -13,6 +18,7 @@ export const getLink = async(req, res) =>  {
         const { data: links, error: linkError } = await supabase
             .from("Nodes")
             .select('*')
+            .eq('chapterID', chapterID)
             .order('modifiedDate', { ascending: false });
 
         if (linkError) {

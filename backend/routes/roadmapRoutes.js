@@ -18,8 +18,8 @@ router.post('/roadmaps/:roadmapID/chapters', createChapter);
 router.put('/roadmaps/:roadmapID/chapters/:chapterID', editChapter);
 router.delete('/roadmaps/:roadmapID/chapters/:chapterID', deleteChapter);
 
-router.get('/roadmaps/:roadmapID/chapters/links', getLink);
-router.post('/roadmaps/:roadmapID/chapters/links', createLink);
+router.get('/roadmaps/:roadmapID/chapters/:chapterID', getLink);
+router.post('/roadmaps/:roadmapID/chapters/:chapterID', createLink);
 router.put('/roadmaps/:roadmapID/chapters/:chapterID/:nodeID', editLink);
 router.delete('/roadmaps/:roadmapID/chapters/:chapterID/:nodeID', deleteLink);
 
