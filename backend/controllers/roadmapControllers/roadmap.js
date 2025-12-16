@@ -1,5 +1,5 @@
 import { supabase } from "../../config.js";
-import { generateSlug } from "./lib.js";
+import { generateSlug } from "../../util/generateSlug.js";
 
 export const getAllRoadmap = async (req, res) => {
 
