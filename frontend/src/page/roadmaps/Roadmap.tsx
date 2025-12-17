@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useGetRoadmaps } from "@/api/roadmaps/roadmapAPI";
 import RoadmapSidebar from "../../component/roadmaps/sidebar";
 import RoadmapItemList from "../../component/roadmaps/Selector/roadmapList";
 import SectionBlock from "../../component/roadmaps/sectionBlock";
@@ -36,9 +37,11 @@ export const Roadmap: React.FC = () => {
   const userID = localStorage.getItem("userID");
   const isLoggedIn = userID && userID !== "0";
 
-  const roadmapData = useSelector((state: any) => state.roadmap.roadmapList);
+  const { data: roadmapData = [], isLoading } = useGetRoadmaps(userID);
   const pillarsData = useSelector((state: any) => state.chapter.pillarList);
   const linksData = useSelector((state: any) => state.link.linkList);
+
+  if (isLoading) return <div>Loading Roadmaps...</div>;
 
   const getRecentlyViewedRoadmaps = (sourceData: any[]) => {
     return sourceData.filter((roadmap: any) => {const roadmapID = Number(roadmap.roadmapID);
