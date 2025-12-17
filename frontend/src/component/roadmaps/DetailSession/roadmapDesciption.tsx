@@ -3,30 +3,36 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { TagPill } from "../../tag";
 import type { RoadmapItemCardProps } from "../Selector/roadmapCard";
 import { generateTags } from '../groupTag';
-import { useSelector } from "react-redux";
 import { Heart, X } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import { toggleFavourite, type RoadmapType } from "@/store/roadmapSlice";
-import type { UserListType } from "@/store/userListSlice";
-import type { PillarType } from "@/store/pillarsSlice";
+import { toggleFavourite } from "@/store/roadmapSlice";
 import type { LinkType } from "@/store/linksSlice";
+import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
+import { IMAGE_MAP, defaultImageSrc } from "@/lib/image";
+import { useGetRoadmapChapters } from "@/api/roadmaps/chapterAPI";
+import type { PillarType } from "@/store/pillarsSlice";
+import { useGetSingleUser } from "@/api/roadmaps/userAPI";
+import { useGetAllLinks } from "@/api/roadmaps/linkAPI";
+
+
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     selectedRoadmapID}) => {
-    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
-    const roadmapItem = roadmapData.find(p => p.roadmapID === selectedRoadmapID);
-    if (!roadmapItem) return <p className="text-white text-center mt-10">Roadmap not found</p>;
-    const userData = useSelector((state: any) => state.userList.userList) as UserListType[];
-    const username = userData.find(user => user.userId === roadmapItem.creatorID)?.username || 'Unknown Username';
-    const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-    const linksData = useSelector((state: any) => state.link.linkList) as LinkType[];
-    const filterPillarsData = pillarsData.filter(data => data.roadmapID === selectedRoadmapID);
-    const uniqueChapterID = [...new Set(filterPillarsData.map(data => data.chapterID))];
+    const userID = localStorage.getItem("userID");
+    const { data: roadmapItem, isLoading, isError } = useGetSingleRoadmap(selectedRoadmapID, userID);
+    const { data: userData } = useGetSingleUser(roadmapItem.creatorID);
+    const username = userData?.username ?? 'Unknown Username';
+    const { data: pillarsData } = useGetRoadmapChapters(selectedRoadmapID, userID) as { data: PillarType[]};
+    const { data: linksData } = useGetAllLinks(userID) as { data: LinkType[] }
+    if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if (isError || !roadmapItem) return null;
+
+    const uniqueChapterID = [...new Set(pillarsData.map(data => data.chapterID))];
     const filterLinksData = linksData.filter(data => {
         return uniqueChapterID.includes(data.chapterID);
     });
     const uniqueModifiedDate = [(Date.parse(roadmapItem.modifiedDate)),
-                                ...new Set(filterPillarsData.map(data => Date.parse(data.modifiedDate))),
+                                ...new Set(pillarsData.map(data => Date.parse(data.modifiedDate))),
                                 ...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
     let latestModifiedDate: string;
     if (uniqueModifiedDate.length > 0) {
@@ -38,8 +44,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
     else {
         latestModifiedDate = roadmapItem.modifiedDate;
     }
-    const dispatch = useDispatch();
-    
+    const dispatch = useDispatch();   
     const location = useLocation();
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -56,8 +61,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
             navigate("/Login", { state: { from: location.pathname } });
         }
     };
-
-    const userID = localStorage.getItem("userID");
+    const displayImage = IMAGE_MAP[roadmapItem.imageSrc] || roadmapItem.imageSrc;
 
     return (
         <div className=" max-w-5xl mx-auto text-white">
@@ -77,11 +81,11 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                 <div className="w-full md:w-[40%]">
                     <div className="relative h-70 bg-gray-700/30 rounded-md mb-4 overflow-hidden">
                         <img
-                            src={roadmapItem.imageSrc}
+                            src={displayImage}
                             alt={roadmapItem.title}
                             className="w-full h-full object-cover" 
                             onError={(e) => {
-                                e.currentTarget.src = 'placeholder-image.jpg'; 
+                                e.currentTarget.src = defaultImageSrc; 
                             }}
                         />
                         {(Number(userID) !== roadmapItem.creatorID) && (
@@ -121,7 +125,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({
                 <div className="w-full md:w-[60%]">
                     {/* Tags Section */}
                     <div className="flex flex-wrap gap-2 down mb-6 text-black">
-                        {(generateTags(selectedRoadmapID, filterPillarsData)
+                        {(generateTags(selectedRoadmapID, pillarsData)
                         ).map((tag, index) => (
                                 <TagPill key={index} tag={tag} />
                         ))}

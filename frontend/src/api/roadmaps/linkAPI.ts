@@ -14,7 +14,7 @@ export const useGetAllLinks = (userID?: string | null) => {
 }
 
 // 2. Get All Links based on Chapter
-export const useGetChapterLinks = (chapterID: string | number, userID?: string | null) => {
+export const useGetChapterLinks = (chapterID: number, userID?: string | null) => {
     return useQuery({
         queryKey: ['links', chapterID, userID],
         queryFn: async () => {
@@ -27,7 +27,7 @@ export const useGetChapterLinks = (chapterID: string | number, userID?: string |
 };
 
 // 3. Get Specific Link
-export const useGetSingleLink = (chapterID: string | number, linkID: string | number, userID?: string | null) => {
+export const useGetSingleLink = (chapterID: number, linkID: number, userID?: string | null) => {
     return useQuery({
         queryKey: ['chapters', chapterID, linkID, userID],
         queryFn: async () => {
