@@ -6,6 +6,7 @@ import { getAllChapter, getRoadmapChapter, getChapter } from '../controllers/roa
 import { createChapter, editChapter, deleteChapter } from '../controllers/roadmapControllers/chapterCUD.js';
 import { getAllLink, getChapterLink, getLink } from '../controllers/roadmapControllers/linkGET.js';
 import { createLink, editLink, deleteLink } from '../controllers/roadmapControllers/linkCUD.js';
+import { getUserDetail } from '../controllers/roadmapControllers/userGET.js';
 
 const router = express.Router();
 router.get('/roadmaps', getAllRoadmap);
@@ -34,5 +35,9 @@ router.get('/chapters/:chapterID/links/:linkID', getLink);
 router.post('/chapters/:chapterID/links', createLink);
 router.put('/chapters/:chapterID/links/:linkID', editLink);
 router.delete('/chapters/:chapterID/links/:linkID', deleteLink);
+
+
+
+router.get('/users/:userID', getUserDetail);
 
 export default router;

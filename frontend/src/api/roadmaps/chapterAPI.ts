@@ -14,7 +14,7 @@ export const useGetAllChapters = (userID?: string | null) => {
 }
 
 // 2. Get All Chapter based on Roadmap
-export const useGetRoadmapChapters = (roadmapID: string | number, userID?: string | null) => {
+export const useGetRoadmapChapters = (roadmapID: number, userID?: string | null) => {
     return useQuery({
         queryKey: ['chapters', roadmapID, userID],
         queryFn: async () => {
@@ -27,7 +27,7 @@ export const useGetRoadmapChapters = (roadmapID: string | number, userID?: strin
 };
 
 // 3. Get Specific Chapter
-export const useGetSingleChapter = (roadmapID: string | number, chapterID: string | number, userID?: string | null) => {
+export const useGetSingleChapter = (roadmapID: number, chapterID: number, userID?: string | null) => {
     return useQuery({
         queryKey: ['chapters', roadmapID, chapterID, userID],
         queryFn: async () => {
