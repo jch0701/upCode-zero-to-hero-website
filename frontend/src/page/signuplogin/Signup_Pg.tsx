@@ -89,7 +89,7 @@ const Signup_Pg: FC = () => {
         </div>
 
         {/*image container for mentor*/}
-        <div className="image-container" role="img" aria-label="mentor"></div>
+        <div className="image-container" role="img" aria-label="signup"></div>
 
         {/*signup form container*/}
         <div className="signup-login-container">

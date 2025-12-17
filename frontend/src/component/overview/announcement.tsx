@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/store";
 import { deleteAnnouncements } from "@/store/announcementSlice";
 import { FaTrash } from "react-icons/fa";
+import { useState } from "react";
 
 export default function Announcement() {
   const announcements = useSelector(
@@ -9,6 +10,7 @@ export default function Announcement() {
   );
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.profile);
+  const [expand, setExpand] = useState(false);
   const isAdmin = user?.role === "Admin" || user?.role === "admin";
 
   if (announcements.length === 0) {
@@ -19,13 +21,15 @@ export default function Announcement() {
     if(!confirmDelete) return;
     dispatch(deleteAnnouncements(id));
   }
-  
+  const MAX_ANNOUNCE = 3;
+  const visibleAnnounce = expand? announcements: announcements.slice(0, MAX_ANNOUNCE);
+
   return (
     <div className="space-y-4">
-      {announcements.map(a => (
+      {visibleAnnounce.map(a => (
         <div
           key={a.id}
-          className="relative bg-yellow-100/90 border border-yellow-300 rounded-2xl p-4 shadow"
+          className="relative bg-white/90 border border-black/70 rounded-2xl p-4 shadow"
         > 
         {isAdmin && (
             <button
@@ -36,19 +40,40 @@ export default function Announcement() {
               <span><FaTrash/></span>
             </button>
           )}
-          <h4 className="font-semibold text-yellow-900">
-            {a.title}
-          </h4>
+          <div className="flex flex-col md:flex-row gap-6 pl-3 items-start">
+          {a.image && (
+            <img
+              src={a.image}
+              alt="Announcement"
+              className="mt-3 max-h-64 object-contain rounded-2xl border border-black/70  p-4 shadow"
+            />
+          )}
+          <div className="flex-1">
+            <p className="mt-3 text-xl font-semibold text-start underline text-black">
+              {a.title}
+            </p>
 
-          <p className="text-sm text-gray-700 mt-1">
-            {a.message}
-          </p>
+            <p className="text-sm text-start text-gray-800 mt-2 whitespace-pre-line">
+              {a.message}
+            </p>
 
-          <p className="text-xs text-gray-500 mt-2">
-            Posted on {a.createdAt}
-          </p>
+            <p className="text-xs text-start text-gray-500 mt-2">
+              Posted on {a.createdAt}
+            </p>
+          </div>
         </div>
+      </div>
       ))}
+      {announcements.length > MAX_ANNOUNCE && (
+        <div className="text-center mt-4">
+          <button
+            onClick={() => {setExpand(prev => !prev); if(expand) window.scrollTo({top:0, behavior: "smooth"})}}
+            className="w-full bg-gray-700 border hover:bg-gray-800 border-white/20 rounded-2xl p-3 text-white hover:underline font-medium  "
+          >
+            {expand ? "Show Less" : `Show ${announcements.length- MAX_ANNOUNCE}+ More`}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
