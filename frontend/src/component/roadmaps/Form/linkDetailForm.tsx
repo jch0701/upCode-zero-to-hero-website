@@ -6,6 +6,8 @@ import { validateTitle, validateOrder, validateLink } from "@/component/validate
 import { defaultImageSrc, bin } from "../../../lib/image";
 import { useDispatch, useSelector } from "react-redux";
 import { addLink, editLink, deleteLink, type LinkType } from "@/store/linksSlice";
+import { updateChapterDate } from "@/store/pillarsSlice";
+import { updateRoadmapDate } from "@/store/roadmapSlice";
 
 interface LinkDetailFormProps{
     mode: "add" | "edit";
@@ -19,7 +21,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
         const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
         const linkItem = linkData.find(p => p.nodeID === selectedLinkID);
         if (!linkItem && mode==="edit" ) return <p className="text-white text-center mt-10">Link not found</p>;
-        const { chapterID } = useParams<{ chapterID: string}>();
+        const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string}>();
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? linkItem!.title ?? "" : "");
         const [queryOrder, setQueryOrder] = useState(mode === "edit" && linkItem!.order !== undefined ? String(linkItem!.order) : "");
         const [queryLink, setQueryLink] = useState(mode === "edit" ? linkItem!.link ?? "" : "");
@@ -59,6 +61,10 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
                 )
             }
             navigate(-1);
+            dispatch(
+                updateChapterDate(Number(chapterID)),
+                updateRoadmapDate(Number(roadmapID))
+            )
         }
 
         const handleDelete = () => {
@@ -66,6 +72,10 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
             dispatch(deleteLink(Number(selectedLinkID)));
         }
         navigate(-1);
+        dispatch(
+            updateChapterDate(Number(chapterID)),
+            updateRoadmapDate(Number(roadmapID))
+        )
         };
     
         return (

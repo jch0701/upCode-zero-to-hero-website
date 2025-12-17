@@ -30,7 +30,8 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const roadmapSlug = roadmapData.find(r => r.roadmapID === chapterItem.roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
 
     const filterLinksData = linksData.filter(data => data.chapterID === selectedChapterID);
-    const uniqueModifiedDate = [...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
+    const uniqueModifiedDate = [Date.parse(chapterItem.modifiedDate),
+                                ...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
     let latestModifiedDate: string;
     if (uniqueModifiedDate.length > 0) {
         const maxTimestamp: number = Math.max(...uniqueModifiedDate);
@@ -38,7 +39,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
         latestModifiedDate = latestDateObject.toISOString().slice(0,10);
 
     } 
-    else latestModifiedDate = chapterItem.createdDate ?? "";
+    else latestModifiedDate = chapterItem.modifiedDate ?? "";
 
     const tags: Tag[] = [
         { type: 'Difficulty', label: chapterItem.difficulty },

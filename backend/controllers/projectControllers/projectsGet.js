@@ -1,5 +1,4 @@
 import { supabase } from "../../config.js";
-import { getUserNameFromId } from "../../util/getUserNameFromId.js";
 
 // Get all projects (not including starting repo link, details file, recommendations and submissions)
 /*
@@ -23,7 +22,7 @@ project_details: {
 */
 export const getAllBasicDetailsOnly = async (req, res) => {
   const { data: projects, error: initialFetchError } = await supabase
-    .from("projects")
+    .from("Projects")
     .select(`
       projectId,
       title,
@@ -81,7 +80,7 @@ Excluded: trackCount: number; //dynamically computed, not included at the moment
 
 export const getByTitleComplete = async (req, res) => {
   const { data: project, error: initialFetchError } = await supabase
-    .from("projects")
+    .from("Projects")
     .select(`
       *,
       Users!creatorId(fname, lname),
