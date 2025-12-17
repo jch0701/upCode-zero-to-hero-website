@@ -34,6 +34,11 @@ export default function AdminTopbar() {
               className="w-full text-left px-3 py-2 hover:bg-gray-600 rounded-md">
                 Logout
             </button>
+
+            <button onClick={() => {navigate("/")}}
+              className="w-full text-left px-3 py-2 hover:bg-gray-600 rounded-md"> 
+              User Page
+              </button>
         </div>
       )}
     </div>
