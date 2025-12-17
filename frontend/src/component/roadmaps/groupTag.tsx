@@ -19,7 +19,8 @@ export const getDifficultyLabel = (arr: string[]) => {
 };
 
 export const generateTags = (roadmapID: number, pillarsData: PillarType[]): Tag[] => {
-  const filtered = pillarsData.filter(p => p.roadmapID === roadmapID);
+  const data = pillarsData || [];
+  const filtered = data.filter(p => p.roadmapID === roadmapID);
 
   const difficultyArr = filtered.map(p => p.difficulty);
   const categoryArr = filtered.map(p => p.category);

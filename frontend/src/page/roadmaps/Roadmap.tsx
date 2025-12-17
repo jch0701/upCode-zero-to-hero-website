@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useGetRoadmaps } from "@/api/roadmaps/roadmapAPI";
+import { useGetAllChapters } from "@/api/roadmaps/chapterAPI";
+import { useGetAllLinks } from "@/api/roadmaps/linkAPI";
 import RoadmapSidebar from "../../component/roadmaps/sidebar";
 import RoadmapItemList from "../../component/roadmaps/Selector/roadmapList";
 import SectionBlock from "../../component/roadmaps/sectionBlock";
 import SearchBar from "../../component/searchBar";
 import { generateTags } from "../../component/roadmaps/groupTag";
-import { useSelector } from "react-redux";
 
 export type Section = {
   id: string;
@@ -38,8 +39,8 @@ export const Roadmap: React.FC = () => {
   const isLoggedIn = userID && userID !== "0";
 
   const { data: roadmapData = [], isLoading } = useGetRoadmaps(userID);
-  const pillarsData = useSelector((state: any) => state.chapter.pillarList);
-  const linksData = useSelector((state: any) => state.link.linkList);
+  const { data: pillarsData = [] } = useGetAllChapters(userID);
+  const { data: linksData = [] } = useGetAllLinks(userID);
 
   if (isLoading) return <div>Loading Roadmaps...</div>;
 

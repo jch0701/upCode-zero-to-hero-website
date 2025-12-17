@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 import type { Tag } from '../../tag.tsx';
 import { TagPill } from '../../tag.tsx';
 import { generateTags } from '../groupTag.tsx';
-import { useSelector } from "react-redux";
-import type { PillarType } from '@/store/pillarsSlice.ts';
 import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI.ts';
 import { defaultImageSrc, IMAGE_MAP } from '@/lib/image.ts';
+import { useGetRoadmapChapters } from '@/api/roadmaps/chapterAPI.ts';
 
 // Type and data structure
 export interface RoadmapItemCardProps {
@@ -24,10 +23,10 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
   const userID = localStorage.getItem("userID");
   // Compute tags from pillarsData when not provided
   const { data: roadmapItem, isLoading, isError } = useGetSingleRoadmap(selectedRoadmapID, userID);
+  const { data: pillarsData } = useGetRoadmapChapters(selectedRoadmapID, userID);
   if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
   if (isError || !roadmapItem) return null;
-  const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-  const effectiveTags = generateTags(roadmapItem.roadmapID, pillarsData);
+  const effectiveTags = generateTags(roadmapItem.roadmapID, pillarsData || []);
   // Logic to determine which tags to show and if "More..." is needed
   const visibleTags = effectiveTags.slice(0, MAX_VISIBLE_TAGS);
   const remainingTagsCount = effectiveTags.length - MAX_VISIBLE_TAGS;
