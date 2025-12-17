@@ -54,14 +54,7 @@ const initialState: RecommendationState = {
       recommendationId: 5,
       sourceId: 100017,
       sourceType: "Roadmap",
-      targetId: 3,
-      targetType: "Career"
-    },
-    {
-      recommendationId: 6,
-      sourceId: 100017,
-      sourceType: "Roadmap",
-      targetId: 4,
+      targetId: 1,
       targetType: "Career"
     },
   ],

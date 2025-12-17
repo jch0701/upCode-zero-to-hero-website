@@ -5,6 +5,8 @@ import { Roadmap } from "./page/roadmaps/Roadmap";
 import { RoadmapDetails } from "./page/roadmaps/RoadmapDetails";
 import { Project } from "./page/projects/Project";
 import { Career } from "./page/career/Career";
+import { AddCareer } from "./page/career/AddCareer";
+import { CareerDetails } from "./page/career/CareerDetail";
 import { All } from "./page/profile/All";
 import Login_Pg from "./page/signuplogin/Login_Pg";
 import Signup_Pg from "./page/signuplogin/Signup_Pg";
@@ -30,7 +32,6 @@ import Admin_Users from "./page/admin/ad_user";
 import Admin_Roadmaps from "./page/admin/ad_roadmap";
 import Admin_Projects from "./page/admin/ad_project";
 import Admin_Analytics from "./page/admin/ad_analytics";
-import { AddCareer } from "./page/career/AddCareer.tsx";
 import CareerDetailsModal from "@/page/career/CareerInfoSub";
 
 const router = createBrowserRouter([
@@ -47,7 +48,10 @@ const router = createBrowserRouter([
           { index: true, element: <Roadmap /> },
           { path: "add-roadmap", element: <AddRoadmap /> },
           { path: ":roadmapID/:roadmapSlug", element: <RoadmapDetails /> },
-          { path: ":roadmapID/:roadmapSlug/recommend-career", element: <RecommendedCareer /> },
+          {
+            path: ":roadmapID/:roadmapSlug/recommend-career",
+            element: <RecommendedCareer />,
+          },
           { path: ":roadmapID/:roadmapSlug/edit", element: <EditRoadmap /> },
           {
             path: ":roadmapID/:roadmapSlug/add-chapter",
@@ -74,18 +78,19 @@ const router = createBrowserRouter([
           { path: "submission/:submissionId", element: <SubmissionDetails /> },
         ],
       },
-      { path: "career",
+      {
+        path: "career",
         children: [
           { index: true, element: <Career /> },
-          { path: "addCareer", element: <AddCareer />},
-          { path: ":id/:slug", element: <CareerDetailsModal />},
-          
+          { path: "addCareer", element: <AddCareer /> },
+          { path: ":id/:slug", element: <CareerDetails /> },
         ],
       },
-      { path: "profile",
+      {
+        path: "profile",
         children: [
-          {index: true, element: <All />},
-          {path: ":userId", element: <All/>},
+          { index: true, element: <All /> },
+          { path: ":userId", element: <All /> },
         ],
       },
       { path: "signup", element: <Signup_Pg /> },
@@ -97,16 +102,16 @@ const router = createBrowserRouter([
   },
   //Admin
   {
-    path:"/admin",
-    element: <AdminLayout/>,
-    children:[
-      {index: true, element: <AdminDashboard/>},
-      {path: "users_admin", element: <Admin_Users/> },
-      { path: "roadmaps_admin", element: <Admin_Roadmaps/> },
-      { path: "projects_admin", element: <Admin_Projects/> },
-      { path: "analytics_admin", element: <Admin_Analytics/> }
-    ]
-   },
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      { index: true, element: <AdminDashboard /> },
+      { path: "users_admin", element: <Admin_Users /> },
+      { path: "roadmaps_admin", element: <Admin_Roadmaps /> },
+      { path: "projects_admin", element: <Admin_Projects /> },
+      { path: "analytics_admin", element: <Admin_Analytics /> },
+    ],
+  },
 ]);
 
 function App() {

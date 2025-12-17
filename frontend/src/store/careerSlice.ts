@@ -1,9 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+export interface CareerApplication {
+  userId: string; // store userId
+  resumeUrl?: string;
+  projectUrl?: string;
+  repoUrl?: string;
+  submittedAt: string;
+}
+
 export interface CareerItem {
   id: number;
   title: string;
+  description?: string;
   category: string;
   isNew?: boolean;
   isViewed?: boolean;
@@ -16,6 +25,7 @@ export interface CareerItem {
   mapLink?: string; // embed link for Google Maps
   prerequisites?: string[];
   slug?: string;
+  applications?: CareerApplication[];
 }
 
 interface CareerState {
@@ -27,56 +37,30 @@ const initialState: CareerState = {
     {
       id: 1,
       title: "Full-Stack Developer Trainee",
+      description:
+        "Hands-on training in full-stack web development, focusing on JavaScript and React.",
       category: "Software Developer",
-      company: "CodeWorks",
-      postedBy: "CodeWorksHR",
-      location: "Kuala Lumpur, Malaysia",
+      postedBy: "Admin",
       level: "Beginner",
-      isNew: true,
       createdDate: "2025-12-10",
       mapLink:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2808.912153499002!2d100.30116925242991!3d5.355519256493747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac1a96f010e97%3A0x8b91d5d092b91828!2sSchool%20of%20Computer%20Sciences%2C%20USM!5e0!3m2!1sen!2smy!4v1765425320356!5m2!1sen!2smy",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63560.739184568134!2d100.25236006953129!3d5.333234845004132!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac1a96f010e97%3A0x8b91d5d092b91828!2sSchool%20of%20Computer%20Sciences%2C%20USM!5e0!3m2!1sen!2smy!4v1765641942623!5m2!1sen!2smy",
       prerequisites: ["JavaScript", "React", "GitHub Portfolio"],
+      applications: [],
     },
     {
       id: 2,
-      title: "AI Analyst Intern",
-      category: "AI Analytics",
-      company: "SanDisk",
-      postedBy: "SanDiskHR",
-      location: "San Jose, CA",
-      level: "Beginner",
-      isNew: true,
-      createdDate: "2025-12-09",
-      mapLink:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.6650914843894!2d100.2848509414146!3d5.314834298710208!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac1d0344ef733%3A0x24cc27c4773a418e!2sTOWA%20TOOL%20Sdn%20Bhd!5e0!3m2!1sen!2smy!4v1765425759036!5m2!1sen!2smy",
-      prerequisites: ["Python", "Data Visualization", "SQL"],
-    },
-    {
-      id: 3,
-      title: "Junior Software Engineer",
-      category: "Software Engineer",
-      company: "TechNova",
-      postedBy: "TechNovaHR",
-      location: "Penang, Malaysia",
-      level: "Intermediate",
-      isViewed: true,
-      createdDate: "2025-12-08",
-      mapLink: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d997...",
-      prerequisites: ["Java", "Spring Boot", "Unit Testing"],
-    },
-    {
-      id: 4,
       title: "Data Scientist Intern",
+      description:
+        "Introductory role in data science, focusing on Python, Pandas, and ML basics.",
       category: "Data Scientist",
-      company: "DataNest",
-      postedBy: "DataNestHR",
-      location: "Singapore",
+      postedBy: "Admin",
       level: "Beginner",
-      isViewed: true,
-      createdDate: "2025-12-07",
-      mapLink: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876...",
-      prerequisites: ["Python", "Pandas", "Jupyter Notebook"],
+      createdDate: "2025-12-11",
+      mapLink:
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d997.123456789!2d100.285!3d5.417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac123456789ab%3A0xabcdefabcdef!2sPenang%20Science%20Park!5e0!3m2!1sen!2smy!4v1765642000000!5m2!1sen!2smy",
+      prerequisites: ["Python", "Pandas", "Machine Learning Basics"],
+      applications: [],
     },
   ],
 };
@@ -108,9 +92,29 @@ const careerSlice = createSlice({
       const item = state.careerList.find((c) => c.id === action.payload);
       if (item) item.isViewed = true;
     },
+    addApplication(
+      state,
+      action: PayloadAction<{
+        careerId: number;
+        application: CareerApplication;
+      }>
+    ) {
+      const career = state.careerList.find(
+        (c) => c.id === action.payload.careerId
+      );
+      if (career) {
+        if (!career.applications) career.applications = [];
+        career.applications.push(action.payload.application);
+      }
+    },
   },
 });
 
-export const { addCareer, editCareer, deleteCareer, markViewed } =
-  careerSlice.actions;
+export const {
+  addCareer,
+  editCareer,
+  deleteCareer,
+  markViewed,
+  addApplication,
+} = careerSlice.actions;
 export default careerSlice.reducer;

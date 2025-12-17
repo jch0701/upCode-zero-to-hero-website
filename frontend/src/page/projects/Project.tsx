@@ -23,7 +23,6 @@ import {
 import { FieldGroup } from "@/component/shadcn/field";
 import { commonBackgroundClass } from "@/lib/styles";
 
-
 export const Project: React.FC = () => {
     const userId = useSelector((state: any) => state.profile.userId);
     const selections = ["All", ...categoryList];
@@ -33,20 +32,20 @@ export const Project: React.FC = () => {
     const { data: projects = [] } = useGetAllBasicDetailsOnly(userId);
     const navigate = useNavigate();
 
-    function handleCategoryChange(value: string) {
-        setCategory(value);
-    }
+  function handleCategoryChange(value: string) {
+    setCategory(value);
+  }
 
-    function navigateToProjectDetails(projectId: number) {
-        navigate(`/project/${projectId}`);
-    }
+  function navigateToProjectDetails(projectId: number) {
+    navigate(`/project/${projectId}`);
+  }
 
-    function navigateToRandomProject() {
-        if (projects.length === 0) return;
-        const randomIndex = Math.floor(Math.random() * projects.length);
-        const randomProject = projects[randomIndex];
-        navigate(`/project/${randomProject.projectId}`);
-    }
+  function navigateToRandomProject() {
+    if (projects.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * projects.length);
+    const randomProject = projects[randomIndex];
+    navigate(`/project/${randomProject.projectId}`);
+  }
 
     const hasProjectsToShow = category === "All" || projects.some((project: ProjectType) => project.category === category);
     return (
