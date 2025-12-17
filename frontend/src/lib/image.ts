@@ -34,6 +34,23 @@ const IMAGE_KEYWORD_MAP: { [key: string]: string } = {
     "html": htmlcssImage
 };
 
+const IMAGE_MAP: Record<string, string> = {
+    "javaScriptImage" : javaScriptImage,
+    "cImage" : cImage,
+    "javaImage": javaImage,
+    "pythonImage": pythonImage,
+    "machinelearningImage": machinelearningImage,
+    "devopsImage": devopsImage,
+    "frontendImage": frontendImage,
+    "backendImage": backendImage,
+    "reactImage": reactImage,
+    "apiImage": apiImage,
+    "angularImage": angularImage,
+    "sqlImage": sqlImage,
+    "typeScriptImage": typeScriptImage,
+    "htmlcssImage": htmlcssImage,
+}
+
 export {
     defaultImageSrc,
     javaImage,
@@ -51,5 +68,6 @@ export {
     htmlcssImage,
     sqlImage,
     bin,
-    IMAGE_KEYWORD_MAP
+    IMAGE_KEYWORD_MAP,
+    IMAGE_MAP
 };

@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getRoadmap } from '../controllers/roadmapControllers/roadmapGET.js';
+import { getAllRoadmap, getRoadmap } from '../controllers/roadmapControllers/roadmapGET.js';
 import { createRoadmap, editRoadmap, deleteRoadmap } from '../controllers/roadmapControllers/roadmapCUD.js';
 import { getChapter } from '../controllers/roadmapControllers/chapterGET.js';
 import { createChapter, editChapter, deleteChapter } from '../controllers/roadmapControllers/chapterCUD.js';
@@ -8,8 +8,9 @@ import { getLink } from '../controllers/roadmapControllers/linkGET.js';
 import { createLink, editLink, deleteLink } from '../controllers/roadmapControllers/linkCUD.js';
 
 const router = express.Router();
-router.get('/roadmaps', getRoadmap);
-router.post('/roadmaps', createRoadmap);
+router.get('/roadmaps', getAllRoadmap);
+router.get('/roadmaps/:roadmapID', getRoadmap);
+router.post('/roadmaps/create', createRoadmap);
 router.put('/roadmaps/:roadmapID', editRoadmap);
 router.delete('/roadmaps/:roadmapID', deleteRoadmap);
 

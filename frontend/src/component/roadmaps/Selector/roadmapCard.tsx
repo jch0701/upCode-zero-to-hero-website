@@ -4,8 +4,10 @@ import type { Tag } from '../../tag.tsx';
 import { TagPill } from '../../tag.tsx';
 import { generateTags } from '../groupTag.tsx';
 import { useSelector } from "react-redux";
-import type { RoadmapType } from '@/store/roadmapSlice.ts';
 import type { PillarType } from '@/store/pillarsSlice.ts';
+import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI.ts';
+import { defaultImageSrc, IMAGE_MAP } from '@/lib/image.ts';
+
 // Type and data structure
 export interface RoadmapItemCardProps {
     selectedRoadmapID: number;
@@ -19,16 +21,18 @@ const MAX_VISIBLE_TAGS = 3;
 export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
     selectedRoadmapID
 }) => {
+  const userID = localStorage.getItem("userID");
   // Compute tags from pillarsData when not provided
-  const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
-  const roadmapItem = roadmapData.find(p => p.roadmapID === selectedRoadmapID);
-  if (!roadmapItem) return <p className="text-white text-center mt-10">Roadmap not found</p>;
+  const { data: roadmapItem, isLoading, isError } = useGetSingleRoadmap(selectedRoadmapID, userID);
+  if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+  if (isError || !roadmapItem) return null;
   const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
   const effectiveTags = generateTags(roadmapItem.roadmapID, pillarsData);
   // Logic to determine which tags to show and if "More..." is needed
   const visibleTags = effectiveTags.slice(0, MAX_VISIBLE_TAGS);
   const remainingTagsCount = effectiveTags.length - MAX_VISIBLE_TAGS;
   const showMoreButton = remainingTagsCount > 0;
+  const displayImage = IMAGE_MAP[roadmapItem.imageSrc] || roadmapItem.imageSrc;
 
   return (
     <Link to={`/roadmap/${roadmapItem.roadmapID}/${roadmapItem.roadmapSlug}`}>
@@ -37,12 +41,12 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
       <div className="w-full h-32 bg-gray-700 rounded-md mb-3 overflow-hidden">
         {/* Replace with a proper image component if you load actual images */}
         <img
-          src={roadmapItem.imageSrc}
+          src={displayImage}
           alt={roadmapItem.title}
           className="w-full h-full object-cover"
           onError={(e) => {
             // Optional: Fallback if image fails to load
-            e.currentTarget.src = 'placeholder-image.jpg'; // Path to a local placeholder image
+            e.currentTarget.src = defaultImageSrc; // Path to a local placeholder image
           }}
         />
       </div>
