@@ -63,7 +63,9 @@ const Recommendation: React.FC<RecommendationProps> =
                         <div className="flex-shrink-0 w-70" key={project.projectId}>
 
                             <ProjectCard 
-                                projectId={project.projectId}
+                                key={project.projectId}
+                                {...project}
+                                creatorName={project.title}
                                 onClick={() => navigateDetails && navigateDetails(project.projectId)}
                             />
                         </div>
