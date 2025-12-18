@@ -1,13 +1,13 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { TagPill } from "../../tag";
 import type { Tag } from "../../tag";
 import { X } from 'lucide-react';
-import { useSelector } from "react-redux";
-import type { UserListType } from "@/store/userListSlice";
-import type { RoadmapType } from "@/store/roadmapSlice";
-import type { PillarType } from "@/store/pillarsSlice";
-import type { LinkType } from "@/store/linksSlice";
+import { useGetSingleChapter } from "@/api/roadmaps/chapterAPI";
+import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
+import { useGetChapterLinks } from "@/api/roadmaps/linkAPI";
+import { useGetSingleUser } from "@/api/roadmaps/userAPI";
+import { IMAGE_MAP } from "@/lib/image";
 
 interface PillarDescription {
     selectedChapterID: number;
@@ -18,21 +18,27 @@ const ChapterDescription: React.FC<PillarDescription> = ({
 }) => {
     const navigate = useNavigate();
     const userID = localStorage.getItem("userID");
-    const userData = useSelector((state: any) => state.userList.userList) as UserListType[];
-    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
-    const pillarData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-    const linksData = useSelector((state: any) => state.link.linkList) as LinkType[];
-    const chapterItem = pillarData.find(p => p.chapterID === selectedChapterID);
-    if (!chapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;
-    const imageSrc = roadmapData.find(r => r.roadmapID === chapterItem.roadmapID)?.imageSrc || 'placeholder-image.jpg';
-    const creator = roadmapData.find(r => r.roadmapID === chapterItem.roadmapID)?.creatorID || 'Unknown Creator';
-    const username = userData.find(user => user.userId === creator)?.username || 'Unknown Username';
-    const roadmapSlug = roadmapData.find(r => r.roadmapID === chapterItem.roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
+    const { roadmapID } = useParams<{ roadmapID: string }>();
 
-    const filterLinksData = linksData.filter(data => data.chapterID === selectedChapterID);
+    const { data: roadmapItem, isLoading: roadmapLoading, isError: roadmapError } = useGetSingleRoadmap(Number(roadmapID), userID);
+    const { data: chapterItem , isLoading: chapterLoading, isError: chapterError } = useGetSingleChapter(Number(roadmapID),selectedChapterID,userID);
+    const { data: linksData = [] } = useGetChapterLinks(selectedChapterID,userID);
+    const { data: userData } = useGetSingleUser(Number(userID))
+
+    if (roadmapLoading || chapterLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if (roadmapError || chapterError || !chapterItem ) return null;
+
+    const imageSrc = roadmapItem?.imageSrc ?? 'Unknown Image'
+    const creator = roadmapItem?.creatorID ?? 'Unknown Creator';
+    const username = userData?.username ?? 'Unknown Username';
+    const roadmapSlug = roadmapItem?.roadmapSlug ?? 'Unknown Roadmap Slug';
+    const displayImage = IMAGE_MAP[imageSrc] || imageSrc;
+
     const uniqueModifiedDate = [Date.parse(chapterItem.modifiedDate),
-                                ...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))];
+                                ...new Set(linksData.map(data => Date.parse(data.modifiedDate)))];
     let latestModifiedDate: string;
+
+    
     if (uniqueModifiedDate.length > 0) {
         const maxTimestamp: number = Math.max(...uniqueModifiedDate);
         const latestDateObject: Date = new Date(maxTimestamp);
@@ -64,7 +70,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
                 <div className="w-full md:w-[40%]">
                     <div className="relative h-70 bg-gray-700/30 rounded-md mb-4 overflow-hidden">
                         <img
-                            src={imageSrc}
+                            src={displayImage}
                             alt={chapterItem.title}
                             className="w-full h-full object-cover" 
                             onError={(e) => {

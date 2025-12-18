@@ -8,9 +8,6 @@ import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
 export const ChapterDetails: React.FC = () => {
     const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string }>();
     const userID = localStorage.getItem("userID");
-    const { data: chapterItem, isLoading, isError } = useGetSingleChapter(Number(roadmapID), Number(chapterID), userID);
-    if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (isError || !chapterItem) return null;
 
     //  Use ref instead of useState to avoid warnings
     const hasCountedRef = useRef(false);
@@ -24,6 +21,10 @@ export const ChapterDetails: React.FC = () => {
         },{ type: "chapter", id: chapterID });
         hasCountedRef.current = true;//marked as counted
     },[chapterID]);
+
+    const { data: chapterItem, isLoading, isError } = useGetSingleChapter(Number(roadmapID), Number(chapterID), userID);
+    if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if (isError || !chapterItem) return null;
 
     if (!chapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;
 
