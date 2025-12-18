@@ -7,7 +7,7 @@ import { useGetSingleChapter } from "@/api/roadmaps/chapterAPI";
 import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { useGetChapterLinks } from "@/api/roadmaps/linkAPI";
 import { useGetSingleUser } from "@/api/roadmaps/userAPI";
-import { IMAGE_MAP } from "@/lib/image";
+import { IMAGE_MAP, defaultImageSrc } from "@/lib/image";
 
 interface PillarDescription {
     selectedChapterID: number;
@@ -76,7 +76,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
                             alt={chapterItem.title}
                             className="w-full h-full object-cover" 
                             onError={(e) => {
-                                e.currentTarget.src = 'placeholder-image.jpg'; 
+                                e.currentTarget.src = defaultImageSrc; 
                             }}
                         />
                     </div>
