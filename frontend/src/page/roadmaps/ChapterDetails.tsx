@@ -6,9 +6,9 @@ import { update_Activity } from '@/component/activity/activity_tracker';
 import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
 
 export const ChapterDetails: React.FC = () => {
-    const { chapterID } = useParams<{ chapterID: string }>();
+    const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string }>();
     const userID = localStorage.getItem("userID");
-    const { data: chapterItem, isLoading, isError } = useGetSingleChapter(Number(chapterID), Number(userID));
+    const { data: chapterItem, isLoading, isError } = useGetSingleChapter(Number(roadmapID), Number(chapterID), userID);
     if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
     if (isError || !chapterItem) return null;
 

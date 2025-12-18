@@ -135,7 +135,7 @@ export const getChapter = async(req, res) => {
             isViewed: viewIds.includes(chapter.chapterID),
         }));
 
-        return res.status(200).json(chapterWithViewStatus);
+        return res.status(200).json(chapterWithViewStatus[0]);
     }
     catch (error){
         console.error('Internal Server Error in GET Controller:', error);

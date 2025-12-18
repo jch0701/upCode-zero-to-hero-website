@@ -85,7 +85,7 @@ export const getRoadmap = async (req, res) => {
             isFavourite: favoriteIds.includes(roadmap.roadmapID),
         }));
 
-        return res.status(200).json(roadmapsWithFavouriteStatus);
+        return res.status(200).json(roadmapsWithFavouriteStatus[0]);
     }
     catch (error){
         console.error('Internal Server Error in GET Controller:', error);

@@ -21,7 +21,7 @@ export const useGetSingleRoadmap = (roadmapID: number, userID?: string | null) =
         queryFn: async () => {
             const headers = userID ? { 'x-user-id': userID } : {};
             const response = await Api.get(`roadmaps/${roadmapID}`, { headers });
-            return Array.isArray(response.data) ? response.data[0] : response.data;
+            return response.data;
         },
         enabled: !!roadmapID, // Only run if ID exists
     });

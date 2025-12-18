@@ -131,7 +131,7 @@ export const getLink = async(req, res) => {
             isViewed: viewIds.includes(link.nodeID),
         }));
 
-        return res.status(200).json(linkWithViewStatus);
+        return res.status(200).json(linkWithViewStatus[0]);
     }
     catch (error){
         console.error('Internal Server Error in GET Controller:', error);

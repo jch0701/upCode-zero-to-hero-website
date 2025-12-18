@@ -22,6 +22,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
     const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
+    
     // use link to get roadmap slug
     const userID = localStorage.getItem("userID");
     const { roadmapID, roadmapSlug } = useParams<{ roadmapID: string, roadmapSlug: string }>();
@@ -34,28 +35,6 @@ const PillarCard : React.FC<PillarCardProps> = ({
 
     const { data: chapterItem , isLoading: chapterLoading, isError} = useGetSingleChapter(Number(roadmapID), selectedChapterID, userID);
     const { data: linksData = [], isLoading: linksLoading} = useGetChapterLinks(selectedChapterID, userID);
-    if (chapterLoading || linksLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (isError || !chapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;
-
-    
-    // toggleViewed indicator
-    const handleToggleViewed = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-        if(isLoggedIn){
-            dispatch(toggleView(chapterItem.chapterID))
-        }
-        else{
-            navigate("/Login", { state: { from: location.pathname } });
-        }
-    };
-
-    const handleArrowClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-        // Call the function passed from the parent (PillarList)
-        onToggleClick(chapterItem.chapterID);
-    }
 
     // percentage generator
     const generateViewPercentage = () =>  {
@@ -68,15 +47,37 @@ const PillarCard : React.FC<PillarCardProps> = ({
 
     useEffect(() => {
         if (viewPercentage === 100) {
-            dispatch(autosetViewTrue(chapterItem.chapterID));
+            dispatch(autosetViewTrue(selectedChapterID));
         }
-    }, [viewPercentage, dispatch, chapterItem.chapterID]);
+    }, [viewPercentage, dispatch, selectedChapterID]);
+
+    if (chapterLoading || linksLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if (isError || !chapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;
+
+    // toggleViewed indicator
+    const handleToggleViewed = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if(isLoggedIn){
+            dispatch(toggleView(selectedChapterID))
+        }
+        else{
+            navigate("/Login", { state: { from: location.pathname } });
+        }
+    };
+
+    const handleArrowClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        // Call the function passed from the parent (PillarList)
+        onToggleClick(selectedChapterID);
+    }
 
     return (
         <div className='relative p-4 m-2 rounded-xl shadow-lg transition-all duration-300 
                         bg-pink-100/70 border-2 border-opacity-70 border-pink-300
                         cursor-pointer hover:bg-pink-200/90'>
-            <Link to={`/roadmap/${chapterItem.roadmapID}/${roadmapSlug}/${chapterItem.chapterID}/${chapterItem.chapterSlug}`}>
+            <Link to={`/roadmap/${chapterItem.roadmapID}/${roadmapSlug}/${selectedChapterID}/${chapterItem.chapterSlug}`}>
                 <div className={`flex items-center`}>
                     {/* Order Number or Checkmark */}
                     <div className=" 
