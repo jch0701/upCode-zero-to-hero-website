@@ -66,7 +66,8 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
                 { userID: Number(userID), roadmapID: Number(selectedRoadmapID) },
                 { onError: () => setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: false })}
             );
-        } else {
+        } 
+        else {
             setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: false });
             unfavouriteMutation.mutate(
                 { userID: Number(userID), roadmapID: Number(selectedRoadmapID) },

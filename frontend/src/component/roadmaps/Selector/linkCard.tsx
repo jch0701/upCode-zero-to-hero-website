@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { toggleView, autosetViewTrue } from '@/store/linksSlice';
 import { useGetSingleLink } from '@/api/roadmaps/linkAPI';
 import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI';
+import { useCreateLinkRecord, useDeleteLinkRecord } from '@/api/roadmaps/recordAPI';
 
 
 // Type and data structure
@@ -14,13 +13,12 @@ export interface LinkCardProps {
 const LinkCard : React.FC<LinkCardProps> = ({
     selectedNodeID,
 }) => {
-    const dispatch = useDispatch();
-
     const location = useLocation();
     const navigate = useNavigate();
     const userID = localStorage.getItem("userID");
     const { roadmapID, roadmapSlug, chapterID, chapterSlug } = useParams<{ roadmapID: string, roadmapSlug: string,  chapterID: string, chapterSlug: string }>();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [localLinkItem, setLocalLinkItem] = useState<any>(null);
 
     useEffect(() => {
         const userID = localStorage.getItem("userID");
@@ -30,27 +28,53 @@ const LinkCard : React.FC<LinkCardProps> = ({
     const { data: roadmapItem, isLoading: roadmapLoading, isError: roadmapError} = useGetSingleRoadmap(Number(roadmapID), userID);
     const { data: linkItem, isLoading: linkLoading, isError: linkError} = useGetSingleLink(Number(chapterID), selectedNodeID, userID)
 
+    useEffect(() => {
+        if (linkItem) {
+            setLocalLinkItem(linkItem);
+        }
+    }, [linkItem]);
+
+    const viewMutation = useCreateLinkRecord();
+    const unviewMutation = useDeleteLinkRecord();
+
     if (roadmapLoading || linkLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (roadmapError || linkError || !linkItem ) return null;
+    if (roadmapError || linkError || !localLinkItem ) return null;
 
     // seperate click
     const directLink = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
         if(isLoggedIn){
-            dispatch(autosetViewTrue(selectedNodeID));
+            setLocalLinkItem({ ...localLinkItem, isViewed: true });
+            viewMutation.mutate(
+                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: false })}
+            );
         }
-        window.open(linkItem.link, "_blank")
+        window.open(localLinkItem.link, "_blank")
     }
     // toggleViewed indicator
     const handleToggleViewed = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        if(isLoggedIn){
-            dispatch(toggleView(linkItem.nodeID))
-        }
-        else{
+        if (!isLoggedIn) {
             navigate("/Login", { state: { from: location.pathname } });
+            return;
+        }
+
+        if (!localLinkItem.isViewed){
+            setLocalLinkItem({ ...localLinkItem, isViewed: true });
+            viewMutation.mutate(
+                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: false })}
+            );
+        }
+        else {
+            setLocalLinkItem({ ...localLinkItem, isViewed: false });
+            unviewMutation.mutate(
+                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: true })}
+            )
         }
     };
 
@@ -67,18 +91,18 @@ const LinkCard : React.FC<LinkCardProps> = ({
             flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center 
             bg-gray-300 text-gray-800 font-bold text-sm mr-4
             ">
-                {linkItem.order}
+                {localLinkItem.order}
             </div>
 
             {/* Title */}
             <div className="flex-grow text-lg font-medium text-gray-900 text-left">
-                {linkItem.title}
+                {localLinkItem.title}
             </div>
             
             {creator != Number(userID) ? (
             // Viewed Indicator
             <div onClick={handleToggleViewed} className="ml-4 cursor-pointer">
-                {linkItem.isViewed ? (
+                {localLinkItem.isViewed ? (
                     <svg className={"w-6 h-6 text-green-800"} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                     </svg>)
@@ -97,7 +121,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
         <>
         {creator == Number(userID) ? (
             // If creator → internal edit link
-                <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${linkItem.nodeID}/edit`}
+                <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${localLinkItem.nodeID}/edit`}
                 state={{ backgroundLocation: location }}
                 >
                     {CardContent}
