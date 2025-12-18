@@ -1,9 +1,9 @@
 import React from "react";
-
+import { LoadingIcon } from "../component/LoadingIcon";
 export const Overview: React.FC = () => {
     return (
         <div className="pt-6">
-            <h1 className="text-3xl font-bold">Overview Page</h1>
+            <LoadingIcon text="Loading Overview page..." />
         </div>
     );
 };

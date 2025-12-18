@@ -1,6 +1,7 @@
 import React from "react";
 import SearchBar from "@/component/searchBar";
 import { Button } from "@/component/shadcn/button";
+import { Spinner } from "@/component/shadcn/spinner.tsx";
 import { useState } from "react";
 import dice_icon from "../../assets/projects/dice_icon.png";
 import folder_icon from "../../assets/projects/folder_icon.png";
@@ -29,23 +30,23 @@ export const Project: React.FC = () => {
     const [query, setQuery] = useState("");
     const [category, setCategory] = useState(selections[0]);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const { data: projects = [] } = useGetAllBasicDetailsOnly(userId);
+    const { data: projects = [], isLoading: isLoadingProjects } = useGetAllBasicDetailsOnly(userId);
     const navigate = useNavigate();
 
-  function handleCategoryChange(value: string) {
-    setCategory(value);
-  }
+    function handleCategoryChange(value: string) {
+        setCategory(value);
+    }
 
-  function navigateToProjectDetails(projectId: number) {
-    navigate(`/project/${projectId}`);
-  }
+    function navigateToProjectDetails(projectId: number) {
+        navigate(`/project/${projectId}`);
+    }
 
-  function navigateToRandomProject() {
-    if (projects.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * projects.length);
-    const randomProject = projects[randomIndex];
-    navigate(`/project/${randomProject.projectId}`);
-  }
+    function navigateToRandomProject() {
+        if (projects.length === 0) return;
+        const randomIndex = Math.floor(Math.random() * projects.length);
+        const randomProject = projects[randomIndex];
+        navigate(`/project/${randomProject.projectId}`);
+    }
 
     const hasProjectsToShow = category === "All" || projects.some((project: ProjectType) => project.category === category);
     return (
@@ -97,6 +98,13 @@ export const Project: React.FC = () => {
                         </div>
                     </div>
                 </div>
+                {
+                    isLoadingProjects &&
+                    <div className="flex h-full w-full gap-3 items-center justify-center">
+                        <Spinner className="size-20 text-amber-50" />
+                        <span className="text-amber-50 text-3xl">Loading Projects...</span>
+                    </div>
+                }
                 {
                     hasProjectsToShow ?
                         <div className="grid grid-cols-3 gap-2">

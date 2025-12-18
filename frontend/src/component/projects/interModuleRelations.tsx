@@ -1,27 +1,43 @@
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { RoadmapItemCard } from "../roadmaps/Selector/roadmapCard";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import search_icon from "../../assets/search_icon.png"
+import { useGetAllRecommendations } from "@/api/projects/recommendationsAPI";
+import type { RoadmapType } from "@/store/roadmapSlice";
 interface InterModuleRelationsProps {
   projectId: number;
-  recommendations?: any[];
 }
 
-export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({projectId, recommendations}) => {
+export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ projectId }) => {
   const navigate = useNavigate();
-  const relatedRoadmaps = recommendations?.filter((rec: any) => rec.sourceId === projectId && rec.targetType === "roadmap" || 
-  rec.targetId === projectId && rec.sourceType === "roadmap");
-  const relatedCareers = recommendations?.filter((rec: any) => rec.sourceId === projectId && rec.targetType === "career" ||
-  rec.targetId === projectId && rec.sourceType === "career");
-  
-  // const roadmapsData = useSelector((state: any) => state.roadmap.roadmapList.filter((roadmap: any) => {
-  //   return relatedRoadmaps?.some((rec: any) => rec.targetId === roadmap.roadmapID 
-  //   || rec.sourceId === roadmap.roadmapID);
-  // }));
+  const roadmapList = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
+  const {
+    data: recommendations = [],
+    isLoading: isLoadingRecommendations,
+    isError: isErrorRecommendations,
+    isSuccess: isSuccessLoadingRecommendations
+  } = useGetAllRecommendations(projectId);
 
+  if (isLoadingRecommendations) {
+    return <p>Loading related modules...</p>;
+  }
 
-  return(
+  if (isErrorRecommendations) {
+    return <p>Whoops! Sorry, there was an error while loading the related modules.</p>;
+  }
+
+  let relatedRoadmaps: any[] = [], relatedCareers: any[] = [];
+  if (isSuccessLoadingRecommendations && recommendations.length > 0) {
+    relatedRoadmaps = recommendations?.filter((rec: any) =>
+      rec.sourceId === projectId && rec.targetType === "roadmap" ||
+      rec.targetId === projectId && rec.sourceType === "roadmap");
+    relatedCareers = recommendations?.filter((rec: any) =>
+      rec.sourceId === projectId && rec.targetType === "career" ||
+      rec.targetId === projectId && rec.sourceType === "career");
+  }
+
+  return (
     <Collapsible className="w-[90%] rounded-2xl p-[0.1rem] text-sm font-semibold bg-gray-800 text-white">
       <div className="flex items-center pl-5 justify-between gap-4 px-4 text-white">
         <p>Related Roadmaps and Career opportunities</p>
@@ -39,9 +55,9 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({proje
             {relatedRoadmaps?.length === 0 ? <p>No related roadmaps found.</p> :
               <div className="flex flex-wrap gap-4 mt-4">
                 {relatedRoadmaps?.map((rec: any) => (
-                  <div key={rec.id} onClick={() => navigate(`/roadmaps/${rec.targetId}`)}>
+                  <div key={rec.id}>
                     <RoadmapItemCard
-                      selectedRoadmapID={rec.roadmapID}
+                      selectedRoadmapID={rec.sourceType === "roadmap" ? rec.sourceId : rec.targetId}
                     />
                   </div>
                 ))}
@@ -55,7 +71,18 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({proje
             Look at all these career opportunities that require skills from this project!
           </span>
           <div className="mt-2">
-            {relatedCareers?.length === 0 && <p>No related careers found.</p>}
+            {/* replace && with ? later on */}
+            {relatedCareers?.length === 0 && <p>No related careers found.</p>
+              // : <div className="flex flex-wrap gap-4 mt-4">
+              //   {relatedCareers?.map((rec: any) => (
+              //     <div key={rec.id} onClick={() => navigate(`/careers/${rec.targetId}`)}>
+              //       <CareerItemCard
+              //         selectedCareerID={rec.sourceType === "career" ? rec.sourceId : rec.targetId}
+              //       />
+              //     </div>
+              //   ))}
+              // </div>
+            }
           </div>
         </div>
       </CollapsibleContent>

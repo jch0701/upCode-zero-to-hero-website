@@ -22,7 +22,7 @@ export const submitProject = async (req, res) => {
     .from("Submissions")
     .insert([{ projectId, creatorId, title, postedOn, lastUpdated, repoLink, rationaleFile }]);
 
-  if (error) return res.status(500).json({ error });
+  if (error) return res.status(500).json({ error: error.message });
   return res.status(201).json({ message: "Submission created successfully" });
 }
 

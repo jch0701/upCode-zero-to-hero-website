@@ -10,14 +10,28 @@ export type ProjectType = {
   creatorId: number;
   lastUpdated: string;
   startingRepoLink?: string;
-  detailsFile: Uint8Array | string;
+  detailsFile: string;
   trackCount: number;
   submissionCount: number;
 };
+
 type InitialProjectTypeOmissions = "projectId" | "trackCount" | "submissionCount" | "lastUpdated";
-export type InitialProjectType = Omit<ProjectType, InitialProjectTypeOmissions> & {
-  recommendations?: InitialRecommendation[];
+
+export type ExtendedProjectType = Omit<ProjectType, InitialProjectTypeOmissions> & {
+  recommendations?: {targetId: number; targetType: string}[];
 };
+
+type LinkTypes = "roadmap" | "project" | "career";
+
+// Recommendation types
+export type RecommendationType = {
+  recommendationId: number;
+  sourceId: number;
+  targetId: number;
+  sourceType: LinkTypes;
+  targetType: LinkTypes;
+}
+export type InitialRecommendation = Omit<RecommendationType, "recommendationId">;
 
 // Project tracking types
 export type ProjectTrackingRecord = {
@@ -27,15 +41,6 @@ export type ProjectTrackingRecord = {
   isMarkedAsDone: boolean;
 }
 
-// Recommendation types
-export type RecommendationType = {
-  recommendationId: number;
-  sourceId: number;
-  targetId: number;
-  sourceType: string;
-  targetType: string;
-}
-export type InitialRecommendation = Omit<RecommendationType, "recommendationId">;
 
 // Submission types
 export type SubmissionType = {
@@ -48,5 +53,7 @@ export type SubmissionType = {
   repoLink: string;
   rationaleFile?: Uint8Array | string;
 }
+
 type InitialSubmissionsOmits = "submissionId" | "lastUpdated" | "postedOn";
+
 export type InitialSubmissionType = Omit<SubmissionType, InitialSubmissionsOmits>;

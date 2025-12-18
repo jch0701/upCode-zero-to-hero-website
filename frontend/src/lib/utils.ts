@@ -37,19 +37,35 @@ export function generateSlug(text: string): string {
     .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
 }
 
-export function uint8ToBase64(uint8: Uint8Array) {
-  return btoa(String.fromCharCode(...uint8));
-}
+// export function uint8ToBase64(bytes: Uint8Array): string {
+//   let binary = "";
+//   const chunkSize = 0x8000;
 
-export async function convertFileToUInt8(file: File): Promise<Uint8Array> {
-  const arrayBuffer = await file.arrayBuffer();
-  return new Uint8Array(arrayBuffer);
-}
+//   for (let i = 0; i < bytes.length; i += chunkSize) {
+//     binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+//   }
 
-export function base64ToString(base64: string): string {
-  try {
-    return atob(base64);
-  } catch (error) {
-    return base64;
-  }
-}
+//   return btoa(binary);
+// }
+
+
+// export async function convertFileToUInt8(file: File): Promise<Uint8Array> {
+//   const arrayBuffer = await file.arrayBuffer();
+//   return new Uint8Array(arrayBuffer);
+// }
+
+// export function base64ToMarkdown(base64: string): string {
+//   const clean = base64.includes(",")
+//     ? base64.split(",").pop()!
+//     : base64;
+
+//   const binary = atob(clean);
+//   const bytes = new Uint8Array(binary.length);
+
+//   for (let i = 0; i < binary.length; i++) {
+//     bytes[i] = binary.charCodeAt(i);
+//   }
+
+//   return new TextDecoder("utf-8").decode(bytes);
+// }
+

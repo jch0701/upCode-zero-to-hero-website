@@ -27,8 +27,8 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
   submissionDialogOpen, setSubmissionDialogOpen }) => {
   const { mutate: putTrackingData } = usePutTrackingData(userId, projectId);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [isTracking, setIsTracking] = useState(project?.isUserTracking || false);
-  const [isMarkedAsDone, setIsMarkedAsDone] = useState(project?.isUserMarkedAsDone || false);
+  const [isTracking, setIsTracking] = useState(project?.isTracking || false);
+  const [isMarkedAsDone, setIsMarkedAsDone] = useState(project?.isMarkedAsDone || false);
   return (
     <div className="flex h-auto items-center mt-5 bg-black/50 text-sm w-fit rounded-2xl">
       {

@@ -6,6 +6,7 @@ import {
   FieldLabel
 } from "@/component/shadcn/field";
 import { useRef, useState } from "react";
+import { useCallback } from "react";
 import { SearchableMultiSelect } from "@/component/projects/searchableMultiSelect";
 import { Input } from "@/component/shadcn/input";
 import { Select, SelectTrigger, SelectValue, SelectItem, SelectContent } from "@/component/shadcn/select";
@@ -14,17 +15,18 @@ import { Button } from "@/component/shadcn/button";
 import { categoryList } from "@/lib/types";
 import { useSelector } from "react-redux";
 import { useCreateProject } from "@/api/projects/projectsAPI";
-import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
-import type { ExtendedProjectType } from "@/store/projectsSlice";
+// import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
+import type { ExtendedProjectType } from "@/lib/projectModuleTypes";
+import { LoadingIcon } from "@/component/LoadingIcon";
 
 type ProjectFormProps = {
   initialData?: any;
   close: () => void;
 }
 
-export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) => {
+export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, close }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { mutateAsync: createProject } = useCreateProject(useSelector((state: any) => state.profile.userId));
+  const { mutateAsync: createProject, status: formSubmissionStatus, error: formSubmissionError } = useCreateProject(useSelector((state: any) => state.profile.userId));
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState<any>({
@@ -42,7 +44,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) =
   // const careers = useSelector((state: any) => state.careers.careerList);
   const careers: any[] = []; // Placeholder careers array
 
-  async function handleSubmit() { 
+  const handleSubmit = useCallback(async () => {
     // Create a deep copy to avoid any reference issues
     const finalFormData: ExtendedProjectType = {
       title: formData.title,
@@ -51,20 +53,28 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) =
       shortDescription: formData.shortDescription,
       startingRepoLink: formData.startingRepoLink,
       detailsFile: formData.detailsFile,
-      roadmaps: formData.roadmaps,
-      careers: formData.careers,
+      recommendations: [],
       creatorId: creatorId
     };
-    
+    const combinedSelections = [...formData.roadmaps, ...formData.careers];
+    finalFormData.recommendations = combinedSelections.map((item: any) => {
+      return (
+        {
+          targetId: item.roadmapID || item.careerID,
+          targetType: item.roadmapID ? "roadmap" : "career"
+        }
+      )
+    });
+
     // Handle file separately if it exists
     if (fileInput) {
-      const uint8Array = await convertFileToUInt8(fileInput);
-      finalFormData.detailsFile = uint8ToBase64(uint8Array);
+      const text = await fileInput.text();
+      finalFormData.detailsFile = text;
     }
-    
+
     await createProject(finalFormData);
     close();
-  }
+  }, [formData, fileInput, createProject, close, creatorId]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -72,6 +82,16 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) =
       ...prev,
       [name]: value
     }));
+  }
+
+  switch (formSubmissionStatus) {
+    case "pending":
+      return <LoadingIcon text="Submitting Project..." iconClass="flex-col" />;
+    case "error":
+      const errorMsg = (formSubmissionError as any)?.response?.data?.error || "Unknown error occurred";
+      return <div className="text-red-500 text-center mt-4">
+        Error submitting project. {String(errorMsg)}
+      </div>;
   }
 
   return (
@@ -196,7 +216,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({initialData, close }) =
                     placeholder="Search and select roadmaps..."
                     items={roadmaps}
                     selectedItems={formData.roadmaps}
-                    onSelect={(roadmaps) => 
+                    onSelect={(roadmaps) =>
                       setFormData((prev: any) => ({ ...prev, roadmaps }))
                     }
                     maxSelections={5}

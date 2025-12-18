@@ -13,7 +13,7 @@ Input:
     lastUpdated: string;
     startingRepoLink?: string;
     detailsFile?: Uint8Array | string;
-    recommendations: [ { recommendation1_details }, { recommendation2_details }, ... ];
+    recommendations: [ { targetId: number, targetType: string }, { targetId: number, targetType: string }, ... ];
   }
 
 Output: {
@@ -36,6 +36,7 @@ export const createProject = async (req, res) => {
   if (missingFields.length > 0) {
     return res.status(400).json({ error: `Missing required fields: ${missingFields.join(", ")}` });
   }
+  projectData.lastUpdated = new Date().toISOString();
 
   // Insert project
   const { data: newProject, error: projectError } = await supabase
@@ -44,20 +45,22 @@ export const createProject = async (req, res) => {
     .select()
     .single();
 
-  if (projectError) return res.status(500).json({ error: projectError });
+  if (projectError) return res.status(500).json({ error: projectError.message || "Failed to create project" });
 
   // Insert recommendations if provided
   if (recommendations && recommendations.length > 0) {
     const recommendationsWithProjectId = recommendations.map(rec => ({
       ...rec,
-      projectId: newProject.projectId
+      sourceId: newProject.projectId,
+      sourceType: 'project',
+      createdAt: new Date().toISOString()
     }));
 
     const { error: recError } = await supabase
       .from("Recommendations")
       .insert(recommendationsWithProjectId);
 
-    if (recError) return res.status(500).json({ error: recError });
+    if (recError) return res.status(500).json({ error: recError.message || "Project created but failed to add recommendations" });
   }
 
   return res.status(201).json(newProject);
@@ -90,7 +93,7 @@ export const putTrackingData = async(req, res) => {
       userId,
       ...trackingData
     });
-  if (trackingError) return res.status(500).json({ error: trackingError });
+  if (trackingError) return res.status(500).json({ error: trackingError.message || "Failed to update tracking data" });
   return res.status(200).json({ message: "Tracking data updated successfully" });
 }
 
@@ -117,7 +120,7 @@ export const updateProject = async (req, res) => {
     .from("Projects")
     .update(updateData)
     .eq("projectId", projectId);
-  if (updateError) return res.status(500).json({ error: updateError });
+  if (updateError) return res.status(500).json({ error: updateError.message || "Failed to update project" });
   return res.status(200).json({ message: "Project updated successfully" });
 }
 
@@ -137,7 +140,7 @@ export const deleteProject = async (req, res) => {
     .from("Projects")
     .delete()
     .eq("projectId", projectId);
-  if (deleteError) return res.status(500).json({ error: deleteError });
+  if (deleteError) return res.status(500).json({ error: deleteError.message || "Failed to delete project" });
 
   return res.status(200).json({ message: "Project deleted successfully" });
 }

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { formatDate, base64ToString } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { commonMarkDownClass } from "@/lib/styles";
 import ReactMarkdown from 'react-markdown';
 import { useGetByIdComplete } from "@/api/projects/projectsAPI";
@@ -14,29 +14,56 @@ import { NoSolutions } from "@/component/projects/NoSolutions";
 import { InterModuleRelations } from "@/component/projects/interModuleRelations";
 import { GitHubLink } from "@/component/projects/gitHubLink";
 import { ProjectInteractive } from "@/component/projects/projectInteractive";
+import { LoadingIcon } from "@/component/LoadingIcon";
+import { Button } from "@/component/shadcn/button";
 
 export const ProjectDetails: React.FC = () => {
   const navigate = useNavigate();
   const [submissionDialogOpen, setSubmissionDialogOpen] = useState(false);
   let { projectId: projectIdParam } = useParams<{ projectId: string }>();
-  
-  const { data: project } = useGetByIdComplete(Number(projectIdParam));
-  const { data: submissions = [] } = useGetSubmissionsSurfaceDataOnly(Number(projectIdParam));
   const projectId = Number(projectIdParam);
-  // const userId = useSelector((state: any) => state.profile.userId);
-  const userId = 1;
-  const communitySubmissions: any[] = [], mySubmissions: any[] = []; // Placeholder arrays for submissions
-  submissions.map((sub: any) => {
-    if (sub.creatorId === userId) {
-      mySubmissions.push(sub);
-    } else {
-      communitySubmissions.push(sub);
-    }
-  });
+  const userId = useSelector((state: any) => state.profile.userId);
 
+  const { 
+    data: project, 
+    isLoading: isLoadingProjectData, 
+    isError: isErrorProjectData, 
+    error: projectError 
+  } = useGetByIdComplete(projectId, userId);
+
+  const { 
+    data: submissions = [], 
+    isSuccess: isSuccessLoadingSubmissions, 
+    isLoading: isLoadingSubmissions, 
+    isError: isErrorSubmissions,
+  } = useGetSubmissionsSurfaceDataOnly(projectId);
+
+  const [displaySection, setDisplaySection] = useState<DisplaySectionType>("Project Description");
+
+  if (isLoadingProjectData) {
+    return (
+      <div className="mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-[90vh] overflow-hidden">
+        <LoadingIcon text="Loading Project Data..." />
+      </div>
+    )
+  }
+  if (isErrorProjectData) {
+    const errorMessage = (projectError as any).response?.data?.error || projectError.message;
+    throw new Error(`Error loading project data: ${errorMessage}`);
+  }
+  
+  const communitySubmissions: any[] = [], mySubmissions: any[] = []; // Placeholder arrays for submissions
+  if(isSuccessLoadingSubmissions && submissions.length > 0) {
+    submissions.map((sub: any) => {
+      if (sub.creatorId === userId) {
+        mySubmissions.push(sub);
+      } else {
+        communitySubmissions.push(sub);
+      }
+    });
+  }
 
   type DisplaySectionType = "Project Description" | "Community Submissions" | "My Submissions";
-  const [displaySection, setDisplaySection] = useState<DisplaySectionType>("Project Description");
   function handleDisplaySectionChange(value: DisplaySectionType) {
     setDisplaySection(value);
   }
@@ -71,7 +98,6 @@ export const ProjectDetails: React.FC = () => {
 
       <InterModuleRelations
         projectId={projectId}
-        recommendations={project?.recommendations}
       />
 
       <div>
@@ -94,17 +120,26 @@ export const ProjectDetails: React.FC = () => {
                 <div>
                   <div className={`prose prose-invert max-w-none mt-4 text-white text-left ${commonMarkDownClass}`}>
                     <ReactMarkdown>
-                      {project?.detailsFile ? base64ToString(project.detailsFile) : "No project details available."}
+                      {project?.detailsFile || "No project details available."}
                     </ReactMarkdown>
                   </div>
                 </div>
               );
-            
+
             case "Community Submissions":
               return (
                 <div className="grid grid-cols-1 gap-3.5">
                   {
+                    isLoadingSubmissions && <LoadingIcon text="Loading Submissions..." />
+                  }
+                  {
+                    isErrorSubmissions && <p className="text-red-500">
+                      Error loading submissions. Please try again later.
+                    </p>
+                  }
+                  {
                     communitySubmissions.length === 0 ? (
+                      mySubmissions.length === 0 ? (
                       <NoSolutions
                         title="No Community Submissions Yet"
                         description="Be the first to contribute your solution!"
@@ -113,6 +148,16 @@ export const ProjectDetails: React.FC = () => {
                         project={project}
                         projectId={projectId}
                       />
+                      ) : (
+                        <div className="flex flex-col justify-center items-center gap-4 mt-10">
+                          <h1 className="text-2xl font-semibold text-white">Wow! You're the first to contribute!</h1>
+                          <Button
+                          onClick={()=>setDisplaySection("My Submissions")}
+                          className="w-fit mx-auto cursor-pointer">
+                            See my submissions
+                          </Button>
+                        </div>
+                      )
                     ) : (
                       communitySubmissions.map((submission: any) => (
                         <SubmissionCard
@@ -122,7 +167,7 @@ export const ProjectDetails: React.FC = () => {
                           title={submission.title}
                           repoLink={submission.repoLink}
                           onClick={() => {
-                            navigate(`/project/submission/${submission.submissionId}`);
+                            navigate(`submission/${submission.submissionId}`);
                           }}
                         />)
                       )
@@ -130,7 +175,7 @@ export const ProjectDetails: React.FC = () => {
                   }
                 </div>
               );
-            
+
             case "My Submissions":
               return (
                 <div>
@@ -153,7 +198,7 @@ export const ProjectDetails: React.FC = () => {
                           title={submission.title}
                           repoLink={submission.repoLink}
                           onClick={() => {
-                            navigate(`/project/submission/${submission.submissionId}`);
+                            navigate(`submission/${submission.submissionId}`);
                           }}
                         />)
                       )
@@ -161,7 +206,7 @@ export const ProjectDetails: React.FC = () => {
                   }
                 </div>
               );
-            
+
             default:
               return null;
           }
