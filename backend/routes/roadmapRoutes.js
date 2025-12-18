@@ -7,6 +7,7 @@ import { createChapter, editChapter, deleteChapter } from '../controllers/roadma
 import { getAllLink, getChapterLink, getLink } from '../controllers/roadmapControllers/linkGET.js';
 import { createLink, editLink, deleteLink } from '../controllers/roadmapControllers/linkCUD.js';
 import { getUserDetail } from '../controllers/roadmapControllers/userGET.js';
+import { createFavouriteRecord, deleteFavouriteRecord } from '../controllers/roadmapControllers/recordCUD.js';
 
 const router = express.Router();
 router.get('/roadmaps', getAllRoadmap);
@@ -35,6 +36,11 @@ router.get('/chapters/:chapterID/links/:linkID', getLink);
 router.post('/chapters/:chapterID/links', createLink);
 router.patch('/chapters/:chapterID/links/:linkID', editLink);
 router.delete('/links/:linkID', deleteLink);
+
+
+
+router.post('/favourites', createFavouriteRecord);
+router.delete('/favourites', deleteFavouriteRecord);
 
 
 

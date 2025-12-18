@@ -21,15 +21,17 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const { roadmapID } = useParams<{ roadmapID: string }>();
 
     const { data: roadmapItem, isLoading: roadmapLoading, isError: roadmapError } = useGetSingleRoadmap(Number(roadmapID), userID);
-    const { data: chapterItem , isLoading: chapterLoading, isError: chapterError } = useGetSingleChapter(Number(roadmapID),selectedChapterID,userID);
-    const { data: linksData = [] } = useGetChapterLinks(selectedChapterID,userID);
-    const { data: userData } = useGetSingleUser(Number(userID))
 
-    if (roadmapLoading || chapterLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (roadmapError || chapterError || !chapterItem ) return null;
+    const creator = roadmapItem?.creatorID ?? 'Unknown Creator';
+
+    const { data: chapterItem , isLoading: chapterLoading, isError: chapterError } = useGetSingleChapter(Number(roadmapID),selectedChapterID,userID);
+    const { data: linksData = [], isLoading: linkLoading, isError: linkError } = useGetChapterLinks(selectedChapterID,userID);
+    const { data: userData } = useGetSingleUser(Number(creator))
+
+    if (roadmapLoading || chapterLoading || linkLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if (roadmapError || chapterError || linkError || !chapterItem ) return null;
 
     const imageSrc = roadmapItem?.imageSrc ?? 'Unknown Image'
-    const creator = roadmapItem?.creatorID ?? 'Unknown Creator';
     const username = userData?.username ?? 'Unknown Username';
     const roadmapSlug = roadmapItem?.roadmapSlug ?? 'Unknown Roadmap Slug';
     const displayImage = IMAGE_MAP[imageSrc] || imageSrc;
@@ -91,7 +93,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
                 <div className="w-full md:w-[60%]">
                     {/* Tags Section */}
                     <div className="flex flex-wrap gap-2 down mb-6 text-black">
-                        {tags.filter(tag => tag.label.trim() !== "")
+                        {tags.filter(tag => tag.label?.trim() !== "")
                              .map((tag, index) => (
                             <TagPill key={index} tag={tag} />
                         ))}

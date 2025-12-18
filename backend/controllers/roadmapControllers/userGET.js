@@ -20,7 +20,7 @@ export const getUserDetail = async(req, res) => {
             console.error('Users Fetch Error:', userError);
             return res.status(500).json({ message: 'Failed to fetch user.' });
         }
-        return res.status(200).json(users);
+        return res.status(200).json(users[0]);
     }
     catch (error) {
         console.error('Internal Server Error in GET Controller:', error);
