@@ -15,7 +15,7 @@ export interface RoadmapType {
     isFavourite: boolean;
 }
 
-type InitialRoadmapOmits = "roadmapID" | "createdDate" | "modifiedDate" | "roadmapSlug" | "isFavoutite";
+type InitialRoadmapOmits = "roadmapID" | "createdDate" | "modifiedDate" | "roadmapSlug" | "isFavourite";
 
 export type InitialRoadmapType = Omit<RoadmapType, InitialRoadmapOmits>;
 

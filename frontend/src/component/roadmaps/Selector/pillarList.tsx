@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PillarCard from '../Selector/pillarCard.tsx';
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Recommendation from './recommendation.tsx';
 import type { RecommendationType } from '@/store/recommendationSlice.ts';
-import type { RoadmapType } from '@/store/roadmapSlice.ts';
 import type { PillarType } from '@/store/pillarsSlice.ts';
+import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI.ts';
+import { useGetRoadmapChapters } from '@/api/roadmaps/chapterAPI.ts';
 
 
 interface PillarListProps {
@@ -13,17 +14,20 @@ interface PillarListProps {
 }
 
 const PillarList: React.FC<PillarListProps> = ({ selectedRoadmapId }) => {
-// Filter pillars based on selectedRoadmapId
-const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
-const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
-const filteredPillars = pillarsData.filter(pillar => pillar.roadmapID === selectedRoadmapId);
-const roadmapSlug = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.roadmapSlug || 'Unknown Roadmap Slug';
-const roadmapTitle = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.title || 'Unknown Roadmap';
-const creator = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.creatorID || 'Unknown creator';
+
 const userID = localStorage.getItem("userID");
+const { roadmapID } = useParams<{ roadmapID: string }>();
+const { data: roadmapData } = useGetSingleRoadmap(Number(roadmapID), userID)
+const { data: pillarsData = [] } = useGetRoadmapChapters(selectedRoadmapId, userID)
+
+// Filter pillars based on selectedRoadmapId
+const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
+const roadmapSlug = roadmapData?.roadmapSlug || 'Unknown Roadmap Slug';
+const roadmapTitle = roadmapData?.title || 'Unknown Roadmap';
+const creator = roadmapData?.creatorID || 'Unknown creator';
+
 // order by 'order' field
-filteredPillars.sort((a, b) => a.order - b.order);
+pillarsData.sort((a, b) => a.order - b.order);
 const navigate = useNavigate();
 
 function navigateToProjectDetails(projectId: number) {
@@ -69,9 +73,9 @@ function toggleProjectsVisibility(chapterID: number) {
                     </button>
                 </Link>)}
             </div>
-            {filteredPillars.length === 0 ? (
+            {pillarsData.length === 0 ? (
                 <p className="text-gray-400 text-center mt-10">No chapters found for this roadmap.</p>
-            ) : (filteredPillars.map((pillar) => (
+            ) : (pillarsData.map((pillar) => (
                 <div key={pillar.chapterID} className='mb-4'>
                     <PillarCard 
                         key={pillar.chapterID}

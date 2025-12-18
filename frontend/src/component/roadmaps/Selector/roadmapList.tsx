@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { generateTags } from '../groupTag.tsx';
-import { useSelector } from "react-redux";
-import type { PillarType } from '@/store/pillarsSlice.ts';
 import { RoadmapItemCard, type RoadmapItemCardProps } from "./roadmapCard.tsx";
+import { useGetAllChapters } from "@/api/roadmaps/chapterAPI.ts";
 
 interface ListRoadmapItem {
   roadmapID: number;
@@ -16,9 +15,10 @@ interface RoadmapItemListProps {
 }
 
 export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterTag }) => {
+  const userID = localStorage.getItem("userID");
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
-  const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+  const {data: pillarsData = []} = useGetAllChapters(userID);
   // reorder items by date descending
   const sortedItems = [...items].sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
 

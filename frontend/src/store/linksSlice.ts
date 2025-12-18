@@ -12,7 +12,7 @@ export interface LinkType {
     isViewed: boolean;
 }
 
-type InitialLinkOmits = "nodeID" | "modifiedDate" | "isViewed";
+type InitialLinkOmits = "nodeID" | "modifiedDate" | "isViewed" | "chapterID";
 
 export type InitialLinkType = Omit<LinkType, InitialLinkOmits>;
 
@@ -40,6 +40,7 @@ const linkSlice = createSlice({
         addLink: (state, action: PayloadAction<InitialLinkType>) => {
             const newLink: LinkType = {
                 ...action.payload,
+                chapterID: generateNodeID(),
                 nodeID: generateNodeID(),
                 modifiedDate: new Date().toISOString().slice(0, 10),
                 isViewed: false,

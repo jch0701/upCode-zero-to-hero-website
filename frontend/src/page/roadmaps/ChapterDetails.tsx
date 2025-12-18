@@ -1,15 +1,13 @@
 import ChapterDescription from '@/component/roadmaps/DetailSession/chapterDescription';
 import LinkList from '@/component/roadmaps/Selector/linkList';
-import { useSelector } from "react-redux";
 import React, {useEffect, useRef} from 'react';
 import { useParams } from 'react-router-dom';
 import { update_Activity } from '@/component/activity/activity_tracker';
-import type { PillarType } from '@/store/pillarsSlice';
+import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
 
 export const ChapterDetails: React.FC = () => {
-    const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-    const { chapterID } = useParams<{ chapterID: string }>();
-    const chapterItem = pillarsData.find(pillar => pillar.chapterID === Number(chapterID));
+    const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string }>();
+    const userID = localStorage.getItem("userID");
 
     //  Use ref instead of useState to avoid warnings
     const hasCountedRef = useRef(false);
@@ -23,6 +21,10 @@ export const ChapterDetails: React.FC = () => {
         },{ type: "chapter", id: chapterID });
         hasCountedRef.current = true;//marked as counted
     },[chapterID]);
+
+    const { data: chapterItem, isLoading, isError } = useGetSingleChapter(Number(roadmapID), Number(chapterID), userID);
+    if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if (isError || !chapterItem) return null;
 
     if (!chapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;
 
