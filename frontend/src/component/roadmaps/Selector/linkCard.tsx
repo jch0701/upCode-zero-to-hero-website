@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { toggleView, autosetViewTrue, type LinkType } from '@/store/linksSlice';
-import type { RoadmapType } from '@/store/roadmapSlice';
-import type { PillarType } from '@/store/pillarsSlice';
+import { toggleView, autosetViewTrue } from '@/store/linksSlice';
+import { useGetSingleLink } from '@/api/roadmaps/linkAPI';
+import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI';
 
 
 // Type and data structure
@@ -19,16 +18,20 @@ const LinkCard : React.FC<LinkCardProps> = ({
 
     const location = useLocation();
     const navigate = useNavigate();
+    const userID = localStorage.getItem("userID");
+    const { roadmapID, roadmapSlug, chapterID, chapterSlug } = useParams<{ roadmapID: string, roadmapSlug: string,  chapterID: string, chapterSlug: string }>();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
-    const linkItem = linkData.find(p => p.nodeID === selectedNodeID);
-    if (!linkItem) return <p className="text-white text-center mt-10">Link not found</p>;
 
     useEffect(() => {
         const userID = localStorage.getItem("userID");
         setIsLoggedIn(userID && userID !== "0" ? true : false);
     }, [location]); // re-check when route changes
+
+    const { data: roadmapItem, isLoading: roadmapLoading, isError: roadmapError} = useGetSingleRoadmap(Number(roadmapID), userID);
+    const { data: linkItem, isLoading: linkLoading, isError: linkError} = useGetSingleLink(Number(chapterID), selectedNodeID, userID)
+
+    if (roadmapLoading || linkLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if (roadmapError || linkError || !linkItem ) return null;
 
     // seperate click
     const directLink = (e: React.MouseEvent) => {
@@ -50,13 +53,8 @@ const LinkCard : React.FC<LinkCardProps> = ({
             navigate("/Login", { state: { from: location.pathname } });
         }
     };
-    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
-    const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-    const chapterSlug = pillarsData.find(p => p.chapterID === linkItem.chapterID)?.chapterSlug || 'Unknown Chapter Slug';
-    const roadmapID = pillarsData.find(p => p.chapterID === linkItem.chapterID)?.roadmapID || 'Unknown Roadmap ID';
-    const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
-    const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creatorID || 'Unknown creator';
-    const userID = localStorage.getItem("userID");
+
+    const creator = roadmapItem?.creatorID ?? 'Unknown creator';
 
     const CardContent = (
         <div className={`
@@ -77,7 +75,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
                 {linkItem.title}
             </div>
             
-            {creator != userID ? (
+            {creator != Number(userID) ? (
             // Viewed Indicator
             <div onClick={handleToggleViewed} className="ml-4 cursor-pointer">
                 {linkItem.isViewed ? (
@@ -89,7 +87,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
             </div>
             ):(
             // Button
-            <Link to ={`/roadmap/${roadmapID}/${roadmapSlug}/${linkItem.chapterID}/${chapterSlug}/${linkItem.nodeID}/edit`}>
+            <Link to ={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${linkItem.nodeID}/edit`}>
                 <button onClick={directLink}
                         className=" px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 transition">
                     Link
@@ -99,9 +97,9 @@ const LinkCard : React.FC<LinkCardProps> = ({
     );
     return (
         <>
-        {creator == userID ? (
+        {creator == Number(userID) ? (
             // If creator → internal edit link
-                <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${linkItem.chapterID}/${chapterSlug}/${linkItem.nodeID}/edit`}
+                <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${linkItem.nodeID}/edit`}
                 state={{ backgroundLocation: location }}
                 >
                     {CardContent}
