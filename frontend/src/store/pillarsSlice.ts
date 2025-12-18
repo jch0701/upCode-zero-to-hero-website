@@ -17,7 +17,7 @@ export interface PillarType{
     modifiedDate: string;
 }
 
-type InitialPillarOmits = "chapterID" | "chapterSlug" | "modifiedDate" | "isViewed";
+type InitialPillarOmits = "chapterID" | "chapterSlug" | "modifiedDate" | "isViewed" | "roadmapID";
 
 export type InitialPillarType = Omit<PillarType, InitialPillarOmits>;
 
@@ -45,6 +45,7 @@ const pillarSlice = createSlice({
         addChapter: (state, action: PayloadAction<InitialPillarType>) => {
             const newPillar: PillarType = {
                 ...action.payload,
+                roadmapID: generateChapterID(),
                 chapterID: generateChapterID(),
                 chapterSlug: generateSlug(action.payload.title),
                 isViewed: false,

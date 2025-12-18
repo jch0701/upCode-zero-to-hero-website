@@ -71,7 +71,7 @@ export const editLink = async(req, res) => {
             .single();
 
         if (error) {
-            console.error('PUT Error:', error);
+            console.error('PATCH Error:', error);
             return res.status(500).json({ message: 'Failed to update link.' });
         }
         return res.status(200).json(link);

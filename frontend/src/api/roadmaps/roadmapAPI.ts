@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Api from '../index.ts';
-import type { RoadmapType } from '@/store/roadmapSlice.ts';
+import type { InitialRoadmapType, RoadmapType } from '@/store/roadmapSlice.ts';
 
 // 1. Get All Roadmap
 export const useGetRoadmaps = (userID?: string | null) => {
@@ -26,3 +26,48 @@ export const useGetSingleRoadmap = (roadmapID: number, userID?: string | null) =
         enabled: !!roadmapID, // Only run if ID exists
     });
 };
+
+// 3. Add Roadmap
+export const useCreateRoadmap = () => {
+    const queryClient = useQueryClient();
+    return useMutation ({
+        mutationFn: async (roadmap: InitialRoadmapType) => {
+            const response = await Api.post(`roadmaps`, roadmap)
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['roadmap'] });
+        }
+    })
+}
+
+// 4. Edit Roadmap
+export const useUpdateRoadmap = (roadmapID: number) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (roadmap: InitialRoadmapType) => {
+            const response = await Api.patch(`roadmaps/${roadmapID}`, {
+                roadmapID: roadmapID,
+                ...roadmap
+            })
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['roadmaps', roadmapID] });
+        }
+    })
+}
+
+// 5. Delete Roadmap
+export const useDeleteRoadmap = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async(roadmapID: number) => {
+            const response = await Api.delete(`roadmaps/${roadmapID}`, {data: {roadmapID}})
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['roadmaps'] });
+        }
+    })
+}

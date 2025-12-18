@@ -13,7 +13,7 @@ router.get('/roadmaps', getAllRoadmap);
 router.get('/roadmaps/:roadmapID', getRoadmap);
 
 router.post('/roadmaps', createRoadmap);
-router.put('/roadmaps/:roadmapID', editRoadmap);
+router.patch('/roadmaps/:roadmapID', editRoadmap);
 router.delete('/roadmaps/:roadmapID', deleteRoadmap);
 
 
@@ -23,8 +23,8 @@ router.get('/roadmaps/:roadmapID/chapters', getRoadmapChapter);
 router.get('/roadmaps/:roadmapID/chapters/:chapterID', getChapter);
 
 router.post('/roadmaps/:roadmapID/chapters', createChapter);
-router.put('/roadmaps/:roadmapID/chapters/:chapterID', editChapter);
-router.delete('/roadmaps/:roadmapID/chapters/:chapterID', deleteChapter);
+router.patch('/roadmaps/:roadmapID/chapters/:chapterID', editChapter);
+router.delete('/chapters/:chapterID', deleteChapter);
 
 
 

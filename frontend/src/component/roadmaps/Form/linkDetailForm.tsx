@@ -4,9 +4,6 @@ import { X } from 'lucide-react';
 import FormBar from "../../formBox";
 import { validateTitle, validateOrder, validateLink } from "@/component/validateFormBox";
 import { defaultImageSrc, bin } from "../../../lib/image";
-import { useDispatch } from "react-redux";
-import { updateChapterDate } from "@/store/pillarsSlice";
-import { updateRoadmapDate } from "@/store/roadmapSlice";
 import { useCreateLink, useDeleteLink, useGetSingleLink, useUpdateLink } from "@/api/roadmaps/linkAPI";
 
 interface LinkDetailFormProps{
@@ -17,23 +14,22 @@ interface LinkDetailFormProps{
 const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
     mode, selectedLinkID}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch();
         const userID = localStorage.getItem("userID");
-        const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string}>();
+        const { chapterID } = useParams<{ chapterID: string}>();
 
         const { data: linkItem, isLoading, isError} = useGetSingleLink(Number(chapterID), Number(selectedLinkID), userID);
 
         if ( isLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
         if ( isError || !linkItem && mode==="edit" ) return <p className="text-white text-center mt-10">Link not found</p>;
         
+        const createLinkMutation = useCreateLink(Number(chapterID));
+        const updateLinkMutation = useUpdateLink(Number(chapterID), Number(selectedLinkID))
+        const deleteLinkMutation = useDeleteLink();
+
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? linkItem!.title ?? "" : "");
         const [queryOrder, setQueryOrder] = useState(mode === "edit" && linkItem!.order !== undefined ? String(linkItem!.order) : "");
         const [queryLink, setQueryLink] = useState(mode === "edit" ? linkItem!.link ?? "" : "");
         const [errors, setErrors] = React.useState<string[]>([]);
-
-        const createLinkMutation = useCreateLink(Number(chapterID));
-        const createUpdateMutation = useUpdateLink(Number(chapterID), Number(selectedLinkID))
-        const createDeleteMutation = useDeleteLink();
 
         const handleSubmit = (e: React.FormEvent) => {
             e.preventDefault()
@@ -54,28 +50,20 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
                 })
             }
             if (mode === "edit"){
-                createUpdateMutation.mutate({
+                updateLinkMutation.mutate({
                     title: queryTitle,
                     order: Number(queryOrder),
                     link: queryLink,
                 })
             }
             navigate(-1);
-            dispatch(
-                updateChapterDate(Number(chapterID)),
-                updateRoadmapDate(Number(roadmapID))
-            )
         }
 
         const handleDelete = () => {
-        if (selectedLinkID) {
-            createDeleteMutation.mutate(Number(selectedLinkID));
-        }
-        navigate(-1);
-        dispatch(
-            updateChapterDate(Number(chapterID)),
-            updateRoadmapDate(Number(roadmapID))
-        )
+            if (selectedLinkID) {
+                deleteLinkMutation.mutate(Number(selectedLinkID));
+            }
+            navigate(-1);
         };
     
         return (
@@ -139,5 +127,3 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
 }
 
 export default LinkDetailForm
-
-
