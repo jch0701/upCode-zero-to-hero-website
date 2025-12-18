@@ -11,7 +11,7 @@ export const createLink = async(req, res) => {
     }
 
     const payload = {
-        chapterID: newLink.roadmapID,
+        chapterID: newLink.chapterID,
         title: newLink.title,
         order: newLink.order,
         link: newLink.link,
@@ -44,14 +44,14 @@ export const createLink = async(req, res) => {
 
 
 export const editLink = async(req, res) => {
-    if (req.method !== 'PUT') {
-        return res.status(405).end(`Method ${req.method} Not Allowed. Use PUT only.`);
+    if (req.method !== 'PATCH') {
+        return res.status(405).end(`Method ${req.method} Not Allowed. Use PATCH only.`);
     }
 
     const updatedLink = req.body;
-    const putLinkID = updatedLink.nodeID;
+    const nodeID = updatedLink.nodeID;
 
-    if (!putLinkID) {
+    if (!nodeID) {
         return res.status(400).json({ message: 'Link ID is required for update.' });
     }
 
@@ -66,7 +66,7 @@ export const editLink = async(req, res) => {
         const { data: link, error } = await supabase
             .from('Nodes')
             .update(payload)
-            .eq('nodeID', putLinkID)
+            .eq('nodeID', nodeID)
             .select()
             .single();
 

@@ -33,8 +33,8 @@ router.get('/chapters/:chapterID/links', getChapterLink)
 router.get('/chapters/:chapterID/links/:linkID', getLink);
 
 router.post('/chapters/:chapterID/links', createLink);
-router.put('/chapters/:chapterID/links/:linkID', editLink);
-router.delete('/chapters/:chapterID/links/:linkID', deleteLink);
+router.patch('/chapters/:chapterID/links/:linkID', editLink);
+router.delete('/links/:linkID', deleteLink);
 
 
 

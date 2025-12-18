@@ -87,12 +87,10 @@ const LinkCard : React.FC<LinkCardProps> = ({
             </div>
             ):(
             // Button
-            <Link to ={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${linkItem.nodeID}/edit`}>
-                <button onClick={directLink}
-                        className=" px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 transition">
-                    Link
-                </button>
-            </Link>)}
+            <button onClick={directLink}
+                className=" px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 transition">
+                Link
+            </button>)}
         </div>
     );
     return (
