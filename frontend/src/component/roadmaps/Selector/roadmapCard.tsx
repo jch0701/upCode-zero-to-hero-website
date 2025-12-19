@@ -22,10 +22,10 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
 }) => {
   const userID = localStorage.getItem("userID");
   // Compute tags from pillarsData when not provided
-  const { data: roadmapItem, isLoading, isError } = useGetSingleRoadmap(selectedRoadmapID, userID);
-  const { data: pillarsData } = useGetRoadmapChapters(selectedRoadmapID, userID);
-  if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-  if (isError || !roadmapItem) return null;
+  const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(selectedRoadmapID, userID);
+  const { data: pillarsData, isLoading: chapterLoading } = useGetRoadmapChapters(selectedRoadmapID, userID);
+  if ( roadmapLoading || chapterLoading ) return null;
+  if ( !pillarsData || !roadmapItem ) return <p className="text-white text-center mt-10">Roadmap not found</p>;;
   const effectiveTags = generateTags(roadmapItem.roadmapID, pillarsData || []);
   // Logic to determine which tags to show and if "More..." is needed
   const visibleTags = effectiveTags.slice(0, MAX_VISIBLE_TAGS);

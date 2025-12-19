@@ -25,8 +25,8 @@ const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, s
     if (mode === "project"){
         const { data: chapter, isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID), selectedID, userID);
         const { data: projects = [], isLoading: projectLoading } = useGetAllBasicDetailsOnly(Number(userID))
-        if ( chapterLoading || projectLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-        if ( !chapter || !projects ) return <p className="text-gray-400 text-center mt-4">Chapter not found.</p>;
+        if ( chapterLoading || projectLoading ) <span className="text-amber-50 text-3xl">Loading Data...</span>
+        if ( !chapter || !projects ) return <p className="text-gray-400 text-center mt-4">Recommended project not found.</p>;
 
         const categories = Array.isArray(chapter.category) ? chapter.category : [chapter.category];
         const prerequisites = Array.isArray(chapter.prerequisite) ? chapter.prerequisite : [chapter.prerequisite];
@@ -61,8 +61,8 @@ const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, s
     }
     else if (mode === "career"){
         const { data: relatedPillars, isLoading: chapterLoading } = useGetRoadmapChapters(selectedID, userID);
-        if ( chapterLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-        if ( !relatedPillars ) return <p className="text-gray-400 text-center mt-4">Chapter not found.</p>;
+        if ( chapterLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
+        if ( !relatedPillars ) return <p className="text-gray-400 text-center mt-4">Recommended career not found.</p>;
         const categories = relatedPillars.flatMap(p =>
             Array.isArray(p.category) ? p.category : [p.category]
         );

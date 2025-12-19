@@ -46,8 +46,8 @@ const RecommendationCard: React.FC<RecommendProps> =({
         }
     }, [isRecommended]);
 
-    if ( recommendedLoading || projectLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if ( !recommendedData || !projects ) return null;
+    if ( recommendedLoading || projectLoading ) return null;
+    if ( !recommendedData || !projects ) return <p className="text-white text-center mt-10">Recomendation data not found</p>;;
     
     const recommendedID =
     recommendedData.find(data => {

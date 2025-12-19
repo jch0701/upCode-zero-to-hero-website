@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import PillarList from "@/component/roadmaps/Selector/pillarList";
 import { update_Activity } from "@/component/activity/activity_tracker";
 import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
+import { Spinner } from "@/component/shadcn/spinner";
 
 export const RoadmapDetails: React.FC = () => {
     const { roadmapID } = useParams<{ roadmapID: string }>(); // get id from URL
@@ -23,9 +24,15 @@ export const RoadmapDetails: React.FC = () => {
         hasCountedRef.current = true;
     }, [roadmapID]);
 
-    const { data: roadmapItem, isLoading, isError } = useGetSingleRoadmap(Number(roadmapID), userID);
-    if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (isError || !roadmapItem) return null;
+    const { data: roadmapItem, isLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
+    if (isLoading) {
+        return(
+        <div className="flex h-screen -translate-y-12 w-full items-center justify-center">
+            <Spinner className="size-20 text-amber-50" />
+            <span className="text-amber-50 text-3xl">Loading Roadmap...</span>
+        </div>
+        )
+    };
 
     if (!roadmapItem) return <p className="text-white text-center mt-10">Roadmap not found</p>;
     return (

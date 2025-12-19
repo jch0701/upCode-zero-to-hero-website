@@ -17,10 +17,10 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
         const userID = localStorage.getItem("userID");
         const { chapterID } = useParams<{ chapterID: string}>();
 
-        const { data: linkItem, isLoading, isError} = useGetSingleLink(Number(chapterID), Number(selectedLinkID), userID);
+        const { data: linkItem, isLoading } = useGetSingleLink(Number(chapterID), Number(selectedLinkID), userID);
 
-        if ( isLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-        if ( isError || !linkItem && mode==="edit" ) return <p className="text-white text-center mt-10">Link not found</p>;
+        if ( isLoading ) return null;
+        if ( !linkItem && mode==="edit" ) return <p className="text-white text-center mt-10">Link not found</p>;
         
         const createLinkMutation = useCreateLink(Number(chapterID));
         const updateLinkMutation = useUpdateLink(Number(chapterID), Number(selectedLinkID))

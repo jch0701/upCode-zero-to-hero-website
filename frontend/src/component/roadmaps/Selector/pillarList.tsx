@@ -24,7 +24,7 @@ const { data: roadmapData, isLoading: roadmapLoading} = useGetSingleRoadmap(Numb
 const { data: pillarsData = [], isLoading: chapterLoading} = useGetRoadmapChapters(selectedRoadmapId, userID)
 const { data: recommendedData = [], isLoading: recommendedLoading } = useGetRoadmapRecommendation();
 
-if ( recommendedLoading || chapterLoading || roadmapLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+if ( recommendedLoading || chapterLoading || roadmapLoading) return <span className="text-amber-50 text-3xl">Loading Data...</span>
 if ( !recommendedData || !pillarsData || !roadmapData ) return null;
 
 // Filter pillars based on selectedRoadmapId

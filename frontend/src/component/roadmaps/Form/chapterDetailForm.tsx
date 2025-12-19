@@ -18,10 +18,10 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
         const userID = localStorage.getItem("userID");
         const {roadmapID} = useParams<{ roadmapID: string}>();
 
-        const { data: chapterItem, isLoading, isError } = useGetSingleChapter(Number(roadmapID), Number(selectedChapterID), userID);
+        const { data: chapterItem, isLoading} = useGetSingleChapter(Number(roadmapID), Number(selectedChapterID), userID);
 
-        if ( isLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-        if ( isError || !chapterItem && mode==="edit" ) return <p className="text-white text-center mt-10">Chapter not found</p>;
+        if ( isLoading ) return null;
+        if ( !chapterItem && mode==="edit" ) return <p className="text-white text-center mt-10">Chapter not found</p>;
 
         const createChapterMutation = useCreateChapter(Number(roadmapID));
         const updateChapterMutation = useUpdateChapter(Number(roadmapID), Number(selectedChapterID));

@@ -18,7 +18,9 @@ export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterT
   const userID = localStorage.getItem("userID");
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
-  const {data: pillarsData = []} = useGetAllChapters(userID);
+  const {data: pillarsData = [], isLoading } = useGetAllChapters(userID);
+  if ( isLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
+  if ( !pillarsData ) return null;
   // reorder items by date descending
   const sortedItems = [...items].sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
 
