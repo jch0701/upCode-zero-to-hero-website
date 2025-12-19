@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Api from '../index.ts';
-import type { InitialRoadmapType, RoadmapType } from '@/store/roadmapSlice.ts';
+import type { InitialRoadmapType, RoadmapType } from '@/lib/roadmapModuleTypes.ts';
 
 // 1. Get All Roadmap
 export const useGetRoadmaps = (userID?: string | null) => {

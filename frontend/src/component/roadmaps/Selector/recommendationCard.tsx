@@ -1,8 +1,7 @@
+import { useGetSingleCareer } from "@/api/careers/careerAPI";
 import { useGetByIdComplete } from "@/api/projects/projectsAPI";
 import { useCreateRoadmapRecommendation, useDeleteRoadmapRecommendation, useGetRoadmapRecommendation } from "@/api/roadmaps/recommendationAPI";
-import type { CareerItem } from "@/store/careerSlice";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 
 interface RecommendProps {
@@ -21,7 +20,7 @@ const RecommendationCard: React.FC<RecommendProps> =({
 
     const { data: recommendedData = [], isLoading: recommendedLoading } = useGetRoadmapRecommendation();
     const { data: projects , isLoading: projectLoading } = useGetByIdComplete(selectedId, Number(userID))
-    const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];
+    const { data: careers, isLoading: careerLoading } = useGetSingleCareer(selectedId);
 
     const recommendMutation = useCreateRoadmapRecommendation();
     const unrecommendMutation = useDeleteRoadmapRecommendation();
@@ -29,7 +28,7 @@ const RecommendationCard: React.FC<RecommendProps> =({
     const title =
     mode === "project"
       ? projects?.title ?? "Unknown Title"
-      : careers.find(c => c.id === selectedId)?.title || "Unknown Title";
+      : careers?.title || "Unknown Title";
 
     const isRecommended = recommendedData.some(data => {
     return (
@@ -46,8 +45,8 @@ const RecommendationCard: React.FC<RecommendProps> =({
         }
     }, [isRecommended]);
 
-    if ( recommendedLoading || projectLoading ) return null;
-    if ( !recommendedData || !projects ) return <p className="text-white text-center mt-10">Recomendation data not found</p>;;
+    if ( recommendedLoading || projectLoading || careerLoading ) return null;
+    if ( !recommendedData ) return <p className="text-white text-center mt-10">Recomendation data not found</p>;;
     
     const recommendedID =
     recommendedData.find(data => {

@@ -3,14 +3,14 @@ import type { ProjectType } from '@/lib/projectModuleTypes';
 import ProjectCard from '@/component/projects/projectCard';
 import AddRecommendation from './recommendationAdd';
 import { useParams } from 'react-router';
-import { useSelector } from 'react-redux';
 import type { CareerItem } from '@/store/careerSlice';
-import type { RecommendationType } from '@/store/recommendationSlice.ts';
+import type { RecommendationType } from '@/lib/projectModuleTypes'; 
 import { CareerItemCard } from '@/component/career/Selector/careerCard';
 import { useGetRoadmapRecommendation } from '@/api/roadmaps/recommendationAPI';
 import { useGetAllBasicDetailsOnly } from '@/api/projects/projectsAPI';
 import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
 import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI';
+import { useGetAllCareers } from '@/api/careers/careerAPI';
 
 interface RecommendationProps {
     mode: "career" | "project"
@@ -27,12 +27,12 @@ const Recommendation: React.FC<RecommendationProps> =
 
     const { data: recommendedData = [], isLoading: recommendedLoading} = useGetRoadmapRecommendation();
     const { data: projects = [], isLoading: projectLoading } = useGetAllBasicDetailsOnly(Number(userID));
+    const { data: careers = [], isLoading: careerLoading } = useGetAllCareers();
     const { data: pillar, isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID), selectedID, userID);
     const { data: roadmap, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
-    const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];
 
-    if ( recommendedLoading || projectLoading || chapterLoading || roadmapLoading) return <span className="text-amber-50 text-3xl">Loading Data...</span>
-    if ( !recommendedData || !projects || !pillar || !roadmap ) return null;
+    if ( recommendedLoading || projectLoading || chapterLoading || roadmapLoading || careerLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
+    if ( !recommendedData || !projects || !pillar || !roadmap || !careers ) return null;
 
     let filterRecommendedData: RecommendationType[] = [];
     let chapterProjects: ProjectType[] = [];

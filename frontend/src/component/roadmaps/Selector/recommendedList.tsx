@@ -1,12 +1,11 @@
 import React from "react";
 import RecommendationCard from "@/component/roadmaps/Selector/recommendationCard";
-import { useSelector } from "react-redux";
 import type { ProjectType } from "@/lib/projectModuleTypes";
-import type { CareerItem } from "@/store/careerSlice";
 import { getDifficultyLabel } from "../groupTag";
 import { useParams } from "react-router";
 import { useGetRoadmapChapters, useGetSingleChapter } from "@/api/roadmaps/chapterAPI";
 import { useGetAllBasicDetailsOnly } from "@/api/projects/projectsAPI";
+import { useGetAllCareers } from "@/api/careers/careerAPI";
 
 interface recommendationListProps {
     mode: "project" | "career"
@@ -18,7 +17,6 @@ interface recommendationListProps {
 const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, selectedSection, searchQuery}) => {
     const userID = localStorage.getItem("userID");
     const { roadmapID } = useParams<{ roadmapID: string }>();
-    const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];
     let finalIds: number[] = []
     
     // Find the chapter/pillar to determine categories (and optionally difficulty)
@@ -60,9 +58,10 @@ const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, s
         finalIds = filteredCandidates.map((p: ProjectType) => p.projectId);
     }
     else if (mode === "career"){
-        const { data: relatedPillars, isLoading: chapterLoading } = useGetRoadmapChapters(selectedID, userID);
-        if ( chapterLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
-        if ( !relatedPillars ) return <p className="text-gray-400 text-center mt-4">Recommended career not found.</p>;
+        const { data: relatedPillars = [], isLoading: chapterLoading } = useGetRoadmapChapters(selectedID, userID);
+        const { data: careers = [], isLoading: careerLoading } = useGetAllCareers();
+        if ( chapterLoading || careerLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
+        if ( !relatedPillars || !careers ) return <p className="text-gray-400 text-center mt-4">Recommended career not found.</p>;
         const categories = relatedPillars.flatMap(p =>
             Array.isArray(p.category) ? p.category : [p.category]
         );
