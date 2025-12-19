@@ -7,6 +7,7 @@ import RoadmapItemList from "../../component/roadmaps/Selector/roadmapList";
 import SectionBlock from "../../component/roadmaps/sectionBlock";
 import SearchBar from "../../component/searchBar";
 import { generateTags } from "../../component/roadmaps/groupTag";
+import { Spinner } from "@/component/shadcn/spinner";
 
 export type Section = {
   id: string;
@@ -38,11 +39,18 @@ export const Roadmap: React.FC = () => {
   const userID = localStorage.getItem("userID");
   const isLoggedIn = userID && userID !== "0";
 
-  const { data: roadmapData = [], isLoading } = useGetRoadmaps(userID);
-  const { data: pillarsData = [] } = useGetAllChapters(userID);
-  const { data: linksData = [] } = useGetAllLinks(userID);
+  const { data: roadmapData = [], isLoading: roadmapLoading } = useGetRoadmaps(userID);
+  const { data: pillarsData = [], isLoading: pillarLoading } = useGetAllChapters(userID);
+  const { data: linksData = [], isLoading: linkLoading } = useGetAllLinks(userID);
 
-  if (isLoading) return <div>Loading Roadmaps...</div>;
+  if ( roadmapLoading || pillarLoading || linkLoading ) {
+    return(
+      <div className="flex h-screen -translate-y-2 w-full items-center justify-center">
+        <Spinner className="size-20 text-amber-50" />
+        <span className="text-amber-50 text-3xl">Loading Roadmaps...</span>
+      </div>
+    )
+  }
 
   const getRecentlyViewedRoadmaps = (sourceData: any[]) => {
     return sourceData.filter((roadmap: any) => {const roadmapID = Number(roadmap.roadmapID);

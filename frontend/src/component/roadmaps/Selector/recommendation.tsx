@@ -31,7 +31,7 @@ const Recommendation: React.FC<RecommendationProps> =
     const { data: roadmap, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
     const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];
 
-    if ( recommendedLoading || projectLoading || chapterLoading || roadmapLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if ( recommendedLoading || projectLoading || chapterLoading || roadmapLoading) return <span className="text-amber-50 text-3xl">Loading Data...</span>
     if ( !recommendedData || !projects || !pillar || !roadmap ) return null;
 
     let filterRecommendedData: RecommendationType[] = [];

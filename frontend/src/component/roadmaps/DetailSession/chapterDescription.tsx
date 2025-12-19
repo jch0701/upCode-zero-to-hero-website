@@ -20,16 +20,17 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const userID = localStorage.getItem("userID");
     const { roadmapID } = useParams<{ roadmapID: string }>();
 
-    const { data: roadmapItem, isLoading: roadmapLoading, isError: roadmapError } = useGetSingleRoadmap(Number(roadmapID), userID);
+    const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
 
     const creator = roadmapItem?.creatorID ?? 'Unknown Creator';
 
-    const { data: chapterItem , isLoading: chapterLoading, isError: chapterError } = useGetSingleChapter(Number(roadmapID),selectedChapterID,userID);
-    const { data: linksData = [], isLoading: linkLoading, isError: linkError } = useGetChapterLinks(selectedChapterID,userID);
+    const { data: chapterItem , isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID),selectedChapterID,userID);
+    const { data: linksData = [], isLoading: linkLoading } = useGetChapterLinks(selectedChapterID,userID);
     const { data: userData } = useGetSingleUser(Number(creator))
 
-    if (roadmapLoading || chapterLoading || linkLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (roadmapError || chapterError || linkError || !chapterItem ) return null;
+    if ( roadmapLoading || chapterLoading || linkLoading) return null;
+    
+    if ( !roadmapItem || !chapterItem ) return <p className="text-white text-center mt-10">Chapter not found</p>;
 
     const imageSrc = roadmapItem?.imageSrc ?? 'Unknown Image'
     const username = userData?.username ?? 'Unknown Username';
