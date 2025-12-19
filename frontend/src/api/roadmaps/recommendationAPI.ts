@@ -5,7 +5,7 @@ import type { InitialRecommendation, RecommendationType } from '@/lib/projectMod
 
 export const useGetRoadmapRecommendation = () => {
     return useQuery<RecommendationType[]>({
-        queryKey: ['recommendations'],
+        queryKey: ['roadmaprecommendations'],
         queryFn: async () => {
             const response = await Api.get('roadmaprecommendations');
             return response.data;

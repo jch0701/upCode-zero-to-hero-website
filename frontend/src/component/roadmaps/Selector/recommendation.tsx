@@ -1,15 +1,13 @@
 import React from 'react';
-import type { ProjectType } from '@/lib/projectModuleTypes'; 
+import type { ProjectType, RecommendationType } from '@/lib/projectModuleTypes'; 
 import ProjectCard from '@/component/projects/projectCard';
 import AddRecommendation from './recommendationAdd';
 import { useParams } from 'react-router';
 import type { CareerItem } from '@/store/careerSlice';
-import type { RecommendationType } from '@/lib/projectModuleTypes'; 
 import { CareerItemCard } from '@/component/career/Selector/careerCard';
 import { useGetRoadmapRecommendation } from '@/api/roadmaps/recommendationAPI';
 import { useGetAllBasicDetailsOnly } from '@/api/projects/projectsAPI';
 import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
-import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI';
 import { useGetAllCareers } from '@/api/careers/careerAPI';
 
 interface RecommendationProps {
@@ -29,26 +27,24 @@ const Recommendation: React.FC<RecommendationProps> =
     const { data: projects = [], isLoading: projectLoading } = useGetAllBasicDetailsOnly(Number(userID));
     const { data: careers = [], isLoading: careerLoading } = useGetAllCareers();
     const { data: pillar, isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID), selectedID, userID);
-    const { data: roadmap, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
 
-    if ( recommendedLoading || projectLoading || chapterLoading || roadmapLoading || careerLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
-    if ( !recommendedData || !projects || !pillar || !roadmap || !careers ) return null;
+    if ( recommendedLoading || projectLoading || chapterLoading || careerLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
 
     let filterRecommendedData: RecommendationType[] = [];
     let chapterProjects: ProjectType[] = [];
     let roadmapCareers: CareerItem[] = [];
 
     if(mode === "project"){
-        filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar!.chapterID && data.sourceType === "chapter"));
+        filterRecommendedData = recommendedData.filter(data => (data.sourceId === selectedID && data.sourceType === "chapter"));
         const uniqueProjectIds = [...new Set(filterRecommendedData.map(data => data.targetId))];
-        chapterProjects = projects!.filter((project: ProjectType) => 
+        chapterProjects = projects.filter((project: ProjectType) => 
             uniqueProjectIds.includes(project.projectId)
         );
     }
-    else if(mode === "career"){
-        filterRecommendedData = recommendedData.filter(data => (data.sourceId === roadmap!.roadmapID && data.sourceType === "roadmap"));
+    if(mode === "career"){
+        filterRecommendedData = recommendedData.filter(data => (data.sourceId === selectedID && data.sourceType === "roadmap"));
         const uniqueCareerIds = [...new Set(filterRecommendedData.map(data => data.targetId))];
-        roadmapCareers = careers!.filter((career: CareerItem) => 
+        roadmapCareers = careers.filter((career: CareerItem) => 
             uniqueCareerIds.includes(career.id)
         );
     };
