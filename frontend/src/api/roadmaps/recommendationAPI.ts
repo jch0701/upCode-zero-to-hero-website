@@ -7,7 +7,7 @@ export const useGetRoadmapRecommendation = () => {
     return useQuery<RecommendationType[]>({
         queryKey: ['recommendations'],
         queryFn: async () => {
-            const response = await Api.get('roadmaps/recommendations');
+            const response = await Api.get('roadmaprecommendations');
             return response.data;
         }
     })
@@ -18,7 +18,7 @@ export const useCreateRoadmapRecommendation = () => {
     const queryClient = useQueryClient();
     return useMutation ({
         mutationFn: async (recommendation: InitialRecommendation) => {
-            const response = await Api.post("roadmaps/recommendations",  {
+            const response = await Api.post("roadmaprecommendations",  {
                 sourceId: recommendation.sourceId,
                 sourceType: recommendation.sourceType,
                 targetId: recommendation.targetId,
@@ -27,7 +27,7 @@ export const useCreateRoadmapRecommendation = () => {
             return response.data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['roadmaps/recommendations'] });
+            queryClient.invalidateQueries({ queryKey: ['roadmaprecommendations'] });
         }
     })
 }
@@ -35,12 +35,12 @@ export const useCreateRoadmapRecommendation = () => {
 export const useDeleteRoadmapRecommendation = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async(recommendationID: number) => {
-            const response = await Api.delete("roadmaps/recommendations", {data: {recommendationID}})
+        mutationFn: async(recommendationId: number) => {
+            const response = await Api.delete("roadmaprecommendations", {data: {recommendationId}})
             return response.data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['roadmaps/recommendations'] });
+            queryClient.invalidateQueries({ queryKey: ['roadmaprecommendations'] });
         }
     })
 }

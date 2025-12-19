@@ -75,7 +75,7 @@ export const deleteRoadmapRecommendation = async(req, res) => {
     
     try {
         const { error } = await supabase
-            .from('FavouriteRoadmap') 
+            .from('Recommendations') 
             .delete()
             .eq('recommendationId', deleteRecommendedID)
 

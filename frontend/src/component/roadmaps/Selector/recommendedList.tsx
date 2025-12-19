@@ -1,10 +1,12 @@
 import React from "react";
 import RecommendationCard from "@/component/roadmaps/Selector/recommendationCard";
 import { useSelector } from "react-redux";
-import type { ProjectType } from "@/store/projectsSlice";
-import type { PillarType } from "@/store/pillarsSlice";
+import type { ProjectType } from "@/lib/projectModuleTypes";
 import type { CareerItem } from "@/store/careerSlice";
 import { getDifficultyLabel } from "../groupTag";
+import { useParams } from "react-router";
+import { useGetRoadmapChapters, useGetSingleChapter } from "@/api/roadmaps/chapterAPI";
+import { useGetAllBasicDetailsOnly } from "@/api/projects/projectsAPI";
 
 interface recommendationListProps {
     mode: "project" | "career"
@@ -14,24 +16,24 @@ interface recommendationListProps {
 }
 
 const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, selectedSection, searchQuery}) => {
-    const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
-    const pillars = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
+    const userID = localStorage.getItem("userID");
+    const { roadmapID } = useParams<{ roadmapID: string }>();
     const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];
     let finalIds: number[] = []
     
     // Find the chapter/pillar to determine categories (and optionally difficulty)
     if (mode === "project"){
-        const chapter = pillars.find(p => p.chapterID === selectedID);
-        if (!chapter) {
-            return <p className="text-gray-400 text-center mt-4">Chapter not found.</p>;
-        }
+        const { data: chapter, isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID), selectedID, userID);
+        const { data: projects = [], isLoading: projectLoading } = useGetAllBasicDetailsOnly(Number(userID))
+        if ( chapterLoading || projectLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+        if ( !chapter || !projects ) return <p className="text-gray-400 text-center mt-4">Chapter not found.</p>;
 
         const categories = Array.isArray(chapter.category) ? chapter.category : [chapter.category];
         const prerequisites = Array.isArray(chapter.prerequisite) ? chapter.prerequisite : [chapter.prerequisite];
         const tags = [...categories, ...prerequisites];
 
         // Candidate projects: match category
-        const candidate = projects.filter(project => {
+        const candidate = projects.filter((project: ProjectType) => {
             if(selectedSection === "highly-recommended"){
                 if(chapter.difficulty !== project.difficulty) return false;
                 return tags.includes(project.category);
@@ -45,7 +47,7 @@ const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, s
         })
 
         const normalizedQuery = searchQuery.toLowerCase().trim();
-        const filteredCandidates = candidate.filter(project => {
+        const filteredCandidates = candidate.filter((project: ProjectType) => {
             if (!normalizedQuery) {return true;}
             // Check if query matches title, category, or difficulty
             const titleMatch = project.title.toLowerCase().includes(normalizedQuery);
@@ -55,10 +57,12 @@ const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, s
         });
         
         // Map the final filtered list to project IDs for rendering
-        finalIds = filteredCandidates.map(p => p.projectId);
+        finalIds = filteredCandidates.map((p: ProjectType) => p.projectId);
     }
     else if (mode === "career"){
-        const relatedPillars = pillars.filter(p => p.roadmapID === selectedID)
+        const { data: relatedPillars, isLoading: chapterLoading } = useGetRoadmapChapters(selectedID, userID);
+        if ( chapterLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+        if ( !relatedPillars ) return <p className="text-gray-400 text-center mt-4">Chapter not found.</p>;
         const categories = relatedPillars.flatMap(p =>
             Array.isArray(p.category) ? p.category : [p.category]
         );

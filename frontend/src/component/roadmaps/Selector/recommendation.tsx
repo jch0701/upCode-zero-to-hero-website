@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ProjectType } from '@/store/projectsSlice';
+import type { ProjectType } from '@/lib/projectModuleTypes'; 
 import ProjectCard from '@/component/projects/projectCard';
 import AddRecommendation from './recommendationAdd';
 import { useParams } from 'react-router';

@@ -1,10 +1,8 @@
+import { useGetByIdComplete } from "@/api/projects/projectsAPI";
+import { useCreateRoadmapRecommendation, useDeleteRoadmapRecommendation, useGetRoadmapRecommendation } from "@/api/roadmaps/recommendationAPI";
 import type { CareerItem } from "@/store/careerSlice";
-import { updateChapterDate } from "@/store/pillarsSlice";
-import type { ProjectType } from "@/store/projectsSlice";
-import { createRecommendation, removeRecommendation, type RecommendationType } from "@/store/recommendationSlice";
-import { updateRoadmapDate } from "@/store/roadmapSlice";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 
 interface RecommendProps {
@@ -15,72 +13,76 @@ interface RecommendProps {
 const RecommendationCard: React.FC<RecommendProps> =({
    mode, selectedId
 }) => {
-    const dispatch = useDispatch();
+    const userID = localStorage.getItem("userID");
     const { chapterID: chapterIdParam, roadmapID: roadmapIdParam } = useParams<{ chapterID: string, roadmapID: string}>();
     const chapterID = chapterIdParam ? Number(chapterIdParam) : 0;
     const roadmapID = roadmapIdParam ? Number(roadmapIdParam) : 0;
+    const [localCheckedRecommendation, setLocalCheckedRecommendation] = useState(false);
 
-    
-    const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
-    const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
+    const { data: recommendedData = [], isLoading: recommendedLoading } = useGetRoadmapRecommendation();
+    const { data: projects , isLoading: projectLoading } = useGetByIdComplete(selectedId, Number(userID))
     const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];
+
+    const recommendMutation = useCreateRoadmapRecommendation();
+    const unrecommendMutation = useDeleteRoadmapRecommendation();
 
     const title =
     mode === "project"
-      ? projects.find(p => p.projectId === selectedId)?.title || "Unknown Title"
+      ? projects?.title ?? "Unknown Title"
       : careers.find(c => c.id === selectedId)?.title || "Unknown Title";
 
     const isRecommended = recommendedData.some(data => {
     return (
         data.sourceId === (mode === "project" ? chapterID : roadmapID) &&
-        data.sourceType === (mode === "project" ? "Chapter" : "Roadmap") &&
+        data.sourceType === (mode === "project" ? "chapter" : "roadmap") &&
         data.targetId === selectedId &&
-        data.targetType === (mode === "project" ? "Project" : "Career")
+        data.targetType === (mode === "project" ? "project" : "career")
         );
     });
+
+    useEffect(() => {
+        if (isRecommended) {
+            setLocalCheckedRecommendation(isRecommended);
+        }
+    }, [isRecommended]);
+
+    if ( recommendedLoading || projectLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
+    if ( !recommendedData || !projects ) return null;
     
     const recommendedID =
     recommendedData.find(data => {
       return (
         data.sourceId === (mode === "project" ? chapterID : roadmapID) &&
-        data.sourceType === (mode === "project" ? "Chapter" : "Roadmap") &&
+        data.sourceType === (mode === "project" ? "chapter" : "roadmap") &&
         data.targetId === selectedId &&
-        data.targetType === (mode === "project" ? "Project" : "Career")
+        data.targetType === (mode === "project" ? "project" : "career")
       );
     })?.recommendationId ?? 0;
 
 
-    const colorClasses = isRecommended
+    const colorClasses = localCheckedRecommendation
         ? "bg-purple-600/70 border-purple-600 hover:bg-purple-600/90"
         : "bg-pink-100/70 border-pink-300 hover:bg-pink-200/90";
-    const colorText = isRecommended
+    const colorText = localCheckedRecommendation
         ? "text-white"
         : "text-gray-900";
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        if (!isRecommended){
-            dispatch(
-                createRecommendation({
-                    sourceId: mode === "project" ? chapterID : roadmapID,
-                    sourceType: mode === "project" ? "Chapter" : "Roadmap",
-                    targetId: selectedId,
-                    targetType: mode === "project" ? "Project" : "Career"
-                })
-            )
-            dispatch(
-                updateRoadmapDate(Number(roadmapID)),
-                mode === "project" && updateChapterDate(Number(chapterID))
+        if (!localCheckedRecommendation){
+            setLocalCheckedRecommendation(true);
+            recommendMutation.mutate({
+                sourceId: mode === "project" ? chapterID : roadmapID,
+                sourceType: mode === "project" ? "chapter" : "roadmap",
+                targetId: selectedId,
+                targetType: mode === "project" ? "project" : "career"
+            },{ onError: () => setLocalCheckedRecommendation(false)}
             )
         }
         else {
-            dispatch(
-                removeRecommendation(Number(recommendedID))
-            )
-            dispatch(
-                updateRoadmapDate(Number(roadmapID)),
-                mode === "project" && updateChapterDate(Number(chapterID))
-            )
+            setLocalCheckedRecommendation(false);
+            unrecommendMutation.mutate(Number(recommendedID),
+            { onError: () => setLocalCheckedRecommendation(true)})
         }
     }
 

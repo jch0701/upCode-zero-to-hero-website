@@ -48,9 +48,9 @@ router.post('/nodeviews', createLinkRecord);
 router.delete('/nodeviews', deleteLinkRecord);
 
 
-router.get('/roadmaps/recommendations', getAllRoadmapRecommendation);
-router.post('/roadmaps/recommendations', createRoadmapRecommendation);
-router.delete('/roadmaps/recommendations', deleteRoadmapRecommendation);
+router.get('/roadmaprecommendations', getAllRoadmapRecommendation);
+router.post('/roadmaprecommendations', createRoadmapRecommendation);
+router.delete('/roadmaprecommendations', deleteRoadmapRecommendation);
 
 
 
