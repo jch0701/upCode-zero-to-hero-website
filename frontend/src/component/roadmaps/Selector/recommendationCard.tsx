@@ -19,6 +19,8 @@ const RecommendationCard: React.FC<RecommendProps> =({
     const { chapterID: chapterIdParam, roadmapID: roadmapIdParam } = useParams<{ chapterID: string, roadmapID: string}>();
     const chapterID = chapterIdParam ? Number(chapterIdParam) : 0;
     const roadmapID = roadmapIdParam ? Number(roadmapIdParam) : 0;
+
+    
     const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
     const projects = useSelector((state: any) => state.projects.projectsList) as ProjectType[];
     const careers = useSelector((state: any) => state.career.careerList) as CareerItem[];

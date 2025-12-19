@@ -47,7 +47,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
         if(isLoggedIn){
             setLocalLinkItem({ ...localLinkItem, isViewed: true });
             viewMutation.mutate(
-                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { userID: Number(userID), recordID: Number(selectedNodeID) },
                 { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: false })}
             );
         }
@@ -65,14 +65,14 @@ const LinkCard : React.FC<LinkCardProps> = ({
         if (!localLinkItem.isViewed){
             setLocalLinkItem({ ...localLinkItem, isViewed: true });
             viewMutation.mutate(
-                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { userID: Number(userID), recordID: Number(selectedNodeID) },
                 { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: false })}
             );
         }
         else {
             setLocalLinkItem({ ...localLinkItem, isViewed: false });
             unviewMutation.mutate(
-                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { userID: Number(userID), recordID: Number(selectedNodeID) },
                 { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: true })}
             )
         }

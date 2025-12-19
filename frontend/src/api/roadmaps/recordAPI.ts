@@ -1,27 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Api from '../index.ts';
 
-type FavouritePayload = {
+type RecordPayload = {
   userID: number;
-  roadmapID: number;
+  recordID: number;
 };
-
-type ChapterRecordPayload = {
-    userID: number;
-    chapterID: number;
-}
-
-type LinkRecordPayload = {
-    userID: number;
-    nodeID: number;
-}
 
 // 1. Add Favourite
 export const useCreateFavourite = () => {
     const queryClient = useQueryClient();
     return useMutation ({
-        mutationFn: async (favourite: FavouritePayload) => {
-            const response = await Api.post("favouriteroadmaps", favourite)
+        mutationFn: async (favourite: RecordPayload) => {
+            const response = await Api.post("favouriteroadmaps",  {
+                userID: favourite.userID,
+                roadmapID: favourite.recordID
+            })
             return response.data;
         },
         onSuccess: () => {
@@ -34,8 +27,11 @@ export const useCreateFavourite = () => {
 export const useDeleteFavourite = () => {
     const queryClient = useQueryClient();
     return useMutation ({
-        mutationFn: async (favourite: FavouritePayload) => {
-            const response = await Api.delete("favouriteroadmaps", {data: favourite})
+        mutationFn: async (favourite: RecordPayload) => {
+            const response = await Api.delete("favouriteroadmaps", {data: {
+                userID: favourite.userID,
+                roadmapID: favourite.recordID
+            }})
             return response.data;
         },
         onSuccess: () => {
@@ -48,8 +44,11 @@ export const useDeleteFavourite = () => {
 export const useCreateChapterRecord = () => {
     const queryClient = useQueryClient();
     return useMutation ({
-        mutationFn: async (views: ChapterRecordPayload) => {
-            const response = await Api.post("chapterviews", views)
+        mutationFn: async (views: RecordPayload) => {
+            const response = await Api.post("chapterviews", {
+                userID: views.userID,
+                chapterID: views.recordID
+            })
             return response.data;
         },
         onSuccess: () => {
@@ -62,8 +61,11 @@ export const useCreateChapterRecord = () => {
 export const useDeleteChapterRecord = () => {
     const queryClient = useQueryClient();
     return useMutation ({
-        mutationFn: async (views: ChapterRecordPayload) => {
-            const response = await Api.delete("chapterviews", {data: views})
+        mutationFn: async (views: RecordPayload) => {
+            const response = await Api.delete("chapterviews", {data: {
+                userID: views.userID,
+                chapterID: views.recordID
+            }})
             return response.data;
         },
         onSuccess: () => {
@@ -77,8 +79,11 @@ export const useDeleteChapterRecord = () => {
 export const useCreateLinkRecord = () => {
     const queryClient = useQueryClient();
     return useMutation ({
-        mutationFn: async (views: LinkRecordPayload) => {
-            const response = await Api.post("nodeviews", views)
+        mutationFn: async (views:RecordPayload) => {
+            const response = await Api.post("nodeviews", {
+                userID: views.userID,
+                nodeID: views.recordID
+            })
             return response.data;
         },
         onSuccess: () => {
@@ -92,8 +97,11 @@ export const useCreateLinkRecord = () => {
 export const useDeleteLinkRecord = () => {
     const queryClient = useQueryClient();
     return useMutation ({
-        mutationFn: async (views: LinkRecordPayload) => {
-            const response = await Api.delete("nodeviews", {data: views})
+        mutationFn: async (views: RecordPayload) => {
+            const response = await Api.delete("nodeviews", {data: {
+                userID: views.userID,
+                nodeID: views.recordID
+            }})
             return response.data;
         },
         onSuccess: () => {

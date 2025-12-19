@@ -21,7 +21,7 @@ export type ExtendedProjectType = Omit<ProjectType, InitialProjectTypeOmissions>
   recommendations?: {targetId: number; targetType: string}[];
 };
 
-type LinkTypes = "roadmap" | "project" | "career";
+type LinkTypes = "roadmap" | "project" | "career" | "chapter";
 
 // Recommendation types
 export type RecommendationType = {

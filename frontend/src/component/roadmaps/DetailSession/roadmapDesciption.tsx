@@ -63,14 +63,14 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
         if (!localRoadmapItem.isFavourite) {
             setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: true });
             favouriteMutation.mutate(
-                { userID: Number(userID), roadmapID: Number(selectedRoadmapID) },
+                { userID: Number(userID), recordID: Number(selectedRoadmapID) },
                 { onError: () => setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: false })}
             );
         } 
         else {
             setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: false });
             unfavouriteMutation.mutate(
-                { userID: Number(userID), roadmapID: Number(selectedRoadmapID) },
+                { userID: Number(userID), recordID: Number(selectedRoadmapID) },
                 { onError: () => setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: true })}
             );
         }
@@ -158,7 +158,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
                         </div>
                     </div>
 
-                    <h3 className="text-xl font-bold mb-2">Description</h3>
+                    <h3 className="text-xl font-bold mb-2 text-left">Description</h3>
                     <p className="text-gray-300 leading-relaxed text-base whitespace-pre-wrap text-justify">
                         {localRoadmapItem.description}
                     </p>

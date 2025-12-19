@@ -58,7 +58,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
         if (viewPercentage === 100 && !localChapterItem.isViewed) {
             setLocalChapterItem({ ...localChapterItem, isViewed: true });
             viewMutation.mutate(
-                { userID: Number(userID), chapterID: Number(selectedChapterID) },
+                { userID: Number(userID), recordID: Number(selectedChapterID) },
                 { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: false })}
             );
         }
@@ -79,14 +79,14 @@ const PillarCard : React.FC<PillarCardProps> = ({
         if (!localChapterItem.isViewed){
             setLocalChapterItem({ ...localChapterItem, isViewed: true });
             viewMutation.mutate(
-                { userID: Number(userID), chapterID: Number(selectedChapterID) },
+                { userID: Number(userID), recordID: Number(selectedChapterID) },
                 { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: false })}
             );
         }
         else {
             setLocalChapterItem({ ...localChapterItem, isViewed: false });
             unviewMutation.mutate(
-                { userID: Number(userID), chapterID: Number(selectedChapterID) },
+                { userID: Number(userID), recordID: Number(selectedChapterID) },
                 { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: true })}
             )
         }
