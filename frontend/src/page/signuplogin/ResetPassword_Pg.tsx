@@ -72,7 +72,7 @@ const ResetPassword_Pg = () => {
         {/* Blurred Card */}
         <div className="forgot-card">
 
-          <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-2">
+          <form id={"reset-password-form"} onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-2">
 
             {/*new password*/}
             <PasswordInput

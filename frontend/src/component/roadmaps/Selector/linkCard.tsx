@@ -25,8 +25,8 @@ const LinkCard : React.FC<LinkCardProps> = ({
         setIsLoggedIn(userID && userID !== "0" ? true : false);
     }, [location]); // re-check when route changes
 
-    const { data: roadmapItem, isLoading: roadmapLoading, isError: roadmapError} = useGetSingleRoadmap(Number(roadmapID), userID);
-    const { data: linkItem, isLoading: linkLoading, isError: linkError} = useGetSingleLink(Number(chapterID), selectedNodeID, userID)
+    const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
+    const { data: linkItem, isLoading: linkLoading } = useGetSingleLink(Number(chapterID), selectedNodeID, userID)
 
     useEffect(() => {
         if (linkItem) {
@@ -37,8 +37,8 @@ const LinkCard : React.FC<LinkCardProps> = ({
     const viewMutation = useCreateLinkRecord();
     const unviewMutation = useDeleteLinkRecord();
 
-    if (roadmapLoading || linkLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (roadmapError || linkError || !localLinkItem ) return null;
+    if ( roadmapLoading || linkLoading ) return null;
+    if ( !roadmapItem || !localLinkItem ) return <p className="text-white text-center mt-10">Link not found</p>;;
 
     // seperate click
     const directLink = (e: React.MouseEvent) => {
@@ -47,7 +47,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
         if(isLoggedIn){
             setLocalLinkItem({ ...localLinkItem, isViewed: true });
             viewMutation.mutate(
-                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { userID: Number(userID), recordID: Number(selectedNodeID) },
                 { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: false })}
             );
         }
@@ -65,14 +65,14 @@ const LinkCard : React.FC<LinkCardProps> = ({
         if (!localLinkItem.isViewed){
             setLocalLinkItem({ ...localLinkItem, isViewed: true });
             viewMutation.mutate(
-                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { userID: Number(userID), recordID: Number(selectedNodeID) },
                 { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: false })}
             );
         }
         else {
             setLocalLinkItem({ ...localLinkItem, isViewed: false });
             unviewMutation.mutate(
-                { userID: Number(userID), nodeID: Number(selectedNodeID) },
+                { userID: Number(userID), recordID: Number(selectedNodeID) },
                 { onError: () => setLocalLinkItem({ ...localLinkItem, isViewed: true })}
             )
         }

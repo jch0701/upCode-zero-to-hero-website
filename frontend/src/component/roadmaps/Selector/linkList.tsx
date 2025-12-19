@@ -13,12 +13,12 @@ const LinkList: React.FC<linkListProps> = ({ selectedChapterId }) => {
 const location = useLocation();
 const userID = localStorage.getItem("userID");
 const { roadmapID } = useParams<{ roadmapID: string }>();
-const { data: roadmapItem, isLoading: roadmapLoading, isError: roadmapError } = useGetSingleRoadmap(Number(roadmapID), userID);
-const { data: chapterItem, isLoading : chapterLoading, isError: chapterError } = useGetSingleChapter(Number(roadmapID),selectedChapterId, userID);
-const { data: linksData = [], isLoading: linkLoading, isError: linkError } = useGetChapterLinks(selectedChapterId, userID);
+const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
+const { data: chapterItem, isLoading : chapterLoading } = useGetSingleChapter(Number(roadmapID),selectedChapterId, userID);
+const { data: linksData = [], isLoading: linkLoading } = useGetChapterLinks(selectedChapterId, userID);
 
-if (roadmapLoading || chapterLoading || linkLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-if (roadmapError || chapterError || !chapterItem || linkError ) return null;
+if (roadmapLoading || chapterLoading || linkLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
+if ( !roadmapItem || !chapterItem || !linksData ) return null;
 
 const chapterSlug = chapterItem?.chapterSlug ?? 'Unknown Chapter Slug';
 const chapterTitle = chapterItem?.title ?? 'Unknown Chapter';

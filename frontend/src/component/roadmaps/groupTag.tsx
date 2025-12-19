@@ -1,4 +1,4 @@
-import type { PillarType } from '@/store/pillarsSlice';
+import type { PillarType } from '@/lib/roadmapModuleTypes';
 import type { Tag } from '../tag'; 
 
 const difficultyScore = (level: string) => {

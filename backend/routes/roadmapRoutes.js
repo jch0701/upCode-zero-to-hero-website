@@ -8,6 +8,7 @@ import { getAllLink, getChapterLink, getLink } from '../controllers/roadmapContr
 import { createLink, editLink, deleteLink } from '../controllers/roadmapControllers/linkCUD.js';
 import { getUserDetail } from '../controllers/roadmapControllers/userGET.js';
 import { createChapterRecord, createFavouriteRecord, createLinkRecord, deleteChapterRecord, deleteFavouriteRecord, deleteLinkRecord } from '../controllers/roadmapControllers/recordCUD.js';
+import { getAllRoadmapRecommendation, createRoadmapRecommendation, deleteRoadmapRecommendation } from '../controllers/roadmapControllers/recommendation.js';
 
 const router = express.Router();
 router.get('/roadmaps', getAllRoadmap);
@@ -45,6 +46,11 @@ router.post('/chapterviews', createChapterRecord);
 router.delete('/chapterviews', deleteChapterRecord);
 router.post('/nodeviews', createLinkRecord);
 router.delete('/nodeviews', deleteLinkRecord);
+
+
+router.get('/roadmaprecommendations', getAllRoadmapRecommendation);
+router.post('/roadmaprecommendations', createRoadmapRecommendation);
+router.delete('/roadmaprecommendations', deleteRoadmapRecommendation);
 
 
 

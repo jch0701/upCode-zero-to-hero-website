@@ -31,7 +31,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
         setIsLoggedIn(userID && userID !== "0" ? true : false);
     }, [location]); // re-check when route changes
 
-    const { data: chapterItem , isLoading: chapterLoading, isError} = useGetSingleChapter(Number(roadmapID), selectedChapterID, userID);
+    const { data: chapterItem , isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID), selectedChapterID, userID);
 
     useEffect(() => {
         if (chapterItem) {
@@ -39,7 +39,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
         }
     }, [chapterItem]);
 
-    const { data: linksData = [], isLoading: linksLoading} = useGetChapterLinks(selectedChapterID, userID);
+    const { data: linksData = [], isLoading: linksLoading } = useGetChapterLinks(selectedChapterID, userID);
 
     const viewMutation = useCreateChapterRecord();
     const unviewMutation = useDeleteChapterRecord();
@@ -58,14 +58,14 @@ const PillarCard : React.FC<PillarCardProps> = ({
         if (viewPercentage === 100 && !localChapterItem.isViewed) {
             setLocalChapterItem({ ...localChapterItem, isViewed: true });
             viewMutation.mutate(
-                { userID: Number(userID), chapterID: Number(selectedChapterID) },
+                { userID: Number(userID), recordID: Number(selectedChapterID) },
                 { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: false })}
             );
         }
     }, [viewPercentage]);
 
-    if (chapterLoading || linksLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (isError || !localChapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;
+    if ( chapterLoading || linksLoading) return null;
+    if ( !linksData || !localChapterItem ) return <p className="text-white text-center mt-10">Chapter not found</p>;
 
     // toggleViewed indicator
     const handleToggleViewed = (e: React.MouseEvent) => {
@@ -79,14 +79,14 @@ const PillarCard : React.FC<PillarCardProps> = ({
         if (!localChapterItem.isViewed){
             setLocalChapterItem({ ...localChapterItem, isViewed: true });
             viewMutation.mutate(
-                { userID: Number(userID), chapterID: Number(selectedChapterID) },
+                { userID: Number(userID), recordID: Number(selectedChapterID) },
                 { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: false })}
             );
         }
         else {
             setLocalChapterItem({ ...localChapterItem, isViewed: false });
             unviewMutation.mutate(
-                { userID: Number(userID), chapterID: Number(selectedChapterID) },
+                { userID: Number(userID), recordID: Number(selectedChapterID) },
                 { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: true })}
             )
         }

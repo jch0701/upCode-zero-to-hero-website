@@ -60,7 +60,7 @@ const Login_Pg: FC = () => {
         </div>
 
         <div className="signup-login-container">
-          <form onSubmit={handleSubmit}>
+          <form id={"login-form"} onSubmit={handleSubmit}>
             {/*email input field*/}
             <TextInput
               label="Email"

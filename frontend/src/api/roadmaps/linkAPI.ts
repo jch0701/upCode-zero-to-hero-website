@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import Api from '../index.ts';
-import type { InitialLinkType, LinkType } from '@/store/linksSlice.ts';
+import type { InitialLinkType, LinkType } from '@/lib/roadmapModuleTypes.ts';
 
 // 1. Get All Link
 export const useGetAllLinks = (userID?: string | null) => {

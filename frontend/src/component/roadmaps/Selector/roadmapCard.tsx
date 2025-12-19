@@ -22,10 +22,10 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
 }) => {
   const userID = localStorage.getItem("userID");
   // Compute tags from pillarsData when not provided
-  const { data: roadmapItem, isLoading, isError } = useGetSingleRoadmap(selectedRoadmapID, userID);
-  const { data: pillarsData } = useGetRoadmapChapters(selectedRoadmapID, userID);
-  if (isLoading) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-  if (isError || !roadmapItem) return null;
+  const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(selectedRoadmapID, userID);
+  const { data: pillarsData, isLoading: chapterLoading } = useGetRoadmapChapters(selectedRoadmapID, userID);
+  if ( roadmapLoading || chapterLoading ) return null;
+  if ( !pillarsData || !roadmapItem ) return <p className="text-white text-center mt-10">Roadmap not found</p>;;
   const effectiveTags = generateTags(roadmapItem.roadmapID, pillarsData || []);
   // Logic to determine which tags to show and if "More..." is needed
   const visibleTags = effectiveTags.slice(0, MAX_VISIBLE_TAGS);
@@ -35,7 +35,7 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
 
   return (
     <Link to={`/roadmap/${roadmapItem.roadmapID}/${roadmapItem.roadmapSlug}`}>
-    <div className="w-72 bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col h-full hover:scale-105 transform transition duration-300">
+    <div className="min-w-72 max-w-82 bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col h-full hover:scale-105 transform transition duration-300">
       {/* 1. Image Placeholder/Container */}
       <div className="w-full h-32 bg-gray-700 rounded-md mb-3 overflow-hidden">
         {/* Replace with a proper image component if you load actual images */}

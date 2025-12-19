@@ -24,7 +24,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
         setIsLoggedIn(userID && userID !== "0" ? true : false);
     }, [location]); // re-check when route changes
 
-    const { data: roadmapItem, isLoading: roadmapLoading, isError: roadmapError } = useGetSingleRoadmap(selectedRoadmapID, userID);
+    const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(selectedRoadmapID, userID);
 
     useEffect(() => {
         if (roadmapItem) {
@@ -32,16 +32,16 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
         }
     }, [roadmapItem]);
 
-    const { data: userData } = useGetSingleUser(localRoadmapItem?.creatorID);
+    const { data: userData, isLoading: userLoading } = useGetSingleUser(localRoadmapItem?.creatorID);
     const username = userData?.username ?? 'Unknown Username';
     const { data: pillarsData = [], isLoading: pillarsLoading } = useGetRoadmapChapters(selectedRoadmapID, userID);
-    const { data: linksData = [] } = useGetAllLinks(userID);
+    const { data: linksData = [], isLoading: linkLoading } = useGetAllLinks(userID);
 
     const favouriteMutation = useCreateFavourite();
     const unfavouriteMutation = useDeleteFavourite();
 
-    if (roadmapLoading || pillarsLoading || !localRoadmapItem) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-    if (roadmapError) return null;
+    if (roadmapLoading || pillarsLoading || userLoading || linkLoading ) return null;
+    if (!localRoadmapItem || !userData || !pillarsData || !linksData ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
 
     const uniqueChapterID = [...new Set(pillarsData.map(data => data.chapterID))];
     const filterLinksData = linksData.filter(data => uniqueChapterID.includes(data.chapterID));
@@ -63,14 +63,14 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
         if (!localRoadmapItem.isFavourite) {
             setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: true });
             favouriteMutation.mutate(
-                { userID: Number(userID), roadmapID: Number(selectedRoadmapID) },
+                { userID: Number(userID), recordID: Number(selectedRoadmapID) },
                 { onError: () => setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: false })}
             );
         } 
         else {
             setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: false });
             unfavouriteMutation.mutate(
-                { userID: Number(userID), roadmapID: Number(selectedRoadmapID) },
+                { userID: Number(userID), recordID: Number(selectedRoadmapID) },
                 { onError: () => setLocalRoadmapItem({ ...localRoadmapItem, isFavourite: true })}
             );
         }
@@ -158,7 +158,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
                         </div>
                     </div>
 
-                    <h3 className="text-xl font-bold mb-2">Description</h3>
+                    <h3 className="text-xl font-bold mb-2 text-left">Description</h3>
                     <p className="text-gray-300 leading-relaxed text-base whitespace-pre-wrap text-justify">
                         {localRoadmapItem.description}
                     </p>

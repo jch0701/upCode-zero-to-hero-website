@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import Api from '../index.ts';
-import type { InitialPillarType, PillarType } from '@/store/pillarsSlice.ts';
+import type { InitialPillarType, PillarType } from '@/lib/roadmapModuleTypes.ts';
 
 // 1. Get All Chapter
 export const useGetAllChapters = (userID?: string | null) => {

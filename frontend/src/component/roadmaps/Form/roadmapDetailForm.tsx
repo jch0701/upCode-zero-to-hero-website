@@ -17,9 +17,9 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
         const navigate = useNavigate();
         const userID = localStorage.getItem("userID");
 
-        const { data: roadmapItem, isLoading, isError } = useGetSingleRoadmap(Number(selectedRoadmapID), userID);
-        if ( isLoading ) return <div className="w-72 h-64 bg-gray-800 animate-pulse rounded-lg" />;
-        if ( isError || !roadmapItem && mode==="edit" ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
+        const { data: roadmapItem, isLoading } = useGetSingleRoadmap(Number(selectedRoadmapID), userID);
+        if ( isLoading ) return null;
+        if ( !roadmapItem && mode==="edit" ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
 
         const createRoadmapMutation = useCreateRoadmap();
         const updateRoadmapMutation = useUpdateRoadmap(Number(selectedRoadmapID));
@@ -121,7 +121,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                             <X size={20} />
                         </button>
                     </div>
-                    <form onSubmit={handleSubmit}>
+                    <form id={"roadmap-form"} onSubmit={handleSubmit}>
                     <div className="flex flex-col md:flex-row gap-8">
                         {/* Left Section: Image and Basic Info */}
                         <div className="w-full md:w-[40%]">
