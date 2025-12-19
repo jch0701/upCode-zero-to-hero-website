@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PasswordInput from "@/component/Signup_Login/PasswordInput";
 import { Validate_Password } from "@/component/Signup_Login/Validate_Signup_Login";
+import { resetPassword } from "@/api/account/accountAPI";
 
 const ResetPassword_Pg = () => {
   const [password, setPassword] = useState("");
@@ -10,7 +11,8 @@ const ResetPassword_Pg = () => {
   const [confirmError, setConfirmError] = useState("");
 
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const email = location.state?.email;
    const handleNewPassword = (value: string) => {
     setPassword(value);
 
@@ -37,26 +39,24 @@ const ResetPassword_Pg = () => {
       }
     };
 
-    const isDisabled =
-      passwordError !== "" ||
-      confirmError !== "" ||
-      password.length < 6 ||
-      confirm.length === 0;
-
-    const handleReset = () => {
-      if (isDisabled) return;
-
-      alert("Password reset successfully!");
-
-      navigate("/login");
-    };
-    
-    const isPasswordValid = password.trim() !== "" && password.length >= 6;
-
     const isValid =
     password.trim() !== "" &&
     confirm.trim() !== "" &&
     confirm === password;
+
+    const handleReset = async() => {
+      if (!isValid) return;
+      
+      try {
+        await resetPassword(email, password);
+        alert("Password reset successfully!");
+        navigate("/login");
+      } catch (err: any) {
+        alert(err.response?.data?.message || "Reset failed");
+      }
+    };
+    
+    const isPasswordValid = password.trim() !== "" && password.length >= 6;
     
   return (
     <div className="page-root">
@@ -89,7 +89,6 @@ const ResetPassword_Pg = () => {
             )}
 
             {/* re-enter new password */}
-            
                 <PasswordInput
                   label="Confirm Password"
                   value={confirm}
