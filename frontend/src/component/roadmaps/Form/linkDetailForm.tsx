@@ -91,7 +91,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
                     <X size={20} />
                 </button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form id={"link-form"} onSubmit={handleSubmit}>
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="w-full">
                     {/* Title Section */}

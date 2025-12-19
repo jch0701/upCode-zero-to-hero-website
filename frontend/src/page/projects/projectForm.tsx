@@ -95,7 +95,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, close }) 
   }
 
   return (
-    <form className="w-full max-w-2xl mx-auto p-4 sm:p-6">
+    <form id={"project-form"} className="w-full max-w-2xl mx-auto p-4 sm:p-6">
       {(() => {
         switch (currentPage) {
           case 1:

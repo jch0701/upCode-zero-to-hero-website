@@ -43,7 +43,7 @@ const ForgotPassword_Pg = () => {
         {/* Card */}
         <div className="forgot-card">
 
-          <form onSubmit={handleSubmit}>
+          <form id={"forgot-password-form"} onSubmit={handleSubmit}>
 
             {/* Input */}
             <div className="forgot-input-wrapper">

@@ -193,7 +193,7 @@ const CareerDetailForm: React.FC<CareerDetailFormProps> = ({
         </div>
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form id={"career-form"} onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row gap-8">
           {/* Left Section: Title, Description, Map */}
           <div className="w-full md:w-1/2">
