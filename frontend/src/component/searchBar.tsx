@@ -14,6 +14,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ query, setQuery, placeholder, cla
     <div className={`p-2 rounded-md border border-white-400 b-6 flex items-center ${className}`}>
       <img src={menuicon} alt="Menu Icon" className="inline-block mr-2 w-10 h-5" />  
       <input
+        id="search-bar"
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
