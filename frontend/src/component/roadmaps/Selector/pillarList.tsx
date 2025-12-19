@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PillarCard from '../Selector/pillarCard.tsx';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Recommendation from './recommendation.tsx';
-import type { PillarType } from '@/store/pillarsSlice.ts';
+import type { PillarType } from '@/lib/roadmapModuleTypes.ts';
 import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI.ts';
 import { useGetRoadmapChapters } from '@/api/roadmaps/chapterAPI.ts';
 import { useGetRoadmapRecommendation } from '@/api/roadmaps/recommendationAPI.ts';
