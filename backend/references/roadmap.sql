@@ -40,7 +40,7 @@ BEGIN
     -- INSERT or UPDATE
     IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
         UPDATE "Chapters"
-        SET "modifiedDate" = NOW()
+        SET "modifiedDate" = NEW."modifiedDate"
         WHERE "chapterID" = NEW."chapterID";
         RETURN NEW;
     END IF;
@@ -62,12 +62,12 @@ AFTER INSERT ON "Nodes"
 FOR EACH ROW
 EXECUTE FUNCTION update_chapter_modified_date();
 
-CREATE TRIGGER trg_chapter_modifiedDate_nodes_after_update_node
+CREATE TRIGGER trg_chapter_modifiedDate_after_update_node
 AFTER UPDATE ON "Nodes"
 FOR EACH ROW
 EXECUTE FUNCTION update_chapter_modified_date();
 
-CREATE TRIGGER trg_chapter_modifiedDate_nodes_after_delete_node
+CREATE TRIGGER trg_chapter_modifiedDate_after_delete_node
 AFTER DELETE ON "Nodes"
 FOR EACH ROW
 EXECUTE FUNCTION update_chapter_modified_date();
@@ -80,7 +80,7 @@ BEGIN
     -- INSERT or UPDATE
     IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
         UPDATE "Roadmaps"
-        SET "modifiedDate" = NOW()
+        SET "modifiedDate" NEW."modifiedDate"
         WHERE "roadmapID" = NEW."roadmapID";
         RETURN NEW;
     END IF;
@@ -111,3 +111,87 @@ CREATE TRIGGER trg_roadmap_modifiedDate_after_delete_chapter
 AFTER DELETE ON "Chapters"
 FOR EACH ROW
 EXECUTE FUNCTION update_roadmap_modified_date();
+
+
+-- Synchronous modifiedDate for recommendation of project is added or deleted
+CREATE OR REPLACE FUNCTION update_chapter_modified_date_from_recommendation()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Only care about Recommendations where sourceType = 'chapter'
+    IF NEW."sourceType" = 'chapter' OR OLD."sourceType" = 'chapter' THEN
+
+        -- INSERT or UPDATE
+        IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+            UPDATE "Chapters"
+            SET "modifiedDate" = NEW."createdAt"
+            WHERE "chapterID" = NEW."sourceId";
+            RETURN NEW;
+        END IF;
+
+        -- DELETE
+        IF TG_OP = 'DELETE' THEN
+            UPDATE "Chapters"
+            SET "modifiedDate" = NOW()
+            WHERE "chapterID" = OLD."sourceId";
+            RETURN OLD;
+        END IF;
+
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- After insert
+CREATE TRIGGER trg_chapter_modifieddate_after_insert_recommendation
+AFTER INSERT ON "Recommendations"
+FOR EACH ROW
+EXECUTE FUNCTION update_chapter_modified_date_from_recommendation();
+
+-- After delete
+CREATE TRIGGER trg_chapter_modifieddate_after_delete_recommendation
+AFTER DELETE ON "Recommendations"
+FOR EACH ROW
+EXECUTE FUNCTION update_chapter_modified_date_from_recommendation();
+
+
+-- Synchronous modifiedDate for recommendation of career is added or deleted
+CREATE OR REPLACE FUNCTION update_roadmap_modified_date_from_recommendation()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Only care about Recommendations where sourceType = 'roadmap'
+    IF NEW."sourceType" = 'roadmap' OR OLD."sourceType" = 'roadmap' THEN
+
+        -- INSERT or UPDATE
+        IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+            UPDATE "Roadmaps"
+            SET "modifiedDate" = NEw."createdAt"
+            WHERE "roadmapID" = NEW."sourceId";
+            RETURN NEW;
+        END IF;
+
+        -- DELETE
+        IF TG_OP = 'DELETE' THEN
+            UPDATE "Roadmaps"
+            SET "modifiedDate" = NOW()
+            WHERE "roadmapID" = OLD."sourceId";
+            RETURN OLD;
+        END IF;
+
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- After insert
+CREATE TRIGGER trg_roadmap_modifieddate_after_insert_recommendation
+AFTER INSERT ON "Recommendations"
+FOR EACH ROW
+EXECUTE FUNCTION update_roadmap_modified_date_from_recommendation();
+
+-- After delete
+CREATE TRIGGER trg_roadmap_modifieddate_after_delete_recommendation
+AFTER DELETE ON "Recommendations"
+FOR EACH ROW
+EXECUTE FUNCTION update_roadmap_modified_date_from_recommendation();
