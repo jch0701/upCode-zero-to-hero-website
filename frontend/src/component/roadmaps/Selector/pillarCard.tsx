@@ -62,6 +62,13 @@ const PillarCard : React.FC<PillarCardProps> = ({
                 { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: false })}
             );
         }
+        else {
+            setLocalChapterItem({ ...localChapterItem, isViewed: false });
+            unviewMutation.mutate(
+                { userID: Number(userID), recordID: Number(selectedChapterID) },
+                { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: true })}
+            );
+        }
     }, [viewPercentage]);
 
     if ( chapterLoading || linksLoading) return null;
