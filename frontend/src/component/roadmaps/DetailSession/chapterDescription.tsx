@@ -5,7 +5,6 @@ import type { Tag } from "../../tag";
 import { X } from 'lucide-react';
 import { useGetSingleChapter } from "@/api/roadmaps/chapterAPI";
 import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
-import { useGetChapterLinks } from "@/api/roadmaps/linkAPI";
 import { useGetSingleUser } from "@/api/roadmaps/userAPI";
 import { IMAGE_MAP, defaultImageSrc } from "@/lib/image";
 
@@ -25,10 +24,9 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const creator = roadmapItem?.creatorID ?? 'Unknown Creator';
 
     const { data: chapterItem , isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID),selectedChapterID,userID);
-    const { data: linksData = [], isLoading: linkLoading } = useGetChapterLinks(selectedChapterID,userID);
-    const { data: userData } = useGetSingleUser(Number(creator))
+    const { data: userData, isLoading: userLoading } = useGetSingleUser(Number(creator))
 
-    if ( roadmapLoading || chapterLoading || linkLoading) return null;
+    if ( roadmapLoading || chapterLoading || userLoading ) return null;
     
     if ( !roadmapItem || !chapterItem ) return <p className="text-white text-center mt-10">Chapter not found</p>;
 
@@ -36,19 +34,6 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const username = userData?.username ?? 'Unknown Username';
     const roadmapSlug = roadmapItem?.roadmapSlug ?? 'Unknown Roadmap Slug';
     const displayImage = IMAGE_MAP[imageSrc] || imageSrc;
-
-    const uniqueModifiedDate = [Date.parse(chapterItem.modifiedDate),
-                                ...new Set(linksData.map(data => Date.parse(data.modifiedDate)))];
-    let latestModifiedDate: string;
-
-    
-    if (uniqueModifiedDate.length > 0) {
-        const maxTimestamp: number = Math.max(...uniqueModifiedDate);
-        const latestDateObject: Date = new Date(maxTimestamp);
-        latestModifiedDate = latestDateObject.toISOString().slice(0,10);
-
-    } 
-    else latestModifiedDate = chapterItem.modifiedDate ?? "";
 
     const tags: Tag[] = [
         { type: 'Difficulty', label: chapterItem.difficulty },
@@ -112,7 +97,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
                         </div>)}
                         <div>
                             <h3 className="font-semibold text-left">Last Modified</h3>
-                            <p className="mt-1 text-gray-300">{latestModifiedDate}</p>
+                            <p className="mt-1 text-gray-300">{chapterItem.modifiedDate}</p>
                         </div>
                     </div>
                     {/* Description */}

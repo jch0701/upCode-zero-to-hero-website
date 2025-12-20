@@ -8,7 +8,6 @@ import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { IMAGE_MAP, defaultImageSrc } from "@/lib/image";
 import { useGetRoadmapChapters } from "@/api/roadmaps/chapterAPI";
 import { useGetSingleUser } from "@/api/roadmaps/userAPI";
-import { useGetAllLinks } from "@/api/roadmaps/linkAPI";
 import { useCreateFavourite, useDeleteFavourite } from "@/api/roadmaps/recordAPI";
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID }) => {
@@ -35,24 +34,12 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
     const { data: userData, isLoading: userLoading } = useGetSingleUser(localRoadmapItem?.creatorID);
     const username = userData?.username ?? 'Unknown Username';
     const { data: pillarsData = [], isLoading: pillarsLoading } = useGetRoadmapChapters(selectedRoadmapID, userID);
-    const { data: linksData = [], isLoading: linkLoading } = useGetAllLinks(userID);
 
     const favouriteMutation = useCreateFavourite();
     const unfavouriteMutation = useDeleteFavourite();
 
-    if (roadmapLoading || pillarsLoading || userLoading || linkLoading ) return null;
-    if (!localRoadmapItem || !userData || !pillarsData || !linksData ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
-
-    const uniqueChapterID = [...new Set(pillarsData.map(data => data.chapterID))];
-    const filterLinksData = linksData.filter(data => uniqueChapterID.includes(data.chapterID));
-    const uniqueModifiedDate = [
-        Date.parse(localRoadmapItem.modifiedDate),
-        ...new Set(pillarsData.map(data => Date.parse(data.modifiedDate))),
-        ...new Set(filterLinksData.map(data => Date.parse(data.modifiedDate)))
-    ];
-    const latestModifiedDate = uniqueModifiedDate.length > 0
-        ? new Date(Math.max(...uniqueModifiedDate)).toISOString().slice(0, 10)
-        : localRoadmapItem.modifiedDate;
+    if (roadmapLoading || pillarsLoading || userLoading ) return null;
+    if (!localRoadmapItem || !userData || !pillarsData ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
 
     const handleToggleFavourite = () => {
         if (!isLoggedIn) {
@@ -154,7 +141,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
                         </div>
                         <div>
                             <h3 className="font-semibold">Last Modified</h3>
-                            <p className="mt-1 text-gray-300">{latestModifiedDate}</p>
+                            <p className="mt-1 text-gray-300">{localRoadmapItem.modifiedDate}</p>
                         </div>
                     </div>
 
