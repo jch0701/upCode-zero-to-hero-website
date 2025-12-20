@@ -13,25 +13,44 @@ export const userLogin = async (req, res) =>{
 
   try{
     //authentication for login
-    const { data, error} = await supabase.auth.signInWithPassword({email, password,});
+    const { data, error:authError} = await supabase.auth.signInWithPassword({email, password,});
 
-    if(error) {
+    if(authError) {
       return res
       .status(401)
-      .json({message:error.message});
+      .json({message:authError.message});
     } 
 
     const user = data.user;
     //get profile from DB
-    const {data: profile, error:profileError}= await supabase
+    let { data: profile, error:profileError } = await supabase
+    .from("userProfiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  // 2️⃣ If profile does NOT exist → create it
+  if (!profile) {
+    const { data: newProfile, error: insertError } = await supabase
       .from("userProfiles")
-      .select("*")
-      .eq("id", user.id)
+      .insert({
+        id: user.id,
+        email: user.email,
+        username: user.email.split("@")[0],
+        role: "user",
+        avatar: "/default-avatar.png",
+        bio: "",
+        skills: [],
+      })
+      .select()
       .single();
 
-    if(profileError){
-      return res.status(404).json({message: "Profile not found!"});
+    if (insertError) {
+      return res.status(500).json({ message: insertError.message });
     }
+
+    profile = newProfile;
+  }
 
     //send user and token 
     return res.status(200).json({
@@ -43,3 +62,4 @@ export const userLogin = async (req, res) =>{
     return res.status(500).json({ message: "Internal Server Error." });
   }
 };
+

@@ -20,8 +20,8 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 // Create and export the Supabase client
-export const supabase = createClient(supabaseUrl, supabaseKey);
-export const supabaseAuth = createClient(supabaseUrl, anonKey);
+export const supabase = createClient(supabaseUrl, supabaseKey); //service key
+export const supabaseAuth = createClient(supabaseUrl, anonKey); //public key
 
 export const initDB = async () => {
   try {

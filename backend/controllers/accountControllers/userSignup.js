@@ -31,7 +31,7 @@ export const userSignup = async(req, res) => {
         role,
         avatar: "https://ozxrxlaufstrwtsgzixa.supabase.co/storage/v1/object/sign/avatar/profile/bear_avatar.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84ZGJmMWZiNy1hNzU3LTQ2M2YtYjI3Ni1jYWY4NzM4Yjg5NDciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhdmF0YXIvcHJvZmlsZS9iZWFyX2F2YXRhci5wbmciLCJpYXQiOjE3NjYxNDAyNTAsImV4cCI6MTc2ODczMjI1MH0.zvqtq8Qqn6PrRbl1keG0SSmETcFGwnlYcV-u_d9Hj6I",
         bio: "",
-        skills:"",
+        skills:[],
       });
       if (profileError) {
         return res.status(500).json({ message: "Failed to create profile" });

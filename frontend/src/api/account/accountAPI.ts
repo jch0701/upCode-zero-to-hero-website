@@ -27,3 +27,8 @@ export const resetPassword = async (email:string, newPassword:string) => {
   const res = await Api.post("/reset-password", {email, newPassword,});
   return res.data;
 };
+
+export const userLogout = async () => {
+  const res = await Api.post("/logout");
+  return res.data; // returns { message: "Logout successful" }
+};

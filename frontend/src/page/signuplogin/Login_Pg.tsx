@@ -22,9 +22,7 @@ const Login_Pg: FC = () => {
   const handleLogin = async ()=> {
     try {
       const data = await userLogin(email, password);
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("activeUser", JSON.stringify(data.user));
-
+      localStorage.setItem("access_token", data.accessToken);
       if (data.user.role === "Admin") {
         navigate("/admin", { replace: true });
       } else {
