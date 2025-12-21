@@ -2,16 +2,12 @@ import React from "react";
 import type { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { 
-  Validate_Username, 
-  Validate_Email, 
-  Validate_Password, 
-  Validate_Role 
-} from "@/component/Signup_Login/Validate_Signup_Login";
+import {  Validate_Username,  Validate_Email,  Validate_Password,  Validate_Role } from "@/component/Signup_Login/Validate_Signup_Login";
 
 import "@/component/Signup_Login/Login_Signup_Pg.css";
 import TextInput from "@/component/Signup_Login/TextInput";
 import PasswordInput from "@/component/Signup_Login/PasswordInput";
+import { userSignup } from "@/api/account/accountAPI";
 
 import user_icon from "@/assets/signuplogin/user.png";
 import email_icon from "@/assets/signuplogin/email.png";
@@ -25,17 +21,7 @@ const Signup_Pg: FC = () => {
   const [errors, setErrors] = React.useState<string[]>([]);
   const navigate = useNavigate();
 
-  function getNextUserId() {
-  const usersRaw = localStorage.getItem("users");
-  const users = usersRaw ? JSON.parse(usersRaw) : [];
-
-  if (users.length === 0) return 101; // first user ID
-
-  const maxId = Math.max(...users.map((u: any) => Number(u.userId)));
-    return maxId + 1;
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
 
     const usernameErrors = Validate_Username(username);
@@ -52,29 +38,13 @@ const Signup_Pg: FC = () => {
 
     if (errormsg.length > 0) return;
 
-    // Create new user with incremental ID
-    const newUser = {
-      userId: getNextUserId(),
-      username,
-      email,
-      password, // plaintext only for dev
-      role,
-      createdAt: Date.now(),
-    };
-
-  const usersRaw = localStorage.getItem("users");
-  const users = usersRaw ? JSON.parse(usersRaw) : [];
-
-    if (users.some((u: any) => u.email === email)) {
-      setErrors(["- Email is already registered"]);
-      return;
+    try{
+      await userSignup(username, email, password, role);
+      alert("Account created successfully!");
+      navigate("/login");
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Signup failed");
     }
-
-  users.push(newUser);
-  localStorage.setItem("users", JSON.stringify(users));
-
-  alert("Account created successfully!");
-  navigate("/login");
   };
 
   return (
@@ -135,8 +105,8 @@ const Signup_Pg: FC = () => {
               <input
                 type="radio"
                 name="role"
-                value="student"
-                checked={role === "student"}
+                value="learner"
+                checked={role === "learner"}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setRole(e.target.value)
                 }

@@ -1,18 +1,12 @@
 import React from "react";
 import type { FC } from "react";
-import { login } from "@/store/profileSlice";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 
-import type { UserListType } from "@/store/userListSlice";
 import "@/component/Signup_Login/Login_Signup_Pg.css";
-import {
-  Validate_Email,
-  Validate_Password,
-} from "@/component/Signup_Login/Validate_Signup_Login";
+import { Validate_Email,Validate_Password } from "@/component/Signup_Login/Validate_Signup_Login";
 import TextInput from "@/component/Signup_Login/TextInput";
 import PasswordInput from "@/component/Signup_Login/PasswordInput";
-import { syncUserToUsers } from "@/component/friend/userSync";
+import { userLogin } from "@/api/account/accountAPI";
 
 import email_icon from "@/assets/signuplogin/email.png";
 import hero_img from "@/assets/signuplogin/Hero.png";
@@ -22,90 +16,36 @@ const Login_Pg: FC = () => {
   const [password, setPassword] = React.useState("");
   const [errors, setErrors] = React.useState<string[]>([]);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
   const fromPath = location.state?.from || "/";
 
-  const userData = useSelector(
-    (state: any) => state.userList.userList
-  ) as UserListType[];
-  const DEFAULT_AVATAR = "/src/assets/profile/bear_avatar.png";
-
-  const handleLogin = (email: string, password: string) => {
-    const userDetail = userData.find((user) => user.email === email);
-
-    if (!userDetail) {
-      alert("User not found");
-      return false;
-    }
-
-    if (userDetail.password !== password) {
-      alert("Wrong password");
-      return false;
-    }
-    const key = `userProfile_${userDetail.userId}`;
-    // 1. Load existing saved profile if available
-    const savedProfile = localStorage.getItem(key);
-    let profileToUse;
-
-    if (savedProfile) {
-      profileToUse = JSON.parse(savedProfile);
-      if (!profileToUse.avatar) {
-        profileToUse.avatar = DEFAULT_AVATAR;
+  const handleLogin = async ()=> {
+    try {
+      const data = await userLogin(email, password);
+      localStorage.setItem("access_token", data.accessToken);
+      if (data.user.role === "Admin") {
+        navigate("/admin", { replace: true });
+      } else {
+        navigate(fromPath, { replace: true });
       }
-    } else {
-      profileToUse = {
-        userId: userDetail.userId,
-        username: userDetail.username,
-        email: userDetail.email,
-        role: userDetail.role ?? "",
-        avatar: DEFAULT_AVATAR,
-        bio: "",
-        skills: [],
-      };
-      localStorage.setItem(key, JSON.stringify(profileToUse));
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Login failed");
     }
-
-    localStorage.setItem("activeUser", JSON.stringify(profileToUse));
-    localStorage.setItem("userID", profileToUse.userId.toString());
-    syncUserToUsers({
-      userId: profileToUse.userId,
-      username: profileToUse.username,
-      email: profileToUse.email,
-    });
-    dispatch(login(profileToUse));
-    if (userDetail.role === "Admin") {
-      return "admin";
-    } else {
-      return "user";
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    // validate email & password separately
+  }
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     const emailErrors = Validate_Email(email);
     const passwordErrors = Validate_Password(password);
     const errormsg = [...emailErrors, ...passwordErrors];
 
     setErrors(errormsg);
-
     if (errormsg.length > 0) return;
 
-    // Login logic
-    const login_acc = handleLogin(email, password);
-    if (login_acc === "admin") {
-      alert(`Admin Login Successful.\nEmail: ${email}`);
-      navigate("/admin", {replace: true});
-    }else if(login_acc === "user"){
-      alert(` Login Successful.\nEmail: ${email}`);
-      navigate(fromPath, { replace: true });
-    } else {
-      console.error("Unexpected login role:", login_acc);
-    }
+    await handleLogin();
   };
+
 
   return (
     <div className="page-root">
@@ -118,7 +58,7 @@ const Login_Pg: FC = () => {
         </div>
 
         <div className="signup-login-container">
-          <form onSubmit={handleSubmit}>
+          <form id={"login-form"} onSubmit={handleSubmit}>
             {/*email input field*/}
             <TextInput
               label="Email"

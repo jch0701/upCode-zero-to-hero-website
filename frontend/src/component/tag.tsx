@@ -20,7 +20,7 @@ export const TYPE_COLORS: { [key in Tag['type']]: string } = {
 
 export const TagPill: React.FC<{ tag: Tag }> = ({ tag }) => {
   let colorClass = '';
-
+  if (!tag?.label || !tag?.type) return null;
   if (tag.type === 'Difficulty') {
     // Convert label to lowercase for consistent lookup
     colorClass = DIFFICULTY_COLORS[tag.label.toLowerCase()] || 'bg-gray-500 text-gray-800';

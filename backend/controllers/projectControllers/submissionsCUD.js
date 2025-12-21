@@ -5,7 +5,6 @@ import { supabase } from "../../config.js";
 Input:
   Params: None
   Body: {
-    projectId: number;
     creatorId: number;
     title: string;
     repoLink: string;
@@ -15,12 +14,15 @@ Output: None
 */
 
 export const submitProject = async (req, res) => {
-  const { projectId, creatorId, title, repoLink, rationaleFile } = req.body;
+  const { projectId } = req.params;
+  const { creatorId, title, repoLink, rationaleFile } = req.body;
+  const postedOn = new Date().toISOString();
+  const lastUpdated = postedOn;
   const { error } = await supabase
     .from("Submissions")
-    .insert([{ projectId, creatorId, title, repoLink, rationaleFile }]);
+    .insert([{ projectId, creatorId, title, postedOn, lastUpdated, repoLink, rationaleFile }]);
 
-  if (error) return res.status(500).json({ error });
+  if (error) return res.status(500).json({ error: error.message });
   return res.status(201).json({ message: "Submission created successfully" });
 }
 

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useGetCommitHistory } from "@/api/getCommitHistory";
-import { formatDate, base64ToString } from "@/lib/utils";
+import { useGetSubmissionById } from "@/api/projects/submissionsAPI";
+import { formatDate } from "@/lib/utils";
 import RadioGroup from "@/component/projects/radioGroup";
 import ReactMarkdown from "react-markdown";
 import { Button } from "../../component/shadcn/button";
@@ -12,28 +13,40 @@ import { FieldGroup } from "@/component/shadcn/field";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/component/shadcn/dialog";
 import { commonBackgroundClass, commonMarkDownClass } from "@/lib/styles";
 import { GitHubLink } from "@/component/projects/gitHubLink";
+import { LoadingIcon } from "@/component/LoadingIcon";
 
 const SubmissionDetails: React.FC = () => {
-  const { submissionId } = useParams<{ submissionId: string }>();
+  const { projectId, submissionId } = useParams<{ projectId: string; submissionId: string }>();
+  const [displaySection, setDisplaySection] = useState<displaySectionType>("Commits History");
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const userName = useSelector((state: any) => state.profile.username);
 
-  const submission = useSelector((state: any) => state.submissions.submissionsList.find((sub: any) => sub.submissionId === Number(submissionId)));
+  const {
+    data: submission,
+    isLoading: submissionIsLoading,
+    isError: submissionIsError,
+    error: submissionError
+  } = useGetSubmissionById(Number(projectId), Number(submissionId));
   const {
     data: commitHistory,
     isLoading: commitsIsLoading,
     isError: getCommitsIsError,
     error: getCommitsError
   } = useGetCommitHistory(submission?.repoLink || "");
-  const creatorId = submission.creatorId;
-  const creatorName = useSelector((state: any) => state.userList.userList.find((user: any) => user.userId === creatorId))?.username;
-  const userName = useSelector((state: any) => state.profile.username);
-  const projectId = submission?.projectId;
-  const projectTitle = useSelector((state: any) =>
-    state.projects.projectsList.find((proj: any) => proj.projectId === projectId)
-  )?.title;
+
+  if (submissionIsLoading) {
+    return (
+      <div className="mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-[90vh] overflow-hidden">
+        <LoadingIcon text="Loading Submission Details..." />
+      </div>
+    )
+  }
+
+  if (submissionIsError) {
+    throw new Error(`Error loading submission: ${submissionError?.message}`);
+  }
 
   type displaySectionType = "Commits History" | "Rationale File";
-  const [displaySection, setDisplaySection] = useState<displaySectionType>("Commits History");
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
   function handleDisplaySectionChange(value: displaySectionType) {
     setDisplaySection(value);
   }
@@ -41,9 +54,9 @@ const SubmissionDetails: React.FC = () => {
   return (
     <div className="text-left mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-full">
       <h1 className="text-left mt-2 text-4xl font-extralight text-white">{submission?.title}</h1>
-      <p className="text-white text-[1.5rem] font-light">Submission by: {creatorName}</p>
+      <p className="text-white text-[1.5rem] font-light">Submission by: {submission.creatorName}</p>
       <p className="text-white text-[1.2rem]">
-        Project: {projectTitle} | Created By: {submission?.creator}
+        Project: {submission.projectTitle} | Created By: {submission.creatorName}
       </p>
       <p className="text-white text-[1rem]">
         <span>Submitted On: {submission?.postedOn && formatDate(new Date(submission.postedOn))} </span>
@@ -52,7 +65,7 @@ const SubmissionDetails: React.FC = () => {
 
       <GitHubLink repoUrl={submission?.repoLink || ""} title="This submission contains a GitHub repository link." />
       {
-        creatorName === userName &&
+        submission.creatorName === userName &&
         <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
           <DialogTrigger asChild>
             <Button
@@ -70,7 +83,7 @@ const SubmissionDetails: React.FC = () => {
             <FieldGroup className={commonBackgroundClass}>
               <SubmissionForm
                 close={() => setEditDialogOpen(false)}
-                projectId={projectId || ""}
+                projectId={submission.projectId || ""}
                 openAsCreateForm={false}
                 initialData={submission}
               />
@@ -94,7 +107,10 @@ const SubmissionDetails: React.FC = () => {
         {displaySection === "Commits History" && (
           <div>
             <div className="prose prose-invert max-w-none mt-4 text-white text-left">
-              {commitsIsLoading && <p>Loading commit history...</p>}
+              {commitsIsLoading &&
+                <div className="mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-[90vh] overflow-hidden">
+                  <LoadingIcon text="Loading Commit Histories..." />
+                </div>}
               {getCommitsIsError && <p>{getCommitsError.message}</p>}
             </div>
             {
@@ -128,9 +144,9 @@ const SubmissionDetails: React.FC = () => {
         )}
         {displaySection === "Rationale File" && (
           <div className={`prose prose-invert max-w-none mt-4 text-white text-left ${commonMarkDownClass}`}>
-              <ReactMarkdown>
-                {submission?.rationaleFile ? base64ToString(submission.rationaleFile) : "No project details available."}
-              </ReactMarkdown>
+            <ReactMarkdown>
+              {submission?.rationaleFile || "No project details available."}
+            </ReactMarkdown>
           </div>
         )}
       </div>

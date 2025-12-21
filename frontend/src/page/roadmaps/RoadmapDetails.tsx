@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import RoadmapDescription from "../../component/roadmaps/DetailSession/roadmapDesciption";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import PillarList from "@/component/roadmaps/Selector/pillarList";
 import { update_Activity } from "@/component/activity/activity_tracker";
-import type { RoadmapType } from "@/store/roadmapSlice";
+import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
+import { Spinner } from "@/component/shadcn/spinner";
 
 export const RoadmapDetails: React.FC = () => {
-    const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
     const { roadmapID } = useParams<{ roadmapID: string }>(); // get id from URL
-    const roadmapItem = roadmapData.find(r => r.roadmapID === Number(roadmapID)); // find the data by id
+    const userID = localStorage.getItem("userID");
+    
     //for profile usage
     const hasCountedRef = useRef(false);
     useEffect(() => {
@@ -23,6 +23,16 @@ export const RoadmapDetails: React.FC = () => {
         
         hasCountedRef.current = true;
     }, [roadmapID]);
+
+    const { data: roadmapItem, isLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
+    if (isLoading) {
+        return(
+        <div className="flex h-screen -translate-y-12 w-full items-center justify-center">
+            <Spinner className="size-20 text-amber-50" />
+            <span className="text-amber-50 text-3xl">Loading Roadmap...</span>
+        </div>
+        )
+    };
 
     if (!roadmapItem) return <p className="text-white text-center mt-10">Roadmap not found</p>;
     return (

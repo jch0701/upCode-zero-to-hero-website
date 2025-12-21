@@ -1,23 +1,26 @@
 import { useNavigate } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import type { RootState } from "@/store";
 
-import { logout } from "@/store/profileSlice";
 import logout_icon from "@/assets/profile/logout.png";
 import delete_icon from "@/assets/profile/delete.png";
+import { userLogout } from "@/api/account/accountAPI";
 
 export function SettingContent(){
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleLogout = () => {
-    if (!confirm("Are you sure you want to logout?")) return;
+  const handleLogout = async () => {
+    const confirmLogout = confirm("Are you sure you want to logout?");
+    if (!confirmLogout) return;
 
-    dispatch(logout());
-    localStorage.removeItem("activeUser");
-    localStorage.removeItem("userID");
-    localStorage.removeItem("token");
-    navigate("/");
-  }
+    try {
+      await userLogout(); // call backend
+      localStorage.clear(); // remove all stored tokens & user info
+      navigate("/login"); // redirect
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Failed to logout. Please try again.");
+    }
+  };
 
   const handleDelete = async () =>{
     const confirmDelete = confirm(
@@ -27,7 +30,6 @@ export function SettingContent(){
     try{
     // await axios.delete(`/api/users/${localStorage.getItem("userID")}`);
 
-    dispatch(logout());
     localStorage.clear();
     alert("Your account has been deleted!");
     }catch (error){

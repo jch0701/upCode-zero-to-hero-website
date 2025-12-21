@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PillarCard from '../Selector/pillarCard.tsx';
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Recommendation from './recommendation.tsx';
-import type { RecommendationType } from '@/store/recommendationSlice.ts';
-import type { RoadmapType } from '@/store/roadmapSlice.ts';
-import type { PillarType } from '@/store/pillarsSlice.ts';
+import type { PillarType } from '@/lib/roadmapModuleTypes.ts';
+import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI.ts';
+import { useGetRoadmapChapters } from '@/api/roadmaps/chapterAPI.ts';
+import { useGetRoadmapRecommendation } from '@/api/roadmaps/recommendationAPI.ts';
 
 
 interface PillarListProps {
@@ -13,18 +13,27 @@ interface PillarListProps {
 }
 
 const PillarList: React.FC<PillarListProps> = ({ selectedRoadmapId }) => {
-// Filter pillars based on selectedRoadmapId
-const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
-const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-const recommendedData = useSelector((state: any) => state.recommendations.recommendations) as RecommendationType[];
-const filteredPillars = pillarsData.filter(pillar => pillar.roadmapID === selectedRoadmapId);
-const roadmapSlug = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.roadmapSlug || 'Unknown Roadmap Slug';
-const roadmapTitle = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.title || 'Unknown Roadmap';
-const creator = roadmapData.find(r => r.roadmapID === selectedRoadmapId)?.creatorID || 'Unknown creator';
+
 const userID = localStorage.getItem("userID");
-// order by 'order' field
-filteredPillars.sort((a, b) => a.order - b.order);
+const { roadmapID } = useParams<{ roadmapID: string }>();
 const navigate = useNavigate();
+const [openChapterId, setOpenChapterId] = useState<number | null>(null);
+
+
+const { data: roadmapData, isLoading: roadmapLoading} = useGetSingleRoadmap(Number(roadmapID), userID)
+const { data: pillarsData = [], isLoading: chapterLoading} = useGetRoadmapChapters(selectedRoadmapId, userID)
+const { data: recommendedData = [], isLoading: recommendedLoading } = useGetRoadmapRecommendation();
+
+if ( recommendedLoading || chapterLoading || roadmapLoading) return <span className="text-amber-50 text-3xl">Loading Data...</span>
+if ( !recommendedData || !pillarsData || !roadmapData ) return null;
+
+// Filter pillars based on selectedRoadmapId
+const roadmapSlug = roadmapData?.roadmapSlug || 'Unknown Roadmap Slug';
+const roadmapTitle = roadmapData?.title || 'Unknown Roadmap';
+const creator = roadmapData?.creatorID || 'Unknown creator';
+
+// order by 'order' field
+pillarsData.sort((a, b) => a.order - b.order);
 
 function navigateToProjectDetails(projectId: number) {
     navigate(`/project/${projectId}`);
@@ -33,7 +42,7 @@ function navigateToProjectDetails(projectId: number) {
 // Helper function to check if a pillar has project in recommended data
 function hasProjects(pillar: PillarType): boolean {
     if(Number(userID) === creator) return true;
-    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar.chapterID && data.sourceType === "Chapter"));
+    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar.chapterID && data.sourceType === "chapter"));
     const uniqueChapterIds = [...new Set(filterRecommendedData.map(data => data.sourceId))];
     if(uniqueChapterIds.includes(pillar.chapterID)) return true;
     return false;
@@ -42,13 +51,11 @@ function hasProjects(pillar: PillarType): boolean {
 // Helper function to check if a roadmap has career in recommended data
 function hasCareer(): boolean {
     if(Number(userID) === creator) return true;
-    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === selectedRoadmapId && data.sourceType === "Roadmap"));
+    const filterRecommendedData = recommendedData.filter(data => (data.sourceId === selectedRoadmapId && data.sourceType === "roadmap"));
     const uniqueRoadmapIds = [... new Set(filterRecommendedData.map(data => data.sourceId))];
     if(uniqueRoadmapIds.includes(selectedRoadmapId)) return true;
     return false;
 }
-
-const [openChapterId, setOpenChapterId] = useState<number | null>(null);
 
 function toggleProjectsVisibility(chapterID: number) {
     // If the clicked chapter is already open, close it (set to null)
@@ -69,9 +76,9 @@ function toggleProjectsVisibility(chapterID: number) {
                     </button>
                 </Link>)}
             </div>
-            {filteredPillars.length === 0 ? (
+            {pillarsData.length === 0 ? (
                 <p className="text-gray-400 text-center mt-10">No chapters found for this roadmap.</p>
-            ) : (filteredPillars.map((pillar) => (
+            ) : (pillarsData.map((pillar) => (
                 <div key={pillar.chapterID} className='mb-4'>
                     <PillarCard 
                         key={pillar.chapterID}

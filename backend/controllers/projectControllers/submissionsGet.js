@@ -28,7 +28,7 @@ export const getAllSubmissions = async (req, res) => {
       postedOn,
       title,
       repoLink,
-      Users!creatorId(fname, lname)
+      Users!creatorId(username)
     `)
     .eq("projectId", projectId);
 
@@ -42,11 +42,54 @@ export const getAllSubmissions = async (req, res) => {
     postedOn: submission.postedOn,
     title: submission.title,
     repoLink: submission.repoLink,
-    creatorName: submission.Users ? `${submission.Users.fname} ${submission.Users.lname}` : null,
+    creatorName: submission.Users ? `${submission.Users.username}` : null,
   }));
 
   return res.json({ submissions: enrichedData });
 }
+/* 
+Controller to get all submissions by a user
+Input:
+  Params: userId: number
+Output:
+  {
+    submissions: [...submission]
+  }
+*/
+
+export const getAllSubmissionsByUser = async (req, res) => {
+  const { userId } = req.params;
+
+  const { data: submissions, error } = await supabase
+    .from("Submissions")
+    .select(`
+      submissionId,
+      projectId,
+      postedOn,
+      title,
+      repoLink,
+      Projects!projectId!inner (
+        title
+      )
+    `)
+    .eq("creatorId", userId);
+
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  const enrichedData = submissions.map(submission => ({
+    submissionId: submission.submissionId,
+    projectId: submission.projectId,
+    postedOn: submission.postedOn,
+    title: submission.title,
+    repoLink: submission.repoLink,
+    projectTitle: submission.Projects?.title ?? "Title not found"
+  }));
+
+  return res.json({ submissions: enrichedData });
+};
+
 
 // Controller to get specific submission for a project (full details)
 /*
@@ -72,15 +115,33 @@ export const getSubmissionById = async (req, res) => {
   const { projectId, submissionId } = req.params;
   const { data: submission, error } = await supabase
     .from("Submissions")
-    .select("submissionId, projectId, creatorId, postedOn, lastUpdated, title, repoLink, rationaleFile")
+    .select(`
+      submissionId, 
+      projectId, 
+      creatorId, 
+      postedOn, 
+      lastUpdated, 
+      title, 
+      repoLink, 
+      rationaleFile,
+      Projects!projectId!inner(title)
+    `)
     .eq("projectId", projectId)
     .eq("submissionId", submissionId)
     .single();
   if (error) {
+    if (error.code === 'PGRST116') {
+      return res.status(404).json({ error: "Submission not found" });
+    }
     return res.status(500).json({ error: error.message });
+  }
+  if (!submission) {
+    return res.status(404).json({ error: "Submission not found" });
   }
   // Get creator name
   submission.creatorName = await getUserNameFromId(submission.creatorId);
-  return res.json(submission);
+  submission.projectTitle = submission.Projects?.title || "Title not found";
+  delete submission.Projects;
+  return res.json({ submission });
 }
 

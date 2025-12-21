@@ -1,0 +1,6 @@
+recommendationId,sourceId,sourceType,targetId,targetType,createdAt
+6,100081,chapter,1,project,2025-11-15
+7,100081,chapter,2,project,2025-11-15
+8,100081,chapter,3,project,2025-11-15
+9,100017,roadmap,2,career,2025-11-15
+10,100017,roadmap,1,career,2025-11-15

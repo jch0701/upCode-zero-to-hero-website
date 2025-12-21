@@ -1,30 +1,34 @@
 import React from 'react';
 import LinkCard from './linkCard';
-import { useSelector } from "react-redux";
-import { Link, useLocation } from 'react-router-dom';
-import type { RoadmapType } from '@/store/roadmapSlice';
-import type { PillarType } from '@/store/pillarsSlice';
-import type { LinkType } from '@/store/linksSlice';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
+import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI';
+import { useGetChapterLinks } from '@/api/roadmaps/linkAPI';
 
 interface linkListProps{
     selectedChapterId: number
 }
 
 const LinkList: React.FC<linkListProps> = ({ selectedChapterId }) => {
-// Filter pillars based on selectedRoadmapId
-const roadmapData = useSelector((state: any) => state.roadmap.roadmapList) as RoadmapType[];
-const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-const linksData = useSelector((state: any) => state.link.linkList) as LinkType[];
-const filteredLinks = linksData.filter(links => links.chapterID === selectedChapterId);
-const chapterSlug = pillarsData.find(p => p.chapterID === selectedChapterId)?.chapterSlug || 'Unknown Chapter Slug';
-const chapterTitle = pillarsData.find(p => p.chapterID === selectedChapterId)?.title || 'Unknown Chapter';
-const roadmapID = pillarsData.find(p => p.chapterID === selectedChapterId)?.roadmapID || 'Unknown Roadmap ID';
-const roadmapSlug = roadmapData.find(r => r.roadmapID === roadmapID)?.roadmapSlug || 'Unknown Roadmap Slug';
-const creator = roadmapData.find(r => r.roadmapID === roadmapID)?.creatorID || 'Unknown creator';
-const userID = localStorage.getItem("userID");
-// order by 'order' field
-filteredLinks.sort((a, b) => a.order - b.order);
 const location = useLocation();
+const userID = localStorage.getItem("userID");
+const { roadmapID } = useParams<{ roadmapID: string }>();
+const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
+const { data: chapterItem, isLoading : chapterLoading } = useGetSingleChapter(Number(roadmapID),selectedChapterId, userID);
+const { data: linksData = [], isLoading: linkLoading } = useGetChapterLinks(selectedChapterId, userID);
+
+if (roadmapLoading || chapterLoading || linkLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
+if ( !roadmapItem || !chapterItem || !linksData ) return null;
+
+const chapterSlug = chapterItem?.chapterSlug ?? 'Unknown Chapter Slug';
+const chapterTitle = chapterItem?.title ?? 'Unknown Chapter';
+const roadmapSlug = roadmapItem?.roadmapSlug ?? 'Unknown roadmap Slug';
+const creator = roadmapItem?.creatorID ?? 'Unknown creator ID';
+
+
+
+// order by 'order' field
+linksData.sort((a, b) => a.order - b.order);
 return (
     <div className="w-full mx-auto">
         <div className='flex items-center justify-between mb-6'>
@@ -39,10 +43,10 @@ return (
                     </button>
                 </Link>)}
         </div >
-            {filteredLinks.length === 0 ? (
+            {linksData.length === 0 ? (
                 <p className="text-gray-400 text-center mt-10">No links found for this chapter.</p>
-            ) : (filteredLinks.map((links) => (
-                <div className='mb-4'>
+            ) : (linksData.map((links) => (
+                <div className='mb-4' key={links.nodeID}>
                     <LinkCard 
                         key={links.nodeID}
                         selectedNodeID={links.nodeID}
