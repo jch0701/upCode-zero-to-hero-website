@@ -29,9 +29,9 @@ const Recommendation: React.FC<RecommendationProps> =
     const { data: pillar, isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID), selectedID, userID);
 
     if ( recommendedLoading || projectLoading || chapterLoading || careerLoading ) return <span className="text-amber-50 text-3xl">Loading Data...</span>
-
+    type ProjectWithCreator = ProjectType & { creatorName: string };
     let filterRecommendedData: RecommendationType[] = [];
-    let chapterProjects: ProjectType[] = [];
+    let chapterProjects: ProjectWithCreator[] = [];
     let roadmapCareers: CareerItem[] = [];
 
     if(mode === "project"){
@@ -56,13 +56,13 @@ const Recommendation: React.FC<RecommendationProps> =
                 <div className='pl-5 pr-5'>
                 {filterRecommendedData.length > 0 ? (
                     <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
-                    {chapterProjects.map((project: ProjectType) => (
+                    {chapterProjects.map((project: ProjectWithCreator ) => (
                         <div className="flex-shrink-0 w-70" key={project.projectId}>
 
                             <ProjectCard 
                                 key={project.projectId}
                                 {...project}
-                                creatorName={project.title}
+                                creatorName={project.creatorName}
                                 onClick={() => navigateDetails && navigateDetails(project.projectId)}
                             />
                         </div>
