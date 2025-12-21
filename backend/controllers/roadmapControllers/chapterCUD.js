@@ -49,14 +49,14 @@ export const createChapter = async(req, res) => {
 
 
 export const editChapter = async(req, res) => {
-    if (req.method !== 'PUT') {
-        return res.status(405).end(`Method ${req.method} Not Allowed. Use PUT only.`);
+    if (req.method !== 'PATCH') {
+        return res.status(405).end(`Method ${req.method} Not Allowed. Use PATCH only.`);
     }
 
     const updatedChapter = req.body;
-    const putChapterID = updatedChapter.chapterID;
+    const chapterID = updatedChapter.chapterID;
 
-    if (!putChapterID) {
+    if (!chapterID) {
         return res.status(400).json({ message: 'Chapter ID is required for update.' });
     }
 
@@ -74,12 +74,12 @@ export const editChapter = async(req, res) => {
         const { data: chapter, error } = await supabase
             .from('Chapters')
             .update(payload)
-            .eq('chapterID', putChapterID)
+            .eq('chapterID', chapterID)
             .select()
             .single();
 
         if (error) {
-            console.error('PUT Error:', error);
+            console.error('PATCH Error:', error);
             return res.status(500).json({ message: 'Failed to update chapter.' });
         }
 

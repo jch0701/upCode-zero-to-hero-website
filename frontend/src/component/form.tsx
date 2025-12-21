@@ -21,7 +21,7 @@ export const Form: React.FC<ProjectFormProps> = ({ onSubmit, onClose, children }
   }
 
   return (
-    <form onSubmit={handleSubmit} ref={formRef} className="w-full max-w-2xl mx-auto p-4 sm:p-6">
+    <form id={"basic-form"} onSubmit={handleSubmit} ref={formRef} className="w-full max-w-2xl mx-auto p-4 sm:p-6">
       {children}
       <FieldGroup className="mt-4 flex flex-col sm:flex-row sm:justify-end gap-3">
         <Button 

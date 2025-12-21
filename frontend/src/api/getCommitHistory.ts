@@ -6,7 +6,6 @@ export function useGetCommitHistory(repoLink: string) {
     queryKey: ["commitHistory", repoLink],
     queryFn: () => {
       const { owner, repo } = parseGitHubRepoLink(repoLink);
-      console.log("Fetching commits for:", owner, repo);
       return fetchAllCommits(owner, repo);
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -18,7 +17,6 @@ export function useGetMainRepoLanguage(repoLink: string) {
     queryKey: ["mainRepoLanguage", repoLink],
     queryFn: async () => {
       const { owner, repo } = parseGitHubRepoLink(repoLink);
-      console.log("Fetching main language for:", owner, repo);
       const url = `https://api.github.com/repos/${owner}/${repo}`;
       const response = await Api.get(url, {
         headers: { 
@@ -81,11 +79,8 @@ export async function fetchAllCommits(owner: string, repo: string) {
     if(allCommits.length === 0){
       throw new Error("No commits found.");
     }
-    console.log(`Fetched ${allCommits.length} commits for ${owner}/${repo}`);
-    console.log(allCommits);
     return allCommits;
   } catch(error){
-    console.error("Error fetching commits:", error);
     throw error;
   }
 }

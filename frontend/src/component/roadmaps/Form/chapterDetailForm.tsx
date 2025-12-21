@@ -5,10 +5,7 @@ import FormBar from "../../formBox";
 import { difficultyOptions, roadmapCategoryOptions } from "@/lib/types";
 import { validateTitle, validateOrder, validateDifficulty, validateCategory, validatePrerequisite } from "../../validateFormBox";
 import { defaultImageSrc, bin } from "../../../lib/image";
-import { useDispatch, useSelector } from "react-redux";
-import { addChapter, editChapter, deleteChapter , type PillarType} from "@/store/pillarsSlice";
-import { updateRoadmapDate } from "@/store/roadmapSlice";
-import { deleteLink, type LinkType } from "@/store/linksSlice";
+import { useCreateChapter, useDeleteChapter, useGetSingleChapter, useUpdateChapter } from "@/api/roadmaps/chapterAPI";
 
 interface ChapterDetailFormProps{
     mode: "add" | "edit";
@@ -18,12 +15,18 @@ interface ChapterDetailFormProps{
 const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
     mode, selectedChapterID}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch();
-        const pillarData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-        const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
-        const chapterItem = pillarData.find(p => p.chapterID === selectedChapterID);
-        if (!chapterItem && mode==="edit" ) return <p className="text-white text-center mt-10">Chapter not found</p>;
+        const userID = localStorage.getItem("userID");
         const {roadmapID} = useParams<{ roadmapID: string}>();
+
+        const { data: chapterItem, isLoading} = useGetSingleChapter(Number(roadmapID), Number(selectedChapterID), userID);
+
+        if ( isLoading ) return null;
+        if ( !chapterItem && mode==="edit" ) return <p className="text-white text-center mt-10">Chapter not found</p>;
+
+        const createChapterMutation = useCreateChapter(Number(roadmapID));
+        const updateChapterMutation = useUpdateChapter(Number(roadmapID), Number(selectedChapterID));
+        const deleteChapterMutation = useDeleteChapter();
+
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? chapterItem!.title ?? "" : "");
         const [queryDescription, setQueryDescription] = useState(mode === "edit" ? chapterItem!.description ?? "" : "")
         const [queryDifficulty, setQueryDifficulty] = useState(mode === "edit" ? chapterItem!.difficulty?.toLowerCase() ?? "" : "")
@@ -31,8 +34,6 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
         const [queryCategory, setQueryCategory] = useState(mode === "edit" ? chapterItem!.category ?? "" : "")
         const [queryPrerequisite, setQueryPrerequisite] = useState(mode === "edit" ? chapterItem!.prerequisite ?? "" : "")
         const [errors, setErrors] = React.useState<string[]>([]);
-        const filterLinksData = linkData.filter(data => data.chapterID === selectedChapterID);
-        const uniqueLinkIDs = [...new Set(filterLinksData.map(data => data.nodeID))];
 
         const handleSubmit = (e: React.FormEvent) => {
             e.preventDefault()
@@ -48,54 +49,33 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                 return;
             } 
             if (mode === 'add'){
-                dispatch(
-                    addChapter({
-                        roadmapID: Number(roadmapID),
-                        title: queryTitle,
-                        description: queryDescription,
-                        difficulty: queryDifficulty.charAt(0).toUpperCase() + queryDifficulty.slice(1).toLowerCase(),
-                        category: queryCategory,
-                        prerequisite: queryPrerequisite,
-                        order: Number(queryOrder)
-                    })
-                )
+                createChapterMutation.mutate({
+                    title: queryTitle,
+                    description: queryDescription,
+                    difficulty: queryDifficulty.charAt(0).toUpperCase() + queryDifficulty.slice(1).toLowerCase(),
+                    category: queryCategory,
+                    prerequisite: queryPrerequisite,
+                    order: Number(queryOrder)
+                })
             }
             if (mode === 'edit'){
-                dispatch(
-                    editChapter({
-                        chapterID: Number(selectedChapterID),
-                        chapterSlug: "",
-                        roadmapID: Number(roadmapID),
-                        title: queryTitle,
-                        description: queryDescription,
-                        difficulty: queryDifficulty.charAt(0).toUpperCase() + queryDifficulty.slice(1).toLowerCase(),
-                        category: queryCategory,
-                        prerequisite: queryPrerequisite,
-                        order: Number(queryOrder),
-                        isViewed:false,
-                        modifiedDate: ""
-                    })
-                )
+                updateChapterMutation.mutate({
+                    title: queryTitle,
+                    description: queryDescription,
+                    difficulty: queryDifficulty.charAt(0).toUpperCase() + queryDifficulty.slice(1).toLowerCase(),
+                    category: queryCategory,
+                    prerequisite: queryPrerequisite,
+                    order: Number(queryOrder)
+                })
             }
-            dispatch(
-                updateRoadmapDate(Number(roadmapID))
-            )
             navigate(-1)
         }
 
         const handleDelete = () => {
         if (selectedChapterID) {
-            for (const l of uniqueLinkIDs) {
-                dispatch(deleteLink(l));
-                console.log("Delete link:", l);
-            }
-            dispatch(deleteChapter(selectedChapterID));
-            console.log("Delete chapter:", selectedChapterID);
+            deleteChapterMutation.mutate(Number(selectedChapterID))
         }
         navigate(-2);
-        dispatch(
-            updateRoadmapDate(Number(roadmapID))
-        )
         };
 
         return(
@@ -124,7 +104,7 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
                         <X size={20} />
                     </button>
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form id={"chapter-form"} onSubmit={handleSubmit}>
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Left Section: Order, Difficulty, Category, Prerequisite Info */}
                     <div className="w-full md:w-[55%] md:order-none">

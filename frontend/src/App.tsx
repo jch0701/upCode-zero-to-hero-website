@@ -75,7 +75,7 @@ const router = createBrowserRouter([
           { index: true, element: <Project /> },
           { path: ":projectId", element: <ProjectDetails /> },
           { path: "myProjects", element: <MyProjects /> },
-          { path: "submission/:submissionId", element: <SubmissionDetails /> },
+          { path: ":projectId/submission/:submissionId", element: <SubmissionDetails /> },
         ],
       },
       {

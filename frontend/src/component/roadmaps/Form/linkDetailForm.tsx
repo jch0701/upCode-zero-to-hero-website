@@ -4,10 +4,7 @@ import { X } from 'lucide-react';
 import FormBar from "../../formBox";
 import { validateTitle, validateOrder, validateLink } from "@/component/validateFormBox";
 import { defaultImageSrc, bin } from "../../../lib/image";
-import { useDispatch, useSelector } from "react-redux";
-import { addLink, editLink, deleteLink, type LinkType } from "@/store/linksSlice";
-import { updateChapterDate } from "@/store/pillarsSlice";
-import { updateRoadmapDate } from "@/store/roadmapSlice";
+import { useCreateLink, useDeleteLink, useGetSingleLink, useUpdateLink } from "@/api/roadmaps/linkAPI";
 
 interface LinkDetailFormProps{
     mode: "add" | "edit";
@@ -17,15 +14,23 @@ interface LinkDetailFormProps{
 const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
     mode, selectedLinkID}) => {
         const navigate = useNavigate();
-        const dispatch = useDispatch();
-        const linkData = useSelector((state: any) => state.link.linkList) as LinkType[];
-        const linkItem = linkData.find(p => p.nodeID === selectedLinkID);
-        if (!linkItem && mode==="edit" ) return <p className="text-white text-center mt-10">Link not found</p>;
-        const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string}>();
+        const userID = localStorage.getItem("userID");
+        const { chapterID } = useParams<{ chapterID: string}>();
+
+        const { data: linkItem, isLoading } = useGetSingleLink(Number(chapterID), Number(selectedLinkID), userID);
+
+        if ( isLoading ) return null;
+        if ( !linkItem && mode==="edit" ) return <p className="text-white text-center mt-10">Link not found</p>;
+        
+        const createLinkMutation = useCreateLink(Number(chapterID));
+        const updateLinkMutation = useUpdateLink(Number(chapterID), Number(selectedLinkID))
+        const deleteLinkMutation = useDeleteLink();
+
         const [queryTitle, setQueryTitle] = useState(mode === "edit" ? linkItem!.title ?? "" : "");
         const [queryOrder, setQueryOrder] = useState(mode === "edit" && linkItem!.order !== undefined ? String(linkItem!.order) : "");
         const [queryLink, setQueryLink] = useState(mode === "edit" ? linkItem!.link ?? "" : "");
         const [errors, setErrors] = React.useState<string[]>([]);
+
         const handleSubmit = (e: React.FormEvent) => {
             e.preventDefault()
             // validate title
@@ -38,44 +43,27 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
                 return;
             } 
             if (mode === "add"){
-                dispatch(
-                    addLink({
-                        chapterID: Number(chapterID),
-                        title: queryTitle,
-                        order: Number(queryOrder),
-                        link: queryLink,
-                    })
-                )
+                createLinkMutation.mutate({
+                    title: queryTitle,
+                    order: Number(queryOrder),
+                    link: queryLink,
+                })
             }
             if (mode === "edit"){
-                dispatch(
-                    editLink({
-                        nodeID: Number(selectedLinkID),
-                        chapterID: Number(chapterID),
-                        title: queryTitle,
-                        order: Number(queryOrder),
-                        link: queryLink,
-                        isViewed: false,
-                        modifiedDate: "",
-                    })
-                )
+                updateLinkMutation.mutate({
+                    title: queryTitle,
+                    order: Number(queryOrder),
+                    link: queryLink,
+                })
             }
             navigate(-1);
-            dispatch(
-                updateChapterDate(Number(chapterID)),
-                updateRoadmapDate(Number(roadmapID))
-            )
         }
 
         const handleDelete = () => {
-        if (selectedLinkID) {
-            dispatch(deleteLink(Number(selectedLinkID)));
-        }
-        navigate(-1);
-        dispatch(
-            updateChapterDate(Number(chapterID)),
-            updateRoadmapDate(Number(roadmapID))
-        )
+            if (selectedLinkID) {
+                deleteLinkMutation.mutate(Number(selectedLinkID));
+            }
+            navigate(-1);
         };
     
         return (
@@ -103,7 +91,7 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
                     <X size={20} />
                 </button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form id={"link-form"} onSubmit={handleSubmit}>
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="w-full">
                     {/* Title Section */}
@@ -139,5 +127,3 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
 }
 
 export default LinkDetailForm
-
-

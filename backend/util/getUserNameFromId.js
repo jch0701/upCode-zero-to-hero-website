@@ -2,11 +2,11 @@ import { supabase } from '../config.js';
 export const getUserNameFromId = async (userId) => {
   const { data: userData, error } = await supabase
     .from("Users")
-    .select("fname, lname")
+    .select("username")
     .eq("userId", userId)
     .single();
   if (error) {
     throw new Error(`Error fetching user data: ${error.message}`);
   }
-  return userData ? `${userData.fname} ${userData.lname}` : null;
+  return userData ? `${userData.username}` : null;
 }

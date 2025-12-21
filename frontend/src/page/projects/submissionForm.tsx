@@ -8,10 +8,13 @@ import {
 import { Input } from "@/component/shadcn/input";
 import { Button } from "@/component/shadcn/button";
 import { Form } from "@/component/form";
-import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef } from "react";
-import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
+import { useSelector } from "react-redux";
+import { useCreateSubmission } from "@/api/projects/submissionsAPI";
+// import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
 import { update_Activity } from "@/component/activity/activity_tracker";
+import { useCallback } from "react";
+import { LoadingIcon } from "@/component/LoadingIcon";
 type SubmissionFormProps = {
   close: () => void;
   openAsCreateForm?: boolean;
@@ -22,27 +25,26 @@ type SubmissionFormProps = {
 export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm, close, initialData, projectId }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileInput, setFileInput] = useState<File | null>(null);
-  const dispatch = useDispatch();
+  const creatorId = useSelector((state: any) => state.profile.userId);
+  const { mutateAsync: createSubmission, status: createSubmissionStatus, error: createSubmissionError } = useCreateSubmission(creatorId, projectId);
   // Currently creatorId is bugged
   // const creatorId = useSelector((state: any) => state.profile.userId); 
-  const creatorId = 1;
   const submissionCounted = useRef(false);
  
-  async function handleSubmit(fd: FormData) {
+  const handleSubmit = useCallback(async (fd: FormData) => {
     const payload: any = {
       ...Object.fromEntries(fd.entries()),
       creatorId
     };
     const file = fd.get("rationaleFile");
     if (file instanceof File && file.size > 0) {
-      const uint8Array = await convertFileToUInt8(file);
-      payload.rationaleFile = uint8ToBase64(uint8Array); // serializable
+      const fileData = await file.text();
+      payload.rationaleFile = fileData; // serializable
     } else {
       delete payload.rationaleFile;
     }
 
-    console.log("Submitting payload:", payload);
-    dispatch({ type: openAsCreateForm ? "submissions/addSubmission" : "submissions/editSubmission", payload });
+    await createSubmission(payload);
 
     //Profile usage
     if (openAsCreateForm && !submissionCounted.current) {
@@ -52,6 +54,15 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
       submissionCounted.current = true; // prevent double count in the same submit event
     }
     close();
+  }, [createSubmission, creatorId, close, openAsCreateForm, projectId]);
+
+  switch (createSubmissionStatus) {
+    case "pending":
+      return <div><LoadingIcon /> Creating submission...</div>;
+    case "error":
+      return <div className="text-red-500 text-center mt-4">Error creating submission. 
+        {(createSubmissionError as any).response.data.error}
+      </div>;
   }
 
   return (

@@ -1,4 +1,4 @@
-import type { PillarType } from '@/store/pillarsSlice';
+import type { PillarType } from '@/lib/roadmapModuleTypes';
 import type { Tag } from '../tag'; 
 
 const difficultyScore = (level: string) => {
@@ -19,7 +19,8 @@ export const getDifficultyLabel = (arr: string[]) => {
 };
 
 export const generateTags = (roadmapID: number, pillarsData: PillarType[]): Tag[] => {
-  const filtered = pillarsData.filter(p => p.roadmapID === roadmapID);
+  const data = pillarsData || [];
+  const filtered = data.filter(p => p.roadmapID === roadmapID);
 
   const difficultyArr = filtered.map(p => p.difficulty);
   const categoryArr = filtered.map(p => p.category);

@@ -3,8 +3,8 @@ import { Button } from "@/component/shadcn/button";
 import { FieldGroup } from "@/component/shadcn/field";
 import { ProjectForm } from "../../page/projects/projectForm";
 import { SubmissionForm } from "../../page/projects/submissionForm";
-import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import { usePutTrackingData } from "@/api/projects/projectsAPI";
 import {
   Dialog,
   DialogTrigger,
@@ -23,15 +23,12 @@ interface ProjectInteractiveProps {
   setSubmissionDialogOpen: (value: boolean) => void;
 }
 
-export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, projectId, project, submissionDialogOpen, setSubmissionDialogOpen }) => {
-  const dispatch = useDispatch();
+export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, projectId, project, 
+  submissionDialogOpen, setSubmissionDialogOpen }) => {
+  const { mutate: putTrackingData } = usePutTrackingData(userId, projectId);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const trackingData = useSelector((state: any) =>
-    state.projectTracking.records.find(
-      (record: any) => record.userId === userId && record.projectId === projectId
-    )
-  ) || { isTracking: false, isMarkedAsDone: false };
-
+  const [isTracking, setIsTracking] = useState(project?.isTracking || false);
+  const [isMarkedAsDone, setIsMarkedAsDone] = useState(project?.isMarkedAsDone || false);
   return (
     <div className="flex h-auto items-center mt-5 bg-black/50 text-sm w-fit rounded-2xl">
       {
@@ -85,32 +82,26 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
         </DialogContent>
       </Dialog>
       <Toggle
-        pressed={trackingData?.isTracking}
+        pressed={isTracking}
         onPressedChange={() => {
-          dispatch({
-            type: 'projectTracking/setTrackingStatus', payload: {
-              userId: userId,
-              projectId: projectId,
-              isTracking: !trackingData?.isTracking,
-              isMarkedAsDone: trackingData?.isMarkedAsDone,
-            }
-          });
+          setIsTracking(!isTracking);
+          putTrackingData({
+            isTracking: !isTracking,
+            isMarkedAsDone: isMarkedAsDone,
+          })
         }}
         className={`cursor-pointer bg-black text-white px-4 rounded-none hover:bg-blue-300 hover:text-black data-[state=on]:bg-blue-600 data-[state=on]:text-white`}
       >
         Track this project
       </Toggle>
       <Toggle
-        pressed={trackingData?.isMarkedAsDone}
+        pressed={isMarkedAsDone}
         onPressedChange={() => {
-          dispatch({
-            type: 'projectTracking/setTrackingStatus', payload: {
-              userId: userId,
-              projectId: projectId,
-              isTracking: trackingData?.isTracking,
-              isMarkedAsDone: !trackingData?.isMarkedAsDone,
-            }
-          });
+          setIsMarkedAsDone(!isMarkedAsDone);
+          putTrackingData({
+            isTracking: isTracking,
+            isMarkedAsDone: !isMarkedAsDone,
+          })
         }}
         className={`cursor-pointer bg-black text-white px-4 rounded-r-2xl rounded-l-none hover:bg-green-300 hover:text-black data-[state=on]:bg-green-600 data-[state=on]:text-white`}
       >

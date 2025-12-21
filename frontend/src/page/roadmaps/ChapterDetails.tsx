@@ -1,15 +1,14 @@
 import ChapterDescription from '@/component/roadmaps/DetailSession/chapterDescription';
 import LinkList from '@/component/roadmaps/Selector/linkList';
-import { useSelector } from "react-redux";
 import React, {useEffect, useRef} from 'react';
 import { useParams } from 'react-router-dom';
 import { update_Activity } from '@/component/activity/activity_tracker';
-import type { PillarType } from '@/store/pillarsSlice';
+import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
+import { Spinner } from '@/component/shadcn/spinner';
 
 export const ChapterDetails: React.FC = () => {
-    const pillarsData = useSelector((state: any) => state.chapter.pillarList) as PillarType[];
-    const { chapterID } = useParams<{ chapterID: string }>();
-    const chapterItem = pillarsData.find(pillar => pillar.chapterID === Number(chapterID));
+    const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string }>();
+    const userID = localStorage.getItem("userID");
 
     //  Use ref instead of useState to avoid warnings
     const hasCountedRef = useRef(false);
@@ -23,6 +22,16 @@ export const ChapterDetails: React.FC = () => {
         },{ type: "chapter", id: chapterID });
         hasCountedRef.current = true;//marked as counted
     },[chapterID]);
+
+    const { data: chapterItem, isLoading } = useGetSingleChapter(Number(roadmapID), Number(chapterID), userID);
+    if (isLoading)  {
+        return(
+        <div className="flex h-screen -translate-y-12 w-full items-center justify-center">
+            <Spinner className="size-20 text-amber-50" />
+            <span className="text-amber-50 text-3xl">Loading Chapter...</span>
+        </div>
+        )
+    };
 
     if (!chapterItem) return <p className="text-white text-center mt-10">Chapter not found</p>;
 

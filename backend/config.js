@@ -13,13 +13,15 @@ SUPABASE_SERVICE_KEY=your_supabase_service_key
 dotenv.config();
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+const anonKey = process.env.SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error('Supabase URL and Service Key must be defined in .env');
 }
 
 // Create and export the Supabase client
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey); //service key
+export const supabaseAuth = createClient(supabaseUrl, anonKey); //public key
 
 export const initDB = async () => {
   try {

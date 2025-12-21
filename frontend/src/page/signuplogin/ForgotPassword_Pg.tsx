@@ -5,6 +5,7 @@ import { Validate_Email } from "@/component/Signup_Login/Validate_Signup_Login";
 import TextInput from "@/component/Signup_Login/TextInput";
 import email_icon from "@/assets/signuplogin/email.png";
 import "@/component/Signup_Login/Fotgot_Reset.css";
+import { checkEmail } from "@/api/account/accountAPI";
 
 const ForgotPassword_Pg = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const ForgotPassword_Pg = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
 
     const emailErrors = Validate_Email(email);
@@ -26,7 +27,12 @@ const ForgotPassword_Pg = () => {
     setError("");
 
     // Proceed to next step
-    navigate("/reset-password");
+    try{
+      await checkEmail(email);
+      navigate("/reset-password", {state: {email}});
+    }catch (err: any){
+      setError(err.response?.data?.message || "Email not found");
+    }
   };
 
   return (
@@ -43,7 +49,7 @@ const ForgotPassword_Pg = () => {
         {/* Card */}
         <div className="forgot-card">
 
-          <form onSubmit={handleSubmit}>
+          <form id={"forgot-password-form"} onSubmit={handleSubmit}>
 
             {/* Input */}
             <div className="forgot-input-wrapper">
