@@ -9,8 +9,9 @@ import { useGetRoadmapChapters } from '@/api/roadmaps/chapterAPI.ts';
 
 // Type and data structure
 export interface RoadmapItemCardProps {
-    selectedRoadmapID: number;
-    tags?: Tag[];
+  selectedRoadmapID: number;
+  customTitle?: string;
+  tags?: Tag[];
 }
 
 const MAX_VISIBLE_TAGS = 3;
@@ -18,7 +19,7 @@ const MAX_VISIBLE_TAGS = 3;
 // --- Main Card Component ---
 
 export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
-    selectedRoadmapID
+  selectedRoadmapID, customTitle
 }) => {
   const userID = localStorage.getItem("userID");
   // Compute tags from pillarsData when not provided
@@ -51,7 +52,7 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
       </div>
 
       {/* 2. Title (Name) */}
-      <h3 className="text-xl text-left font-bold text-white mb-1 leading-tight">{roadmapItem.title}</h3>
+      <h3 className="text-xl text-left font-bold text-white mb-1 leading-tight">{customTitle ? customTitle : roadmapItem.title}</h3>
 
       {/* 3. Date */}
       <p className="text-sm text-left text-gray-400 mb-4">

@@ -22,6 +22,9 @@ export function useGetAllRecommendations(projectId: number) {
   return useQuery({
     queryKey: ['recommendations', 'byProjectId', projectId],
     queryFn: async (): Promise<RecommendationType[]> => {
+      if (projectId === -1) {
+        return [];
+      }
       const response = await Api.get(`/projects/${projectId}/recommendations/getAllRecommendations`);
       return response.data.recommendations;
     }

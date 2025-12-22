@@ -32,6 +32,7 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  console.log("Selected Items:", selectedItems);
 
   const filteredItems = items.filter(
     (item) =>
@@ -112,7 +113,7 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
             key={item[idtag]}
             className="bg-blue-600 text-white px-3 py-[0.15rem] rounded-full flex items-center gap-2"
           >
-            <span className="text-sm">{item[searchKey]}</span>
+            <span className="text-sm">{item?.roadmapTitle ? `${item.roadmapTitle} - ${item[searchKey]}` : item[searchKey]}</span>
             <Button
               type="button"
               onClick={() => handleRemove(item[idtag])}

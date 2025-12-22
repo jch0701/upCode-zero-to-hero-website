@@ -26,7 +26,7 @@ router.post('/projects/create', createProject);
 // Put tracking data (user level) for the project
 router.put('/projects/:projectId/putTrackingData/:userId', putTrackingData);
 
-router.patch('/projects/update/:projectId', updateProject);
+router.put('/projects/update/:projectId', updateProject);
 router.delete('/projects/delete/:projectId', deleteProject);
 
 // ************************************************************

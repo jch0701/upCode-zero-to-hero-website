@@ -14,19 +14,30 @@ import { Textarea } from "@/component/shadcn/textarea";
 import { Button } from "@/component/shadcn/button";
 import { categoryList } from "@/lib/types";
 import { useSelector } from "react-redux";
-import { useCreateProject } from "@/api/projects/projectsAPI";
-// import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
+import { useCreateProject, useUpdateProject } from "@/api/projects/projectsAPI";
+import { useGetAllRecommendations } from "@/api/projects/recommendationsAPI";
 import type { ExtendedProjectType } from "@/lib/projectModuleTypes";
 import { LoadingIcon } from "@/component/LoadingIcon";
 
 type ProjectFormProps = {
   initialData?: any;
+  projectId?: number;
   close: () => void;
 }
 
-export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, close }) => {
+export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId, close }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { mutateAsync: createProject, status: formSubmissionStatus, error: formSubmissionError } = useCreateProject(useSelector((state: any) => state.profile.userId));
+  const userId = useSelector((state: any) => state.profile.userId);
+  const { mutateAsync: createProject, status: formSubmissionStatus, error: formSubmissionError } = useCreateProject(userId);
+  const { mutateAsync: updateProject, status: formUpdateStatus, error: formUpdateError } = useUpdateProject(projectId || -1);
+  const { data: allRecommendations = [], status: getAllRecStatus, error: getAllRecError } = useGetAllRecommendations(projectId || -1);
+
+  const roadmapsFetched = getAllRecStatus === "success" 
+  && allRecommendations.filter(rec => rec.sourceType === "roadmap" || rec.targetType === "roadmap" 
+    || rec.sourceType === "chapter" || rec.targetType === "chapter") || [];
+  const careersFetched = getAllRecStatus === "success" 
+  && allRecommendations.filter(rec => rec.sourceType === "career" || rec.targetType === "career") || [];
+
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState<any>({
@@ -36,12 +47,12 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, close }) 
     shortDescription: initialData?.shortDescription || "",
     detailsFile: initialData?.detailsFile || null,
     startingRepoLink: initialData?.startingRepoLink || "",
-    roadmaps: initialData?.roadmaps || [],
-    careers: initialData?.careers || [],
+    roadmaps: getAllRecStatus === "success" ? roadmapsFetched : [],
+    careers: getAllRecStatus === "success" ? careersFetched : [],
   });
+
   const creatorId = useSelector((state: any) => state.profile.userId);
   const roadmaps = useSelector((state: any) => state.roadmap.roadmapList);
-  // const careers = useSelector((state: any) => state.careers.careerList);
   const careers: any[] = []; // Placeholder careers array
 
   const handleSubmit = useCallback(async () => {
@@ -72,7 +83,12 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, close }) 
       finalFormData.detailsFile = text;
     }
 
-    await createProject(finalFormData);
+    if(initialData && initialData.projectId) {
+      await updateProject(finalFormData);
+    } else{
+      await createProject(finalFormData);
+    }
+
     close();
   }, [formData, fileInput, createProject, close, creatorId]);
 
@@ -84,13 +100,16 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, close }) 
     }));
   }
 
-  switch (formSubmissionStatus) {
+  const lookAt = initialData ? formUpdateStatus : formSubmissionStatus;
+  const formError = initialData ? formUpdateError : formSubmissionError;
+
+  switch (lookAt) {
     case "pending":
-      return <LoadingIcon text="Submitting Project..." iconClass="flex-col" />;
+      return <LoadingIcon text={` ${initialData ? "Updating" : "Submitting"} Project...`} iconClass="flex-col" />;
     case "error":
-      const errorMsg = (formSubmissionError as any)?.response?.data?.error || "Unknown error occurred";
+      const errorMsg = (formError as any)?.response?.data?.error || "Unknown error occurred";
       return <div className="text-red-500 text-center mt-4">
-        Error submitting project. {String(errorMsg)}
+        Error {initialData ? "updating" : "submitting"} project. {String(errorMsg)}
       </div>;
   }
 
@@ -210,6 +229,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, close }) 
             return (
               <FieldGroup>
                 <FieldSet className="gap-4 sm:gap-3">
+                  {
+                    initialData && getAllRecError && (
+                      <div className="text-red-500">
+                        Error loading recommendations: {String((getAllRecError as any)?.response?.data?.error || "Unknown error")}
+                      </div>
+                    )
+                  }
                   <SearchableMultiSelect
                     label="Related Roadmaps"
                     description="Link this project to relevant learning roadmaps"

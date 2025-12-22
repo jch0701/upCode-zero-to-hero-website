@@ -77,7 +77,7 @@ Input:
   Output: None
 */
 
-export const putTrackingData = async(req, res) => {
+export const putTrackingData = async (req, res) => {
   const { projectId, userId } = req.params;
   // Guard against missing/invalid JSON body
   const trackingData = (req.body && typeof req.body === "object") ? req.body : null;
@@ -114,13 +114,30 @@ Output: None
 
 export const updateProject = async (req, res) => {
   const { projectId } = req.params;
-  const updateData = req.body;
+  const { recommendations, ...updateData } = req.body;
   // Supabase trigger will handle lastUpdated field
   const { error: updateError } = await supabase
     .from("Projects")
     .update(updateData)
     .eq("projectId", projectId);
   if (updateError) return res.status(500).json({ error: updateError.message || "Failed to update project" });
+
+  // Update recommendations if provided
+  // to be fixed
+  // if (recommendations && recommendations.length > 0) {
+  //   const recommendationsWithProjectId = recommendations.map(rec => ({
+  //     ...rec,
+  //     sourceId: projectId,
+  //     sourceType: 'project',
+  //     createdAt: new Date().toISOString()
+  //   }));
+
+  //   const { error: recError } = await supabase
+  //     .from("Recommendations")
+  //     .update(recommendationsWithProjectId);
+
+  //   if (recError) return res.status(500).json({ error: recError.message || "Project created but failed to add recommendations" });
+  // }
   return res.status(200).json({ message: "Project updated successfully" });
 }
 

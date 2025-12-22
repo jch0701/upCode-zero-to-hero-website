@@ -4,7 +4,8 @@ import { FieldGroup } from "@/component/shadcn/field";
 import { ProjectForm } from "../../page/projects/projectForm";
 import { SubmissionForm } from "../../page/projects/submissionForm";
 import { useState } from "react";
-import { usePutTrackingData } from "@/api/projects/projectsAPI";
+import { usePutTrackingData, useDeleteProject } from "@/api/projects/projectsAPI";
+import { useNavigate } from "react-router";
 import {
   Dialog,
   DialogTrigger,
@@ -25,43 +26,61 @@ interface ProjectInteractiveProps {
 
 export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, projectId, project, 
   submissionDialogOpen, setSubmissionDialogOpen }) => {
+  const navigate = useNavigate();
   const { mutate: putTrackingData } = usePutTrackingData(userId, projectId);
+  const { mutate: deleteProject } = useDeleteProject(projectId);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isTracking, setIsTracking] = useState(project?.isTracking || false);
   const [isMarkedAsDone, setIsMarkedAsDone] = useState(project?.isMarkedAsDone || false);
+  function handleDeleteProject() {
+    if (window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
+      navigate("/projects");
+      deleteProject();
+    }
+  }
   return (
     <div className="flex h-auto items-center mt-5 bg-black/50 text-sm w-fit rounded-2xl">
       {
         userId === project?.creatorId && (
-          <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="cursor-pointer rounded-none rounded-l-2xl"
-              >! Edit Project</Button>
-            </DialogTrigger>
-            <DialogContent className={commonBackgroundClass}>
-              <DialogHeader>
-                <DialogTitle>Edit Project</DialogTitle>
-                <DialogDescription>
-                  Change the project details by modifying the form below.
-                </DialogDescription>
-              </DialogHeader>
-              <FieldGroup className={commonBackgroundClass}>
-                <ProjectForm
-                  initialData={project}
-                  close={() => setEditDialogOpen(false)}
-                />
-              </FieldGroup>
-            </DialogContent>
-          </Dialog>
+          <>
+            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="cursor-pointer rounded-none rounded-l-2xl hover:bg-green-600 hover:border-green-600 hover:text-white"
+                >! Edit Project</Button>
+              </DialogTrigger>
+              <DialogContent className={commonBackgroundClass}>
+                <DialogHeader>
+                  <DialogTitle>Edit Project</DialogTitle>
+                  <DialogDescription>
+                    Change the project details by modifying the form below.
+                  </DialogDescription>
+                </DialogHeader>
+                <FieldGroup className={commonBackgroundClass}>
+                  <ProjectForm
+                    initialData={project}
+                    projectId={projectId}
+                    close={() => setEditDialogOpen(false)}
+                  />
+                </FieldGroup>
+              </DialogContent>
+            </Dialog>
+            <Button
+              variant="outline"
+              className="cursor-pointer rounded-none hover:bg-red-600 hover:border-red-600 hover:text-white"
+              onClick={handleDeleteProject}
+            >
+              Delete Project
+            </Button>
+          </>
         )
       }
       <Dialog open={submissionDialogOpen} onOpenChange={setSubmissionDialogOpen}>
         <DialogTrigger asChild>
           <Button
             variant="outline"
-            className={`cursor-pointer rounded-none ${userId !== project?.creatorId && "rounded-l-2xl"}`}
+            className={`cursor-pointer rounded-none hover:bg-blue-600 hover:border-blue-600 hover:text-white ${userId !== project?.creatorId && "rounded-l-2xl"}`}
           >+ Add a Submission</Button>
         </DialogTrigger>
         <DialogContent className={commonBackgroundClass}>

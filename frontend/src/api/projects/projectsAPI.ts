@@ -68,9 +68,8 @@ export function usePutTrackingData(userId: number, projectId: number) {
 export function useUpdateProject(projectId: number) {
   return useMutation({
     mutationFn: async (updatedProjectData: Partial<ExtendedProjectType>) => {
-      const response = await Api.put(`/projects/update/${projectId}`, {
-        data: updatedProjectData
-      });
+      console.log("update path:", `/projects/update/${projectId}`);
+      const response = await Api.put(`/projects/update/${projectId}`, updatedProjectData);
       return response.data;
     },
     onSuccess: () => {

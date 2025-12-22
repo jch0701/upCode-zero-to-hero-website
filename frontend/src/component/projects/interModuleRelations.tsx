@@ -25,8 +25,8 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
   let relatedRoadmaps: any[] = [], relatedCareers: any[] = [];
   if (isSuccessLoadingRecommendations && recommendations.length > 0) {
     relatedRoadmaps = recommendations?.filter((rec: any) =>
-      rec.sourceId === projectId && rec.targetType === "roadmap" ||
-      rec.targetId === projectId && rec.sourceType === "roadmap");
+      rec.sourceId === projectId && rec.targetType === "roadmap" || rec.targetType === "chapter" ||
+      rec.targetId === projectId && rec.sourceType === "roadmap" || rec.sourceType === "chapter");
     relatedCareers = recommendations?.filter((rec: any) =>
       rec.sourceId === projectId && rec.targetType === "career" ||
       rec.targetId === projectId && rec.sourceType === "career");
@@ -49,13 +49,23 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
           <div className="mt-2">
             {relatedRoadmaps?.length === 0 ? <p>No related roadmaps found.</p> :
               <div className="flex flex-wrap gap-4 mt-4">
-                {relatedRoadmaps?.map((rec: any) => (
-                  <div key={rec.id}>
-                    <RoadmapItemCard
-                      selectedRoadmapID={rec.sourceType === "roadmap" ? rec.sourceId : rec.targetId}
-                    />
-                  </div>
-                ))}
+                {relatedRoadmaps?.map((rec: any) => {
+                  if (rec.sourceType === "chapter" || rec.targetType === "chapter") return (
+                    <div key={rec.id}>
+                      <RoadmapItemCard
+                        customTitle={`${rec.roadmapTitle} -> ${rec.title}`}
+                        selectedRoadmapID={rec.roadmapID}
+                      />
+                    </div>
+                  ); else
+                  return (
+                    <div key={rec.id}>
+                      <RoadmapItemCard
+                        selectedRoadmapID={rec.sourceType === "roadmap" ? rec.sourceId : rec.targetId}
+                      />
+                    </div>
+                  )
+                })}
               </div>
             }
           </div>
