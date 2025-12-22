@@ -26,12 +26,12 @@ export default function AdminOverviewImages() {
       return;
     }
     const base64 = await fileToBase64(file);
-    setDraftImg(prev => [...prev,{id:Date.now(), src:base64}]);
+    setDraftImg((prev: any) => [...prev,{id:Date.now(), src:base64}]);
 
   };
 
   const handleDelete= (id:number) => {
-    setDraftImg(prev => prev.filter(img=> img.id !== id));
+    setDraftImg((prev: any) => prev.filter((img: any) => img.id !== id));
     if (fileInputRef.current) {
         fileInputRef.current.value = "";
     }
@@ -68,27 +68,32 @@ export default function AdminOverviewImages() {
       )}
 
       {isEditing && (
-        <input
-        className="px-4 py-2 rounded-2xl bg-white/20 hover:bg-white/40 text-white text-center justify-center "
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={e => {
-            if (e.target.files?.[0]) {
-              handleUpload(e.target.files[0]);
-            }
-          }}
-        />
+        <div>
+          <label htmlFor="fileInput">Upload Image</label>
+          <input
+            id="fileInput"
+            className="px-4 py-2 rounded-2xl bg-white/20 hover:bg-white/40 text-white text-center justify-center "
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={e => {
+              if (e.target.files?.[0]) {
+                handleUpload(e.target.files[0]);
+              }
+            }}
+          />
+        </div>
       )}
     </div>
     </div>
       
       {isEditing && (
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-gray-800/70 backdrop-blur-lg border border-white/20 rounded-3xl mt-5 p-6 shadow-xl">
-        {draftImg.map(img => (
+        {draftImg.map((img: any) => (
           <div key={img.id} className="relative">
             <img
               src={img.src}
+              alt=""
               className="rounded-xl border shadow"
             />
             <button

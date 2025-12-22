@@ -14,7 +14,6 @@ import {FriendsOwnerContent, FriendsVisitorContent} from "@/component/friend/fri
 import FriendsDrawer from "@/component/friend/drawerFriend";
 
 export const All: React.FC = () => {
-    
     const { userId } = useParams();
     // Load the active user from localStorage
     const currentUser = useSelector((state: RootState) => state.profile);
@@ -37,8 +36,6 @@ export const All: React.FC = () => {
         setCategory(value);
     }
     const [friendsOpen, setfriendsOpen] = useState(false);
-
-    
 
     return (
     <div className="flex">

@@ -33,3 +33,4 @@ export const initDB = async () => {
     throw new Error(`Supabase connection failed: ${err.message}`);
   }
 };
+

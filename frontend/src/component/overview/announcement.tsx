@@ -26,7 +26,7 @@ export default function Announcement() {
 
   return (
     <div className="space-y-4">
-      {visibleAnnounce.map(a => (
+      {visibleAnnounce.map((a: any) => (
         <div
           key={a.id}
           className="relative bg-white/90 border border-black/70 rounded-2xl p-4 shadow"

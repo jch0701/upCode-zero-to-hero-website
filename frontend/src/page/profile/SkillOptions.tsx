@@ -4,10 +4,13 @@ import {
   getUserSkills,
   saveUserSkills,
 } from "@/api/profile/skillAPI";
-import Api from "@/api/index"; // your axios instance
+import { getMyProfile } from "@/api/profile/profileAPI";
+import { useSelector } from "react-redux";
 
 export default function SkillOptions({ editable }: { editable: boolean }) {
-  const [userId, setUserId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(
+    useSelector((state: any) => state.profile.userId)
+  );
   const [options, setOptions] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
   const [draft, setDraft] = useState<string[]>([]);
@@ -17,7 +20,7 @@ export default function SkillOptions({ editable }: { editable: boolean }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await Api.get("/profile/me"); // backend returns { id, email, username, ... }
+        const res = await getMyProfile(userId);
         setUserId(res.data.id);
       } catch (err) {
         console.error("Failed to fetch current user:", err);

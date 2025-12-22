@@ -1,7 +1,7 @@
 import Api from "../index";
 
-export const getMyProfile  = async () => {
-  const res = await Api.get(`/profile/me`);
+export const getMyProfile  = async (userId: string) => {
+  const res = await Api.get(`/profile/getProfileData/${userId}`);
   return res.data;
 };
 

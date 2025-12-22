@@ -3,27 +3,22 @@ import logo from '../assets/UpCode.png';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import MenuIcon from './navbarMenu';
-import api from '@/api';
 const Navbar: React.FC = () => {
     const navItems: string[] = ['Overview', 'Roadmap', 'Project', 'Career'];
     // const [activeItem, setActiveItem] = useState('Overview'); // Default to 'Overview'
     const location = useLocation();
     const currentPath = location.pathname.replace("/", "").toLowerCase() || 'overview';
-    // read 
+    const userId = useSelector((state: any) => state.profile.userId);
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const handleMenuItemClick = () => setIsMenuOpen(false);
     useEffect(() => {
         const checkLogin = async () => {
-            try {
-                await api.get("/profile/me"); // must require auth
-                setIsLoggedIn(true);
-            } catch {
-                setIsLoggedIn(false);
-            }
+            setIsLoggedIn(userId != null);
         };
         checkLogin();
-    }, [location.pathname]); // ✅ recheck when route changes
+    }, [location.pathname]); // recheck when route changes
 
     return (
         <nav className="bg-indigo-950 backdrop-blur-sm text-white flex justify-between items-center fixed top-0 left-0 right-0 z-10 h-16 px-4">
