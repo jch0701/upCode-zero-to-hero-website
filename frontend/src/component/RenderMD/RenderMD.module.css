@@ -1,0 +1,31 @@
+.commonMarkDownClass {
+  font-family: 'Courier New', Courier, monospace;
+  color: #ffffff;
+}
+
+.commonMarkDownClass h1 {
+  font-size: 3.8rem;
+  font-weight: bold;
+  margin: 1rem 0 0.5rem 0;
+}
+
+.commonMarkDownClass h2 {
+  font-size: 2.8rem;
+  font-weight: bold;
+  margin: 0.8rem 0 0.4rem 0;
+}
+
+.commonMarkDownClass h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0.6rem 0 0.3rem 0;
+}
+
+.commonMarkDownClass p {
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+.commonMarkDownClass ul, .commonMarkDownClass ol {
+  margin: 0.5rem 0 0.5rem 1.5rem;
+}

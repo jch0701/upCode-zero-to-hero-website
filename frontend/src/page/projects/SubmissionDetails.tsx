@@ -5,7 +5,7 @@ import { useGetCommitHistory } from "@/api/getCommitHistory";
 import { useGetSubmissionById } from "@/api/projects/submissionsAPI";
 import { formatDate } from "@/lib/utils";
 import RadioGroup from "@/component/projects/radioGroup";
-import ReactMarkdown from "react-markdown";
+import RenderMD from "@/component/RenderMD/RenderMD";
 import { Button } from "../../component/shadcn/button";
 import { SubmissionForm } from "./submissionForm";
 import { ellipsifyText } from "@/lib/utils";
@@ -36,7 +36,7 @@ const SubmissionDetails: React.FC = () => {
 
   if (submissionIsLoading) {
     return (
-      <div className="mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-[90vh] overflow-hidden">
+      <div className="mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-fit min-h-[90vh] mb-10 overflow-hidden">
         <LoadingIcon text="Loading Submission Details..." />
       </div>
     )
@@ -144,9 +144,9 @@ const SubmissionDetails: React.FC = () => {
         )}
         {displaySection === "Rationale File" && (
           <div className={`prose prose-invert max-w-none mt-4 text-white text-left ${commonMarkDownClass}`}>
-            <ReactMarkdown>
+            <RenderMD>
               {submission?.rationaleFile || "No project details available."}
-            </ReactMarkdown>
+            </RenderMD>
           </div>
         )}
       </div>
