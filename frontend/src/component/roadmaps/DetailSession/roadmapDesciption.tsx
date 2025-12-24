@@ -9,6 +9,7 @@ import { IMAGE_MAP, defaultImageSrc } from "@/lib/image";
 import { useGetRoadmapChapters } from "@/api/roadmaps/chapterAPI";
 import { useCreateFavourite, useDeleteFavourite } from "@/api/roadmaps/recordAPI";
 import { getActiveUserField } from "@/lib/utils";
+import { useGetSingleProfile } from "@/api/profile/profileAPI";
 
 const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID }) => {
     const navigate = useNavigate();
@@ -27,6 +28,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
     // const { data: userData, isLoading: userLoading } = useGetSingleUser(localRoadmapItem?.creatorID);
     // const username = userData?.username ?? 'Unknown Username';
     const { data: pillarsData = [], isLoading: pillarsLoading } = useGetRoadmapChapters(selectedRoadmapID, userID);
+    const { data: userProfile } = useGetSingleProfile(userID);
 
     const favouriteMutation = useCreateFavourite();
     const unfavouriteMutation = useDeleteFavourite();
@@ -56,6 +58,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
         }
     };
 
+    const username = userProfile?.username ?? 'Unknown username';
     const displayImage = IMAGE_MAP[localRoadmapItem.imageSrc] || localRoadmapItem.imageSrc;
 
     return (
@@ -124,7 +127,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
                             <div>
                                 <h3 className="font-semibold">Creator</h3>
                                 <Link to={`/profile/${localRoadmapItem.creatorID}`}>
-                                    <p className="mt-1 text-gray-300">{localRoadmapItem.creatorID}</p>
+                                    <p className="mt-1 text-gray-300">{username}</p>
                                 </Link>
                             </div>
                         )}

@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import Api from "../index";
 
 export const getMyProfile  = async () => {
@@ -17,3 +18,14 @@ export const updateMyProfile = async (payload: {
 }) => {
   await Api.put("/profile/me", payload);
 };
+
+
+export const useGetSingleProfile = (userID: string) => {
+  return useQuery({
+    queryKey: ["profile", userID],
+    queryFn: async () => {
+      const response = await Api.get(`profile/${userID}`);
+      return response.data;
+    }
+  })
+}

@@ -7,6 +7,7 @@ import { useGetSingleChapter } from "@/api/roadmaps/chapterAPI";
 import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { IMAGE_MAP, defaultImageSrc } from "@/lib/image";
 import { getActiveUserField } from "@/lib/utils";
+import { useGetSingleProfile } from "@/api/profile/profileAPI";
 
 interface PillarDescription {
     selectedChapterID: number;
@@ -22,12 +23,14 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
     const creator = roadmapItem?.creatorID ?? 'Unknown Creator';
     const { data: chapterItem , isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID),selectedChapterID,userID);
+    const { data: userProfile } = useGetSingleProfile(userID);
 
     if ( roadmapLoading || chapterLoading ) return null;
     if ( !roadmapItem || !chapterItem ) return <p className="text-white text-center mt-10">Chapter not found</p>;
 
     const imageSrc = roadmapItem?.imageSrc ?? 'Unknown Image'
     const roadmapSlug = roadmapItem?.roadmapSlug ?? 'Unknown Roadmap Slug';
+    const username = userProfile?.username ?? 'Unknown username';
     const displayImage = IMAGE_MAP[imageSrc] || imageSrc;
 
     const tags: Tag[] = [
@@ -87,7 +90,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
                         <div>
                             <h3 className="font-semibold text-left">Creator</h3>
                             <Link to={`/profile/${creator}`}>
-                                <p className="mt-1 text-gray-300">{roadmapItem.creatorID}</p>
+                                <p className="mt-1 text-gray-300">{username}</p>
                             </Link>
                         </div>)}
                         <div>

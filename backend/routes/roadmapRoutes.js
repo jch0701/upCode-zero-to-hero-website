@@ -6,7 +6,6 @@ import { getAllChapter, getRoadmapChapter, getChapter } from '../controllers/roa
 import { createChapter, editChapter, deleteChapter } from '../controllers/roadmapControllers/chapterCUD.js';
 import { getAllLink, getChapterLink, getLink } from '../controllers/roadmapControllers/linkGET.js';
 import { createLink, editLink, deleteLink } from '../controllers/roadmapControllers/linkCUD.js';
-import { getUserDetail } from '../controllers/roadmapControllers/userGET.js';
 import { createChapterRecord, createFavouriteRecord, createLinkRecord, deleteChapterRecord, deleteFavouriteRecord, deleteLinkRecord } from '../controllers/roadmapControllers/recordCUD.js';
 import { getAllRoadmapRecommendation, createRoadmapRecommendation, deleteRoadmapRecommendation } from '../controllers/roadmapControllers/recommendation.js';
 
@@ -52,8 +51,5 @@ router.get('/roadmaprecommendations', getAllRoadmapRecommendation);
 router.post('/roadmaprecommendations', createRoadmapRecommendation);
 router.delete('/roadmaprecommendations', deleteRoadmapRecommendation);
 
-
-
-router.get('/users/:userID', getUserDetail);
 
 export default router;

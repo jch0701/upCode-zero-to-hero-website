@@ -90,3 +90,34 @@ export const updateMyProfile = async (req, res) => {
 
 //   return res.json(newProfile);
 // }
+
+
+// Get user detail
+export const getSingleProfile = async (req, res) => {
+  if (req.method !== 'GET') {
+    return res.status(405).end(`Method ${req.method} Not Allowed. Use GET only.`);
+  }
+
+  const { userID } = req.params;
+  if (!userID) {
+    return res.status(400).json({ message: 'Missing user ID query parameter.' });
+  }
+
+  try {
+    const { data: profiles, error: profileError } = await supabase
+      .from("userProfiles")
+      .select("*")
+      .eq('user_id', userID)
+    
+    if(profileError){
+      console.error('Profiles Fetch Error:', profileError);
+      return res.status(500).json({ message: 'Failed to fetch profiles.' });
+    }
+
+    return res.status(200).json(profiles[0]);
+  }
+  catch {
+    console.error('Internal Server Error in GET Controller:', error);
+    return res.status(500).json({ message: 'Internal Server Error.' });
+  }
+}
