@@ -5,13 +5,13 @@ export const getSkillOptions = async () => {
   return res.data;
 };
 
-export const getUserSkills = async (userId: string) => {
-  const res = await Api.get(`/skills/${userId}`); //  matches getUserSkills
+export const getMySkills = async () => {
+  const res = await Api.get("/skills/me");
   return res.data;
 };
 
-export const saveUserSkills = async (userId: string, skills: string[]) => {
-  const res = await Api.post("/skills", { userId, skills }); //  matches updateUserSkills
+export const saveMySkills = async (skills: string[]) => {
+  const res = await Api.post("/skills/me", { skills });
   return res.data;
 };
 

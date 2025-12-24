@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getSkillOptions, getUserSkills, saveUserSkills } from "@/api/profile/skillAPI";
+import { getSkillOptions, getMySkills, saveMySkills } from "@/api/profile/skillAPI";
 import { getMyProfile } from "@/api/profile/profileAPI";
 import Api from "@/api/index";
 import { useSelector } from "react-redux";
@@ -15,50 +15,32 @@ export default function SkillOptions({ editable }: { editable: boolean }) {
   const [editing, setEditing] = useState(false);
 
   //1 Fetch current user from backend
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        //const res = await getMyProfile();
-        const res = await Api.get("/profile/me");
-        setUserId(res.data.user_id);
-      } catch (err) {
-        console.error("Failed to fetch current user:", err);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   // 2 Load user skills once we have the userId
   useEffect(() => {
-  if (!userId) return;
-
   let cancelled = false;
 
   const loadSkills = async () => {
     try {
       const [opt, userSkills] = await Promise.all([
         getSkillOptions(),
-        getUserSkills(userId),
+        getMySkills(),
       ]);
 
       if (cancelled) return;
-
       setOptions(opt);
       setSkills(userSkills);
     } catch (err) {
-      if (!cancelled) {
-        console.error("Failed to load skills:", err);
-      }
+      console.error("Failed to load skills:", err);
     }
   };
 
   loadSkills();
-
   return () => {
     cancelled = true;
   };
-}, [userId]);
+}, []);
+
 
   // 3 Toggle skill selection locally
   // const toggle = (skill: string) => {
@@ -78,9 +60,8 @@ export default function SkillOptions({ editable }: { editable: boolean }) {
 
   // 4 Save to backend
   const save = async () => {
-    if (!userId) return;
     const skillIds = draft.map((s) => s.id);
-    await saveUserSkills(userId, skillIds);
+    await saveMySkills(skillIds);
     setSkills(draft);
     setEditing(false);
   };
@@ -88,14 +69,6 @@ export default function SkillOptions({ editable }: { editable: boolean }) {
   return (
     <div className="space-y-4">
       {/* Display skills */}
-      <div className="flex flex-wrap gap-2">
-        {skills.length === 0 && (
-          <span className="text-gray-400 italic">
-            {editable
-              ? "You haven’t added any skills yet"
-              : "No skills added"}
-          </span>
-        )}
         <div className="flex flex-wrap gap-2">
           {Array.isArray(skills) && skills.length > 0 ? (
             skills.map((skill) => (
@@ -115,7 +88,7 @@ export default function SkillOptions({ editable }: { editable: boolean }) {
           {editable && (
             <span
               onClick={() => {
-                setDraft(skills);
+                setDraft([...skills]);
                 setEditing(true);
               }}
               className="px-3 py-1 bg-gray-300 cursor-pointer rounded-full"
@@ -123,8 +96,8 @@ export default function SkillOptions({ editable }: { editable: boolean }) {
               + New
             </span>
           )}
-        </div>
       </div>
+      
 
       {/* Inline editor */}
       {editable && editing && (

@@ -1,25 +1,20 @@
-import jwt from "jsonwebtoken";
+import { supabaseAuth } from "../../config.js";
 
 export const requireAuth = async (req, res, next) => {
-  const token = req.headers.authorization?.replace("Bearer ", "");
-  if (!token) return res.status(401).json({ message: "No token" });
+  const authHeader = req.headers.authorization;
 
-  try {
-    // Decode the JWT without verifying
-    const decoded = jwt.decode(token);
-    if (!decoded?.sub) {
-      return res.status(401).json({ message: "Invalid token structure" });
-    }
-
-    req.user = {
-      id: decoded.sub,
-      email: decoded.email,
-    };
-
-    console.log("USER:", req.user);
-    next();
-  } catch (err) {
-    console.error("JWT decode error:", err.message);
-    res.status(401).json({ message: "Token decode failed" });
+  if (!authHeader) {
+    return res.status(401).json({ message: "No token" });
   }
+
+  const token = authHeader.replace("Bearer ", "");
+
+  const { data, error } = await supabaseAuth.auth.getUser(token);
+
+  if (error || !data?.user) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+
+  req.user = data.user; // ✅ REAL user from Supabase
+  next();
 };

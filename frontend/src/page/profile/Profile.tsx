@@ -86,8 +86,8 @@ export function ProfileContent() {
   useEffect(() => {
       const loadProfile = async () => {
         try {
-          const res = await api.get("/profile/me");
-          setProfile(res.data);
+          const res = await getMyProfile();
+          setProfile(res);
         } catch {
           alert("Please login to view your profile");
           

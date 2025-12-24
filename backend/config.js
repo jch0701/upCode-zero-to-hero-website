@@ -15,10 +15,12 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 const anonKey = process.env.SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Supabase URL and Service Key must be defined in .env');
-}
+console.log("Anon key loaded:", anonKey?.slice(0, 10));
 
+if (!supabaseUrl || !supabaseKey || !anonKey) {
+  throw new Error('Supabase URL, Service Key and Anon Key must be defined in .env');
+}
+  
 // Create and export the Supabase client
 export const supabase = createClient(supabaseUrl, supabaseKey); //service key
 export const supabaseAuth = createClient(supabaseUrl, anonKey); //public key

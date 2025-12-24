@@ -22,12 +22,11 @@ const Login_Pg: FC = () => {
   const handleLogin = async ()=> {
     try {
       const data = await userLogin(email, password);
-      localStorage.setItem("access_token", data.accessToken);
+      localStorage.setItem("access_token", data.access_token);
       localStorage.setItem(
         "activeUser",
         JSON.stringify({
           userId: data.user.user_id,
-          token: data.access_token,
           role: data.user.role,
         })
       );

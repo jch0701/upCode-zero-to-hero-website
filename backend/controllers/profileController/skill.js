@@ -11,7 +11,6 @@ export const getAllSkills = async (req, res) => {
     if (error) throw error;
 
     if (!data || data.length === 0) {
-      console.warn(" No skills found in table");
       return res.json([]); // Return empty array safely
     }
 
@@ -21,78 +20,16 @@ export const getAllSkills = async (req, res) => {
       name: row.skill,
     }));
 
-    console.log("Skills fetched from Supabase:", skillsList);
     return res.json(skillsList);
   } catch (err) {
-    console.error("getAllSkills error:", err.message);
     return res.status(500).json({ message: err.message });
   }
 };
-// export const getAllSkills = async (req, res) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from("skills")
-//       .select("skill_id, skill")
-//       .order("skill");
 
-//     if (error) throw error;
+export const getMySkills = async (req, res) => {
+  const userId = req.user.id;
 
-//     if (!data || data.length === 0) {
-//       console.warn(" No skills found in table");
-//       return res.json([]); // Return empty array safely
-//     }
-
-//     // Extract plain string array
-//     const skillsList = data.map((row) => row.skill);
-
-//     console.log("✅ Skills fetched from Supabase:", skillsList);
-//     return res.json(skillsList);
-//   } catch (err) {
-//     console.error("getAllSkills error:", err.message);
-//     return res.status(500).json({ message: err.message });
-//   }
-// };
-
-
-/* Get user skills */
-// export const getUserSkills = async (req, res) => {
-//   const { userId } = req.params;
-
-//   const { data, error } = await supabase
-//     .from("userProfiles")
-//     .select("skills")
-//     .eq("user_id", userId)
-//     .maybeSingle();
-
-//   if (error) {
-//     console.error("Supabase error:", error.message);
-//     return res.status(500).json({ message: error.message });
-//   }
-
-//   if (!data) {
-//     console.warn("User not found:", userId);
-//     return res.status(404).json({ message: "User not found" });
-//   }
-
-//   let skills = [];
-
-//   if (Array.isArray(data.skills)) {
-//     skills = data.skills;
-//   } else if (typeof data.skills === "string") {
-//     try {
-//       skills = JSON.parse(data.skills);
-//     } catch {
-//       skills = [];
-//     }
-//   }
-
-//   console.log("Final skills sent to frontend:", skills);
-//   return res.json(skills);
-// };
-export const getUserSkills = async (req, res) => {
-  const { userId } = req.params;
-
-  // 1️ Get skill IDs from profile
+  // 1. Get skill IDs from profile
   const { data: profile, error: profileError } = await supabase
     .from("userProfiles")
     .select("skills")
@@ -104,10 +41,10 @@ export const getUserSkills = async (req, res) => {
   }
 
   if (!profile || !Array.isArray(profile.skills) || profile.skills.length === 0) {
-    return res.json([]); //  no skills is valid
+    return res.json([]);
   }
 
-  // 2️ Fetch full skill objects
+  // 2. Fetch full skill objects
   const { data: skills, error: skillsError } = await supabase
     .from("skills")
     .select("skill_id, skill")
@@ -117,7 +54,7 @@ export const getUserSkills = async (req, res) => {
     return res.status(500).json({ message: skillsError.message });
   }
 
-  // 3 Normalize response
+  // 3. Normalize response
   const result = skills.map(s => ({
     id: s.skill_id,
     name: s.skill,
@@ -127,11 +64,12 @@ export const getUserSkills = async (req, res) => {
 };
 
 /* Update user skills */
-export const updateUserSkills = async (req, res) => {
-  const { userId, skills } = req.body;
+export const updateMySkills = async (req, res) => {
+  const userId = req.user.id;
+  const { skills } = req.body;
 
-  if (!userId || !Array.isArray(skills)) {
-    return res.status(400).json({ message: "Invalid data" });
+  if (!Array.isArray(skills)) {
+    return res.status(400).json({ message: "Invalid skills data" });
   }
 
   const { data, error } = await supabase
@@ -142,10 +80,11 @@ export const updateUserSkills = async (req, res) => {
     .single();
 
   if (error) {
-    console.error("Failed to update user skills:", error.message);
     return res.status(400).json({ message: error.message });
   }
 
-  console.log("Updated skills for user:", userId, data.skills);
-  return res.json({ message: "Skills updated successfully", skills: data.skills });
+  return res.json({
+    message: "Skills updated successfully",
+    skills: data.skills,
+  });
 };
