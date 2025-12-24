@@ -3,10 +3,11 @@ import { useParams } from "react-router";
 import RoadmapDetailForm from "@/component/roadmaps/Form/roadmapDetailForm";
 import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { Spinner } from "@/component/shadcn/spinner";
+import { getActiveUserField } from "@/lib/utils";
 
 export const EditRoadmap: React.FC = () => {
     const { roadmapID } = useParams<{ roadmapID: string }>();
-    const userID = localStorage.getItem("userID");
+    const userID = getActiveUserField("userId");
     const { data: roadmapItem, isLoading} = useGetSingleRoadmap(Number(roadmapID), userID);
 
     if ( isLoading)  {

@@ -1,6 +1,7 @@
 import { useGetSingleCareer } from "@/api/careers/careerAPI";
 import { useGetByIdComplete } from "@/api/projects/projectsAPI";
 import { useCreateRoadmapRecommendation, useDeleteRoadmapRecommendation, useGetRoadmapRecommendation } from "@/api/roadmaps/recommendationAPI";
+import { getActiveUserField } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -12,14 +13,14 @@ interface RecommendProps {
 const RecommendationCard: React.FC<RecommendProps> =({
    mode, selectedId
 }) => {
-    const userID = localStorage.getItem("userID");
+    const userID = getActiveUserField("userId");
     const { chapterID: chapterIdParam, roadmapID: roadmapIdParam } = useParams<{ chapterID: string, roadmapID: string}>();
     const chapterID = chapterIdParam ? Number(chapterIdParam) : 0;
     const roadmapID = roadmapIdParam ? Number(roadmapIdParam) : 0;
     const [localCheckedRecommendation, setLocalCheckedRecommendation] = useState(false);
 
     const { data: recommendedData = [], isLoading: recommendedLoading } = useGetRoadmapRecommendation();
-    const { data: projects , isLoading: projectLoading } = useGetByIdComplete(selectedId, Number(userID))
+    const { data: projects , isLoading: projectLoading } = useGetByIdComplete(selectedId, 100007)
     const { data: careers, isLoading: careerLoading } = useGetSingleCareer(selectedId);
 
     const recommendMutation = useCreateRoadmapRecommendation();

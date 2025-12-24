@@ -6,6 +6,7 @@ import { generateTags } from '../groupTag.tsx';
 import { useGetSingleRoadmap } from '@/api/roadmaps/roadmapAPI.ts';
 import { defaultImageSrc, IMAGE_MAP } from '@/lib/image.ts';
 import { useGetRoadmapChapters } from '@/api/roadmaps/chapterAPI.ts';
+import { getActiveUserField } from '@/lib/utils.ts';
 
 // Type and data structure
 export interface RoadmapItemCardProps {
@@ -21,7 +22,7 @@ const MAX_VISIBLE_TAGS = 3;
 export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
   selectedRoadmapID, customTitle
 }) => {
-  const userID = localStorage.getItem("userID");
+  const userID = getActiveUserField("userId");
   // Compute tags from pillarsData when not provided
   const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(selectedRoadmapID, userID);
   const { data: pillarsData, isLoading: chapterLoading } = useGetRoadmapChapters(selectedRoadmapID, userID);

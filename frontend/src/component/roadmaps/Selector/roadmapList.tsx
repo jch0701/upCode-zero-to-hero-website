@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { generateTags } from '../groupTag.tsx';
 import { RoadmapItemCard, type RoadmapItemCardProps } from "./roadmapCard.tsx";
 import { useGetAllChapters } from "@/api/roadmaps/chapterAPI.ts";
+import { getActiveUserField } from "@/lib/utils.ts";
 
 interface ListRoadmapItem {
   roadmapID: number;
@@ -15,7 +16,7 @@ interface RoadmapItemListProps {
 }
 
 export const RoadmapItemList: React.FC<RoadmapItemListProps> = ({ items, filterTag }) => {
-  const userID = localStorage.getItem("userID");
+  const userID = getActiveUserField("userId");
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
   const {data: pillarsData = [], isLoading } = useGetAllChapters(userID);

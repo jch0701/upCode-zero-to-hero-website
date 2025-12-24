@@ -3,9 +3,10 @@ import React from "react";
 import { useParams } from "react-router";
 import { useGetSingleChapter } from "@/api/roadmaps/chapterAPI";
 import { Spinner } from "@/component/shadcn/spinner";
+import { getActiveUserField } from "@/lib/utils";
 
 export const EditChapter: React.FC = () => {
-    const userID = localStorage.getItem("userID");
+    const userID = getActiveUserField("userId");
     const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string }>();
     const { data: chapterItem, isLoading } = useGetSingleChapter(Number(roadmapID),Number(chapterID),userID);
     

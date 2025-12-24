@@ -6,6 +6,7 @@ import { useParams } from "react-router";
 import { useGetRoadmapChapters, useGetSingleChapter } from "@/api/roadmaps/chapterAPI";
 import { useGetAllBasicDetailsOnly } from "@/api/projects/projectsAPI";
 import { useGetAllCareers } from "@/api/careers/careerAPI";
+import { getActiveUserField } from "@/lib/utils";
 
 interface recommendationListProps {
     mode: "project" | "career"
@@ -15,14 +16,14 @@ interface recommendationListProps {
 }
 
 const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, selectedSection, searchQuery}) => {
-    const userID = localStorage.getItem("userID");
+    const userID = getActiveUserField("userId");
     const { roadmapID } = useParams<{ roadmapID: string }>();
     let finalIds: number[] = []
     
     // Find the chapter/pillar to determine categories (and optionally difficulty)
     if (mode === "project"){
         const { data: chapter, isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID), selectedID, userID);
-        const { data: projects = [], isLoading: projectLoading } = useGetAllBasicDetailsOnly(Number(userID))
+        const { data: projects = [], isLoading: projectLoading } = useGetAllBasicDetailsOnly(100007)
         if ( chapterLoading || projectLoading ) <span className="text-amber-50 text-3xl">Loading Data...</span>
         if ( !chapter || !projects ) return <p className="text-gray-400 text-center mt-4">Recommended project not found.</p>;
 
