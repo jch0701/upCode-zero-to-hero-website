@@ -8,6 +8,7 @@ import SectionBlock from "../../component/roadmaps/sectionBlock";
 import SearchBar from "../../component/searchBar";
 import { generateTags } from "../../component/roadmaps/groupTag";
 import { Spinner } from "@/component/shadcn/spinner";
+import { getActiveUserField } from "@/lib/utils";
 
 export type Section = {
   id: string;
@@ -36,8 +37,7 @@ const sections: Section[] = [
 
 export const Roadmap: React.FC = () => {
   const [query, setQuery] = useState("");
-  const userID = localStorage.getItem("userID");
-  const isLoggedIn = userID && userID !== "0";
+  const userID = getActiveUserField("userId");
 
   const { data: roadmapData = [], isLoading: roadmapLoading } = useGetRoadmaps(userID);
   const { data: pillarsData = [], isLoading: pillarLoading } = useGetAllChapters(userID);
@@ -82,21 +82,21 @@ export const Roadmap: React.FC = () => {
 
   const getItemsForSection = (section: Section) => {
     // User own designs
-    if (section.id === "your-design" && isLoggedIn && userID) {
+    if (section.id === "your-design" && userID) {
       return filteredRoadmapData.filter(
-        (item: any) => item.creatorID === Number(userID)
+        (item: any) => item.creatorID === userID
       );
     }
 
     // New content that is not created by the user
-    if (section.id === "whats-new" && isLoggedIn && userID) {
+    if (section.id === "whats-new" && userID) {
       return filteredRoadmapData.filter(
-        (item: any) => item.creatorID !== Number(userID)
+        (item: any) => item.creatorID !== userID
       );
     }
 
     // Recently viewed roadmaps
-    if (section.id === "recently-viewed" && isLoggedIn) {
+    if (section.id === "recently-viewed") {
       return getRecentlyViewedRoadmaps(filteredRoadmapData);
     }
 
@@ -118,7 +118,7 @@ export const Roadmap: React.FC = () => {
 
   const availableSections = sections.filter((section) => {
     // Hide certain sections for guest users
-    if (!isLoggedIn && ["recently-viewed", "your-design"].includes(section.id)) {
+    if (!userID && ["recently-viewed", "your-design"].includes(section.id)) {
       return false;
     }
 

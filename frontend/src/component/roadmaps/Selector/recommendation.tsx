@@ -9,6 +9,7 @@ import { useGetRoadmapRecommendation } from '@/api/roadmaps/recommendationAPI';
 import { useGetAllBasicDetailsOnly } from '@/api/projects/projectsAPI';
 import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
 import { useGetAllCareers } from '@/api/careers/careerAPI';
+import { getActiveUserField } from '@/lib/utils';
 
 interface RecommendationProps {
     mode: "career" | "project"
@@ -18,13 +19,13 @@ interface RecommendationProps {
 }
 
 const Recommendation: React.FC<RecommendationProps> = 
-    ({mode, selectedID, navigateDetails, creator }) => {
-    const userID = localStorage.getItem("userID");
+    ({mode, selectedID, creator }) => {
+    const userID = getActiveUserField("userId");
     const { roadmapID, roadmapSlug } = useParams<{ roadmapID: string, roadmapSlug: string }>();
 
 
     const { data: recommendedData = [], isLoading: recommendedLoading} = useGetRoadmapRecommendation();
-    const { data: projects = [], isLoading: projectLoading } = useGetAllBasicDetailsOnly(Number(userID));
+    const { data: projects = [], isLoading: projectLoading } = useGetAllBasicDetailsOnly(100007);
     const { data: careers = [], isLoading: careerLoading } = useGetAllCareers();
     const { data: pillar, isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID), selectedID, userID);
 

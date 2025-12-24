@@ -40,7 +40,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
     const directLink = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
-        if(!userID && !localLinkItem.isViewed){
+        if(userID && !localLinkItem.isViewed){
             setLocalLinkItem({ ...localLinkItem, isViewed: true });
             viewMutation.mutate(
                 { userID: userID!, recordID: Number(selectedNodeID) },

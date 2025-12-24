@@ -5,10 +5,11 @@ import { useParams } from 'react-router-dom';
 import { update_Activity } from '@/component/activity/activity_tracker';
 import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
 import { Spinner } from '@/component/shadcn/spinner';
+import { getActiveUserField } from '@/lib/utils';
 
 export const ChapterDetails: React.FC = () => {
     const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string }>();
-    const userID = localStorage.getItem("userID");
+    const userID = getActiveUserField("userId");
 
     //  Use ref instead of useState to avoid warnings
     const hasCountedRef = useRef(false);

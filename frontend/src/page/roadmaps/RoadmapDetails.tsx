@@ -5,10 +5,11 @@ import PillarList from "@/component/roadmaps/Selector/pillarList";
 import { update_Activity } from "@/component/activity/activity_tracker";
 import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { Spinner } from "@/component/shadcn/spinner";
+import { getActiveUserField } from "@/lib/utils";
 
 export const RoadmapDetails: React.FC = () => {
     const { roadmapID } = useParams<{ roadmapID: string }>(); // get id from URL
-    const userID = localStorage.getItem("userID");
+    const userID = getActiveUserField("userId");
     
     //for profile usage
     const hasCountedRef = useRef(false);

@@ -3,9 +3,10 @@ import { useParams } from "react-router-dom";
 import LinkDetailForm from "@/component/roadmaps/Form/linkDetailForm";
 import { useGetSingleLink } from "@/api/roadmaps/linkAPI";
 import { Spinner } from "@/component/shadcn/spinner";
+import { getActiveUserField } from "@/lib/utils";
 
 export const EditNode: React.FC = () => {
-    const userID = localStorage.getItem("userID");
+    const userID = getActiveUserField("userId");
     const { chapterID, nodeID } = useParams<{ chapterID: string, nodeID: string }>();
     const { data: nodeItem, isLoading } = useGetSingleLink(Number(chapterID), Number(nodeID), userID);
 
