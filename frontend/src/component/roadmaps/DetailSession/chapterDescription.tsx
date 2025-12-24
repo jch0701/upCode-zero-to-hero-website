@@ -23,10 +23,10 @@ const ChapterDescription: React.FC<PillarDescription> = ({
     const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
     const creator = roadmapItem?.creatorID ?? 'Unknown Creator';
     const { data: chapterItem , isLoading: chapterLoading } = useGetSingleChapter(Number(roadmapID),selectedChapterID,userID);
-    const { data: userProfile } = useGetSingleProfile(userID);
+    const { data: userProfile , isLoading: userLoading } = useGetSingleProfile(creator);
 
-    if ( roadmapLoading || chapterLoading ) return null;
-    if ( !roadmapItem || !chapterItem ) return <p className="text-white text-center mt-10">Chapter not found</p>;
+    if ( roadmapLoading || chapterLoading || userLoading) return null;
+    if ( !roadmapItem || !chapterItem || !userProfile ) return <p className="text-white text-center mt-10">Chapter not found</p>;
 
     const imageSrc = roadmapItem?.imageSrc ?? 'Unknown Image'
     const roadmapSlug = roadmapItem?.roadmapSlug ?? 'Unknown Roadmap Slug';

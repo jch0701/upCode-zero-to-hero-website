@@ -28,13 +28,16 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
     // const { data: userData, isLoading: userLoading } = useGetSingleUser(localRoadmapItem?.creatorID);
     // const username = userData?.username ?? 'Unknown Username';
     const { data: pillarsData = [], isLoading: pillarsLoading } = useGetRoadmapChapters(selectedRoadmapID, userID);
-    const { data: userProfile } = useGetSingleProfile(userID);
+    const { data: userProfile, isLoading: userLoading } = useGetSingleProfile(roadmapItem!.creatorID);
 
     const favouriteMutation = useCreateFavourite();
     const unfavouriteMutation = useDeleteFavourite();
 
-    if (roadmapLoading || pillarsLoading ) return null;
+    if (roadmapLoading || pillarsLoading || userLoading ) return null;
     if (!localRoadmapItem || !pillarsData ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
+
+    const username = userProfile?.username ?? 'Unknown username';
+
 
     const handleToggleFavourite = () => {
         if (!userID) {
@@ -58,7 +61,6 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
         }
     };
 
-    const username = userProfile?.username ?? 'Unknown username';
     const displayImage = IMAGE_MAP[localRoadmapItem.imageSrc] || localRoadmapItem.imageSrc;
 
     return (
