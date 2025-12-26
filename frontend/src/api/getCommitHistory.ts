@@ -65,11 +65,12 @@ export async function fetchAllCommits(owner: string, repo: string) {
         break;
       }
       
-      // changed: map each commit to extract only hash, message, date
+      // changed: map each commit to extract only hash, message, date, link
       const transformedCommits = commits.map(commit => ({
-        hash: commit.sha,
+        hash: commit.sha.substring(0, 6),
         message: commit.commit.message,
         date: commit.commit.author.date,
+        link: commit.html_url,
       }));
       
       allCommits = allCommits.concat(transformedCommits);
