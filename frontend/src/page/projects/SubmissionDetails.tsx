@@ -128,7 +128,11 @@ const SubmissionDetails: React.FC = () => {
                     <tbody>
                       {commitHistory.map((commit: any, idx: number) => (
                         <tr key={commit.hash} className={`border-b border-gray-600 hover:bg-gray-700/50 transition-colors ${idx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-600'}`}>
-                          <td className="px-4 py-3 font-mono text-xs text-green-400">{ellipsifyText(commit.hash)}</td>
+                          <td className="px-4 py-3 font-mono text-xs text-green-400">
+                            <a href={commit.link} target="_blank" rel="noopener noreferrer" key={commit.hash}>
+                              {ellipsifyText(commit.hash)}
+                            </a>
+                          </td>
                           <td className="px-4 py-3 text-sm text-gray-100 truncate max-w-xs">{commit.message}</td>
                           <td className="px-4 py-3 text-sm text-gray-400 whitespace-nowrap">{formatDate(new Date(commit.date))}</td>
                         </tr>

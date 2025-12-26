@@ -90,12 +90,26 @@ export const getByTitleComplete = async (req, res) => {
     .maybeSingle();
 
   // Fetch recommendations separately (polymorphic relationship)
-  const { data: recommendations } = await supabase
+  let recommendations = []
+  const { data: projectSrcRecommendations } = await supabase
     .from("Recommendations")
     .select("*")
     .eq("sourceId", project.projectId)
-    .eq("sourceType", "project")
-    .maybeSingle();
+    .eq("sourceType", "project");
+
+  if(projectSrcRecommendations){
+    recommendations = projectSrcRecommendations;
+  }
+
+  const { targetSrcRecommendations } = await supabase
+    .from("Recommendations")
+    .select("*")
+    .eq("targetId", project.projectId)
+    .eq("targetType", "project");
+
+  if(targetSrcRecommendations){
+    recommendations = recommendations.concat(targetSrcRecommendations);
+  }
 
   // Get tracking data for the specified user (if userId provided)
   let trackingData = {};
@@ -168,11 +182,26 @@ export const getByIdComplete = async (req, res) => {
     .maybeSingle();
 
   // Fetch recommendations separately (polymorphic relationship)
-  const { data: recommendations } = await supabase
+  let recommendations = []
+  const { data: projectSrcRecommendations } = await supabase
     .from("Recommendations")
     .select("*")
     .eq("sourceId", project.projectId)
     .eq("sourceType", "project");
+
+  if(projectSrcRecommendations){
+    recommendations = projectSrcRecommendations;
+  }
+
+  const { targetSrcRecommendations } = await supabase
+    .from("Recommendations")
+    .select("*")
+    .eq("targetId", project.projectId)
+    .eq("targetType", "project");
+
+  if(targetSrcRecommendations){
+    recommendations = recommendations.concat(targetSrcRecommendations);
+  }
 
   // Get tracking data for the specified user (if userId provided)
 
