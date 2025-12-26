@@ -1,39 +1,70 @@
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "@/store";
-import { deleteAnnouncements } from "@/store/announcementSlice";
+import { useState, useEffect } from "react";
 import { FaTrash } from "react-icons/fa";
-import { useState } from "react";
+import { fetchAnnouncements, removeAnnouncement } from "@/api/admin/adminAPI";
+
+type AnnouncementData = {
+  announcement_id: number;
+  title: string;
+  message: string;
+  image?: string;
+  created_at: string; 
+};
 
 export default function Announcement() {
-  const announcements = useSelector(
-    (state: RootState) => state.announcement.announcements
-  );
-  const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.profile);
+  const [announcements, setAnnouncements] = useState<AnnouncementData[]>([]);
+  const [loading, setLoading] = useState(true);
   const [expand, setExpand] = useState(false);
-  const isAdmin = user?.role === "Admin" || user?.role === "admin";
+  const activeUser = JSON.parse(localStorage.getItem("activeUser") || "{}");
+  const isAdmin = activeUser?.role?.toLowerCase() === "admin";
+  const loadData = async () => {
+    try {
+      const data = await fetchAnnouncements();
+      setAnnouncements(data);
+    } catch (error) {
+      console.error("Failed to load announcements", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const handleDelete = async (id: number) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this announcement?");
+    if (!confirmDelete) return;
+
+    try {
+      await removeAnnouncement(id);
+      setAnnouncements((prev) => prev.filter((a) => a.announcement_id !== id));
+      alert("Deleted successfully!");
+    } catch (error) {
+      alert("Failed to delete announcement");
+    }
+  };
+
+  if (loading) {
+    return <p className="text-white/50 text-xl font-semibold italic">Loading announcements...</p>;
+  }
 
   if (announcements.length === 0) {
     return <p className="text-white/95 text-3xl h-20 font-semibold italic">No announcements yet</p>;
   }
-  const handleDelete= (id: number) => {  
-    const confirmDelete= window.confirm("Are you sure you want to delete this announcement?");
-    if(!confirmDelete) return;
-    dispatch(deleteAnnouncements(id));
-  }
+
   const MAX_ANNOUNCE = 3;
-  const visibleAnnounce = expand? announcements: announcements.slice(0, MAX_ANNOUNCE);
+  const visibleAnnounce = expand ? announcements : announcements.slice(0, MAX_ANNOUNCE);
 
   return (
     <div className="space-y-4 bg-black/40">
       {visibleAnnounce.map((a: any) => (
         <div
-          key={a.id}
+          key={a.announcement_id}
           className="relative bg-white/90 border border-black/70 rounded-2xl p-4 shadow"
         > 
         {isAdmin && (
             <button
-              onClick={() => handleDelete(a.id)}
+              onClick={() => handleDelete(a.announcement_id)}
               className="absolute top-3 right-3 text-red-600 hover:text-red-800"
               title="Delete announcement"
             >
@@ -58,7 +89,7 @@ export default function Announcement() {
             </p>
 
             <p className="text-xs text-start text-gray-500 mt-2">
-              Posted on {a.createdAt}
+              Posted on {new Date(a.created_at).toLocaleDateString()}
             </p>
           </div>
         </div>

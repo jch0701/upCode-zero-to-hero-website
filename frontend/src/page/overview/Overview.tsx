@@ -3,8 +3,14 @@ import AdminAnnouncement from "@/component/admin/ad_announcement";
 import DisplayImage from "@/component/overview/display_img";
 import AdminOverviewImages from "@/component/admin/ad_overview_img";
 import { WhatsNew } from "@/component/overview/WhatsNew";
+import { useState } from "react";
 
 export function Overview() {
+  const [refreshVersion, setRefreshVersion] = useState(0);
+
+  const handleUpdateSuccess = () => {
+    setRefreshVersion((prev) => prev + 1); // Increment to trigger reload
+  };
   return (
     <div className="space-y-12 mx-20 bg-black/20 h-fit min-h-[90vh] py-10 px-6 rounded-3xl">
       {/* Header */}
@@ -15,32 +21,32 @@ export function Overview() {
           Level up your coding skills with curated projects, roadmaps, and career guidance.
       </p>
 
-      {/* Hero Section */}
-      {/* <div className="flex justify-start mt-8">
+      {/* Advertisement Section */}
+      <div className="flex justify-start mt-8">
         <div className="w-full max-w-7xl rounded-3xl overflow-hidden">
-          <DisplayImage />
+          <DisplayImage key={refreshVersion}/>
         </div>
-      </div> */}
+      </div>
 
       {/* Overview Images */}
-      {/* <div className="flex justify-start">
+      <div className="flex justify-start">
         <div className="w-full max-w-7xl">
-          <AdminOverviewImages />
+          <AdminOverviewImages onPostSuccess={handleUpdateSuccess}/>
         </div>
-      </div> */}
+      </div>
 
       {/* Announcements Section */}
       <div className="flex justify-start pt-6">
         <div className="max-w-7xl w-full space-y-6">
           <h2 className="text-4xl font-bold text-white mb-8 text-left">Notice board</h2>
-          <Announcement />
+          <Announcement key={refreshVersion}/>
         </div>
       </div>
 
       {/* Admin-only Section */}
       <div className="flex justify-center pt-6">
         <div className="max-w-7xl w-full">
-          <AdminAnnouncement />
+          <AdminAnnouncement onPostSuccess={handleUpdateSuccess} />
         </div>
       </div>
 

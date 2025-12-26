@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/store";
-
 import logout_icon from "@/assets/profile/logout.png";
 import delete_icon from "@/assets/profile/delete.png";
+import { FaExchangeAlt } from "react-icons/fa";
 import { userLogout, deleteUserAccount } from "@/api/account/accountAPI";
 
 export function SettingContent(){
   const navigate = useNavigate();
+  const activeUser = JSON.parse(localStorage.getItem("activeUser") || "{}");
+  const isAdmin = activeUser?.role?.toLowerCase() === "admin";
   const handleLogout = async () => {
     const confirmLogout = confirm("Are you sure you want to logout?");
     if (!confirmLogout) return;
@@ -37,8 +37,6 @@ export function SettingContent(){
       alert("Failed to delete account.");
     }
   }
-    const user = useSelector((state:RootState) => state.profile)
-    const isAdmin = user?.role?.toLowerCase() === "admin";
     const handleSwitch= () =>{
       navigate("/admin");
     }
@@ -47,16 +45,22 @@ export function SettingContent(){
     <label className="block text-center text-indigo-600 text-6xl font-bold pt-1 mt-2 -mb-15 ">Settings</label>
     <div className="w-full flex justify-center items-center py-20"> 
     <div className="w-[600px] bg-gray-800/70 backdrop-blur-lg border border-white/30 rounded-3xl shadow-xl p-10 space-y-8">
-    {isAdmin&&(
+    {/*Admin Switch Button */}
+    {isAdmin && (
       <>
-      <label className="block text-start font-bold text-2xl text-indigo-400 mb-5">Switch to Admin Dashboard</label>
-      <button 
-        onClick={handleSwitch}
-        className="bg-white/20 border border-white/20 text-white px-4 py-1 rounded-2xl hover:bg-red-500 flex items-center gap-2">
-        Switch to Admin
+        <label className="block text-start font-bold text-2xl text-indigo-400 mb-5">
+          Admin Controls
+        </label>
+        <button
+          onClick={handleSwitch}
+          className="bg-white/20 border border-white/20 text-white px-4 py-1 rounded-2xl hover:bg-red-500 flex items-center gap-2">
+            <FaExchangeAlt className="h-5 w-5" />
+            Switch to Admin Dashboard
         </button>
+        <div className="border-t border-white/20 my-4"></div>
       </>
-    )}
+      )}
+    {/*Logout Account */}
     <label className="block text-start font-bold text-2xl text-indigo-400 mb-5">Logout Your Account</label>
       <button
         onClick={handleLogout}
@@ -64,6 +68,7 @@ export function SettingContent(){
         <img src={logout_icon} alt="logout" className="h-5 w-5"/>
         Logout
       </button>
+      {/* Delete Section (Hidden for Admins) */}
       {!isAdmin &&(
         <>
         <label className="block text-start font-bold text-2xl text-indigo-400 mb-5">Permanent Delete Account</label>

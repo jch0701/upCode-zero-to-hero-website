@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { fileToBase64 } from "../overview/announcement_helper";
-import { useDispatch } from "react-redux";
-import { createAnnouncements } from "@/store/announcementSlice";
+import { postAnnouncement } from "@/api/admin/adminAPI";
 
-export default function AdminAnnouncement() {
+type Props = {
+  onPostSuccess?: () => void; 
+};
+
+export default function AdminAnnouncement({ onPostSuccess }: Props) {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [image, setImage] = useState<File | null>(null)
-  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const currentUser = JSON.parse(
     localStorage.getItem("activeUser") || "{}"
   );
-  //only admin can see
+  // only admin can see
   if (currentUser.role !== "admin" && currentUser.role !== "Admin") return null;
 
   const handleSubmit = async () => {
@@ -19,25 +22,35 @@ export default function AdminAnnouncement() {
       alert("Please fill in all fields");
       return;
     }
-  let imageBase64: string | undefined;
 
-  if (image) {
-    imageBase64 = await fileToBase64(image);
-  }
-
-  dispatch(createAnnouncements({
-    title,
-    message,
-    image: imageBase64,
-  }));
-  setTitle("");
-  setMessage("");
-  setImage(null);
-  alert("Announcement posted!");
+    setLoading(true);
+    try {
+      let imageBase64: string | undefined;
+      if (image) {
+        imageBase64 = await fileToBase64(image);
+      }
+      await postAnnouncement({
+        title,
+        message,
+        image: imageBase64,
+      });
+      setTitle("");
+      setMessage("");
+      setImage(null);
+      alert("Announcement posted successfully!");
+      if (onPostSuccess) {
+        onPostSuccess();
+      }
+    } catch (error) {
+      console.error("Failed to post:", error);
+      alert("Failed to post announcement");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-gray-800/70 backdrop-blur-lg border border-white/20 rounded-3xl p-6 shadow-xl -mt-24">
+    <div className="bg-gray-800/70 backdrop-blur-lg border border-white/20 rounded-3xl p-6 shadow-xl ">
       <div className="text-3xl font-semibold text-white mb-4">
         Make an Announcement
       </div>
@@ -81,7 +94,7 @@ export default function AdminAnnouncement() {
         onClick={handleSubmit}
         className="bg-green-500 hover:bg-green-600 text-black px-4 py-2 rounded-xl"
       >
-        Post Announcement
+        {loading? "Posting...": "Post Announcement"}
       </button>
     </div>
   );

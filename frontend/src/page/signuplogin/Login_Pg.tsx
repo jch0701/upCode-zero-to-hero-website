@@ -30,9 +30,11 @@ const Login_Pg: FC = () => {
           role: data.user.role,
         })
       );
-      if (data.user.role === "Admin") {
-        navigate("/admin", { replace: true });
+      if (data.user.role && data.user.role.toLowerCase() === "admin") {
+        console.log("Redirecting to Admin Dashboard...");
+        navigate("/admin", { replace: true }); 
       } else {
+        console.log("Redirecting to User Page...");
         navigate(fromPath, { replace: true });
       }
     } catch (err: any) {
