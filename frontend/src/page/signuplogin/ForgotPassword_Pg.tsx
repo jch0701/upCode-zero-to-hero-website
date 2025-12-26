@@ -62,7 +62,6 @@ const ForgotPassword_Pg = () => {
               />
             </div>
 
-            {/* Inline Error */}
             {error && (
               <p style = {{ color:"red"}} className="forgot-error" >
                 {error}

@@ -1,39 +1,43 @@
-import { initial_Completion } from "@/component/activity/activity_details";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getUserActivity } from "@/api/profile/activityAPI";
 import { getWeeklyStats, getMonthlyStats } from "@/component/activity/weekly_monthly";
 import WeeklyChart from "@/component/activity/weeklyChart";
 import MonthlyChart from "@/component/activity/monthlyChart";
 
 type ActivityContentProps = {
-  userId : number;
+  userId : string;
 };
 export function ActivityContent({userId}: ActivityContentProps){
   const activeUserRaw = localStorage.getItem("activeUser");
-  const topic_name = useSelector((state:any) => state.roadmap.roadmapList);
-  const chapters_name = useSelector((state:any) => state.chapter.pillarList);
-    if(!activeUserRaw) return;
-  const activeUser = JSON.parse(activeUserRaw);
-  const isOwner = activeUser.userId === userId;
-  const key = `activity_${userId}`;
-  const saved = localStorage.getItem(key);
-  const activity = saved? JSON.parse(saved):{...initial_Completion, ...(saved ? JSON.parse(saved) : {})};
-  const main_topic_stat = Object.entries(activity.opened.main_topic as Record<string,number>).sort((a,b) => b[1] - a[1]);
-  const chapters_stat = Object.entries(activity.opened.chapters as Record<string,number>).sort((a,b)=> b[1]-a[1]);
-  //return the topic name instead of their id
-  const getTopic_name = (id: string | number) => {
-    const item = topic_name.find((r:any)=> r.roadmapID === Number(id));
-    return item ? item.title : "Unknown Roadmap";
-  };
-  const getChapter_name = (id: string | number ) =>{
-    const item = chapters_name.find((r:any) => r.chapterID === Number(id));
-    return item ? item.title : "Unknown Chapter";
-  };
-  const getTopic_fr_Chap = (chapterID: string | number) => {
-    const chap = chapters_name.find((r:any) => r.chapterID === Number(chapterID));
-    if(!chap) return "Unknow Topic";
-    const topic = topic_name.find((r:any) => r.roadmapID === chap.roadmapID);
-    return topic ? topic.title : "Unknown Topic";
+  const activeUser = activeUserRaw ? JSON.parse(activeUserRaw) : null;
+  const isOwner = activeUser?.userId === userId;
+  const [activity, setActivity] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  if (!userId || userId === "0") {
+
+  return <p className="text-white">Invalid user</p>;
+}
+
+useEffect(() => {
+  setLoading(true);
+  getUserActivity(userId)
+    .then(data => {
+      setActivity(data);
+    })
+    .catch(err => {
+      console.error("Activity error:", err);
+    })
+    .finally(() => setLoading(false));
+}, [userId]);
+
+
+  if (loading) {
+    return <p className="text-white text-center">Loading activity...</p>;
   }
+  if (!activity) {
+    return <p className="text-white text-center">No activity data.</p>;
+  }
+
   //for graph purpose
   const weeklyGraphData = getWeeklyStats(activity.history ?? []);
   const monthlyGraphData = getMonthlyStats(activity.history ?? []);
@@ -55,31 +59,36 @@ export function ActivityContent({userId}: ActivityContentProps){
           )}
         {/* Roadmaps */}
           <label className="block text-start text-indigo-400 text-2xl font-semibold pt-1 pl-7 mb-2 mt-2 ">Most Visited Topic</label>
-          {main_topic_stat.length === 0 ? (
+          {activity.topTopics.length === 0 ? (
             <p className="block text-start text-white text-l pt-1 pl-7 mb-2 mt-2">No roadmap activity yet.</p>
           ) : (
             <ul className="list-disc text-start text-l pl-7 mt-2 mb-2 text-white">
-              {main_topic_stat.slice(0,5).map(([roadmapID, count]) => (
-                <li key={roadmapID}>
-                  {getTopic_name(roadmapID)}: <strong className="text-red-500 font-extrabold">{count}</strong> visits
+              {activity.topTopics.map((item:any) => (
+                <li key={item.title}>
+                  {item.title}: 
+                  <strong className="text-red-500 font-extrabold"> {item.count}</strong> visits
                 </li>
               ))}
             </ul>
           )}
         {/* Chapters */}
           <label className="block text-start text-indigo-400 text-2xl font-semibold pt-1 pl-7 mb-2 mt-2 ">Most Visited Chapters</label>
-          {chapters_stat.length === 0 ? (
-            <p className="block text-start text-white text-l pt-1 pl-7 mb-2 mt-2">No chapter activity yet.</p>
+          {activity.topChapters.length === 0 ? (
+            <p className="block text-start text-white text-l pt-1 pl-7 mb-2 mt-2">
+              No chapter activity yet.
+            </p>
           ) : (
             <ul className="list-disc text-start text-l pl-7 mt-2 mb-2 text-white">
-              {chapters_stat.slice(0,5).map(([chapterID, count]) => (
-                <li key={chapterID}>
-                  {getChapter_name(chapterID)} 
-                  <span className="ml-1">({getTopic_fr_Chap(chapterID)})</span>: <strong className="text-red-500 font-extrabold">{count}</strong> visits
+              {activity.topChapters.map((item:any) => (
+                <li key={item.chapterTitle}>
+                  {item.chapterTitle}
+                  <span className="ml-1">({item.topicTitle})</span>:{" "}
+                  <strong className="text-red-500 font-extrabold">{item.count}</strong> visits
                 </li>
               ))}
             </ul>
           )}
+
             {isOwner ? (
               <>
                 <label className="block text-center text-indigo-500 text-4xl font-semibold mt-5">

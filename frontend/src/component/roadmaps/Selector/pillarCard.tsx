@@ -57,13 +57,6 @@ const PillarCard : React.FC<PillarCardProps> = ({
                 { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: false })}
             );
         }
-        else {
-            setLocalChapterItem({ ...localChapterItem, isViewed: false });
-            unviewMutation.mutate(
-                { userID: userID!, recordID: Number(selectedChapterID) },
-                { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: true })}
-            );
-        }
     }, [viewPercentage]);
 
     if ( chapterLoading || linksLoading) return null;
@@ -86,11 +79,16 @@ const PillarCard : React.FC<PillarCardProps> = ({
             );
         }
         else {
-            setLocalChapterItem({ ...localChapterItem, isViewed: false });
-            unviewMutation.mutate(
-                { userID: userID!, recordID: Number(selectedChapterID) },
-                { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: true })}
-            )
+            if( viewPercentage !== 100){
+                setLocalChapterItem({ ...localChapterItem, isViewed: false });
+                unviewMutation.mutate(
+                    { userID: userID!, recordID: Number(selectedChapterID) },
+                    { onError: () => setLocalChapterItem({ ...localChapterItem, isViewed: true })}
+                )
+            }
+            else{
+                alert("Cannot unview a fully viewed chapter. Please unview some links first.");
+            }
         }
 
     };
@@ -122,7 +120,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
                     </div>
 
                     {/* Percentage Viewer */}
-                    {viewPercentage !== 100 && viewPercentage !== 0 && 
+                    {viewPercentage !== 100 && 
                     (<div className="flex items-center gap-2">
                         <div className="w-16 h-2 bg-gray-300 rounded-full overflow-hidden">
                             <div

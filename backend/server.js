@@ -14,7 +14,6 @@ app.use(express.json());
     const { default: projectRoutes } = await import('./routes/projectRoutes.js');
     const { default: roadmapRoutes } = await import('./routes/roadmapRoutes.js');
     const { default: userRoutes } = await import('./routes/userRoutes.js');
-    const { default: profileRoutes } = await import('./routes/profileRoutes.js') 
     const { default: careerRoutes } = await import('./routes/careerRoutes.js');
 
     // Now do: app.use("/api", <routeName>);
@@ -23,7 +22,6 @@ app.use(express.json());
     app.use("/api", projectRoutes);
     app.use("/api", roadmapRoutes);
     app.use("/api", userRoutes);
-    app.use("/api", profileRoutes);
     app.use("/api", careerRoutes);
 
     console.log("Registered profile routes");

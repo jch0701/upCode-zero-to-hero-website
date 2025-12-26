@@ -74,6 +74,9 @@ const ChapterDetailForm: React.FC<ChapterDetailFormProps> = ({
 
         const handleDelete = () => {
         if (selectedChapterID) {
+            const confirmDelete = window.confirm("Are you sure you want to delete this chapter?");
+            if (!confirmDelete) return;
+            
             deleteChapterMutation.mutate(Number(selectedChapterID))
         }
         navigate(-2);

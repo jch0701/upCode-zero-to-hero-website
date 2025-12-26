@@ -88,6 +88,9 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
 
         const handleDelete = () => {
             if (selectedRoadmapID) {
+                const confirmDelete = window.confirm("Are you sure you want to delete this roadmap?");
+                if (!confirmDelete) return;
+
                 deleteRoadmapMutation.mutate(Number(selectedRoadmapID));
 
                 update_Activity((activity) => {

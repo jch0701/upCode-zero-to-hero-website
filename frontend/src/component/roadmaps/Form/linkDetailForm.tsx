@@ -62,6 +62,9 @@ const LinkDetailForm: React.FC<LinkDetailFormProps> = ({
 
         const handleDelete = () => {
             if (selectedLinkID) {
+                const confirmDelete = window.confirm("Are you sure you want to delete this link?");
+                if (!confirmDelete) return;
+                
                 deleteLinkMutation.mutate(Number(selectedLinkID));
             }
             navigate(-1);

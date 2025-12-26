@@ -11,12 +11,6 @@ export const getMyProfile = async (req, res) => {
     .eq("user_id", req.user.id)
     .maybeSingle();
 
-  // if (error) {
-  //   return res.status(500).json({ message: error.message });
-  // }
-
-  // return res.json(data);
-
   if(data){
     return res.json(data);
   }
@@ -42,6 +36,7 @@ export const getMyProfile = async (req, res) => {
       return res.json(newProfile);
 };
 }
+
 export const updateMyProfile = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -61,37 +56,6 @@ export const updateMyProfile = async (req, res) => {
   res.json({ message: "Profile updated" });
 };
 
-// export const signUp = async (req, res) => {
-//   const data = req.body;
-//   const { data: isDuplicate } = await supabase
-//     .from("userProfiles")
-//     .select(1)
-//     .eq("email", data.email)
-//     .single();
-  
-//   if (isDuplicate) {
-//     return res.status(400).json({ message: "Email already in use" });
-//   }
-
-//   const { data: newProfile, error: insertError } = await supabase
-//     .from("userProfiles")
-//     .insert({
-//       email: req.body.email,
-//       username: req.body.email.split("@")[0],
-//       role: "user",
-//       avatar: "/default-avatar.png",
-//       bio: "",
-//       skills: [],
-//     });
-
-//   if (insertError) {
-//     return res.status(500).json({ message: insertError.message });
-//   }
-
-//   return res.json(newProfile);
-// }
-
-
 // Get user detail
 export const getSingleProfile = async (req, res) => {
   if (req.method !== 'GET') {
@@ -108,13 +72,14 @@ export const getSingleProfile = async (req, res) => {
       .from("userProfiles")
       .select("*")
       .eq('user_id', userID)
+      .maybeSingle()
     
     if(profileError){
       console.error('Profiles Fetch Error:', profileError);
       return res.status(500).json({ message: 'Failed to fetch profiles.' });
     }
 
-    return res.status(200).json(profiles[0]);
+    return res.status(200).json(profiles);
   }
   catch {
     console.error('Internal Server Error in GET Controller:', error);

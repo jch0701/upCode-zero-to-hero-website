@@ -15,6 +15,6 @@ export const requireAuth = async (req, res, next) => {
     return res.status(401).json({ message: "Invalid or expired token" });
   }
 
-  req.user = data.user; // ✅ REAL user from Supabase
+  req.user = data.user; // user from Supabase
   next();
 };

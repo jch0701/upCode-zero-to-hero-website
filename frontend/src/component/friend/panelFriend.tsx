@@ -6,7 +6,7 @@ import FriendsList from "@/component/friend/friendList";
 export default function FriendsPanelContent({
   userId,
 }: {
-  userId: number;
+  userId: string;
 }) {
   const [version, setVersion] = useState(0);
 

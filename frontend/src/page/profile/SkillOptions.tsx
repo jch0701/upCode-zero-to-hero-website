@@ -1,55 +1,39 @@
 import { useEffect, useState } from "react";
-import { getSkillOptions, getMySkills, saveMySkills } from "@/api/profile/skillAPI";
-import { getMyProfile } from "@/api/profile/profileAPI";
-import Api from "@/api/index";
-import { useSelector } from "react-redux";
+import { getSkillOptions, getUserSkills, saveMySkills } from "@/api/profile/skillAPI";
 type Skill = {
   id: string;
   name: string;
 };
-export default function SkillOptions({ editable }: { editable: boolean }) {
-  const [userId, setUserId] = useState<string | null>(null);
+export default function SkillOptions({ userId, editable }: { userId: string, editable: boolean }) {
   const [options, setOptions] = useState<Skill[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [draft, setDraft] = useState<Skill[]>([]);
   const [editing, setEditing] = useState(false);
-
-  //1 Fetch current user from backend
-
-  // 2 Load user skills once we have the userId
+  // Load user skills once we have the userId
   useEffect(() => {
-  let cancelled = false;
+    let cancelled = false;
 
-  const loadSkills = async () => {
-    try {
-      const [opt, userSkills] = await Promise.all([
-        getSkillOptions(),
-        getMySkills(),
-      ]);
+    const loadSkills = async () => {
+      try {
+        // Check loading Me or a Friend
+        const [opt, userSkills] = await Promise.all([
+          getSkillOptions(),
+          getUserSkills(userId) 
+        ]);
 
-      if (cancelled) return;
-      setOptions(opt);
-      setSkills(userSkills);
-    } catch (err) {
-      console.error("Failed to load skills:", err);
-    }
-  };
+        if (cancelled) return;
+        setOptions(opt);
+        setSkills(userSkills);
+      } catch (err) {
+        console.error("Failed to load skills:", err);
+      }
+    };
 
-  loadSkills();
-  return () => {
-    cancelled = true;
-  };
-}, []);
+    if (userId) loadSkills(); // Only load if we have an ID
 
+    return () => { cancelled = true; };
+  }, [userId]);
 
-  // 3 Toggle skill selection locally
-  // const toggle = (skill: string) => {
-  //   setDraft((prev) =>
-  //     prev.includes(skill)
-  //       ? prev.filter((s) => s !== skill)
-  //       : [...prev, skill]
-  //   );
-  // };
   const toggle = (skill: Skill) => {
   setDraft((prev) =>
     prev.some((s) => s.id === skill.id)
@@ -58,7 +42,7 @@ export default function SkillOptions({ editable }: { editable: boolean }) {
     );
   };
 
-  // 4 Save to backend
+  // Save to backend
   const save = async () => {
     const skillIds = draft.map((s) => s.id);
     await saveMySkills(skillIds);
@@ -98,8 +82,6 @@ export default function SkillOptions({ editable }: { editable: boolean }) {
           )}
       </div>
       
-
-      {/* Inline editor */}
       {editable && editing && (
         <div className="bg-gray-200 p-4 rounded">
           <h3 className="font-semibold mb-2">Choose Skills</h3>
