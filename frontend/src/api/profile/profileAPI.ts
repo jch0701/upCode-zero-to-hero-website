@@ -24,3 +24,8 @@ export const useGetSingleProfile = (userID: string) => {
     }
   })
 }
+
+export const getSingleProfile = async (userID: string) => {
+  const response = await Api.get(`/profile/${userID}`);
+  return response.data;
+};

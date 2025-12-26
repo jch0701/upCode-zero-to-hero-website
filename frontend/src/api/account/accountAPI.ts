@@ -5,7 +5,7 @@ export const userLogin = async (email: string, password: string) => {
   const response = await Api.post("/login", {email, password});
   const data = response.data;
 
-  // ✅ Save active user + token locally
+  //  Save active user + token locally
   if (data?.user && data?.access_token) {
     const activeUser = {
       userId: data.user.user_id,          // from your Supabase profile
@@ -36,16 +36,13 @@ export const checkEmail = async (email: string) => {
   return res.data;
 };
 
+// reset password
 export const resetPassword = async (email:string, newPassword:string) => {
   const res = await Api.post("/reset-password", {email, newPassword,});
   return res.data;
 };
 
-// export const userLogout = async () => {
-//   const res = await Api.post("/logout");
-//   return res.data; // returns { message: "Logout successful" }
-// };
-
+// user logout
 export const userLogout = async () => {
   const token = localStorage.getItem("access_token");
 
@@ -60,4 +57,10 @@ export const userLogout = async () => {
   );
 
   return res.data;
+};
+
+// delete account
+export const deleteUserAccount = async () => {
+  const response = await Api.delete("/delete-account");
+  return response.data;
 };

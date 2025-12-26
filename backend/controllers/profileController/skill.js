@@ -1,6 +1,6 @@
 import { supabase } from "../../config.js";
 
-/* Get all default skills */
+// Get all default skills 
 export const getAllSkills = async (req, res) => {
   try {
     const { data, error } = await supabase
@@ -14,7 +14,7 @@ export const getAllSkills = async (req, res) => {
       return res.json([]); // Return empty array safely
     }
 
-    // ✅ Extract plain string array
+    // Extract plain string array
     const skillsList = data.map(row => ({
       id: row.skill_id,
       name: row.skill,
@@ -29,7 +29,7 @@ export const getAllSkills = async (req, res) => {
 export const getMySkills = async (req, res) => {
   const userId = req.user.id;
 
-  // 1. Get skill IDs from profile
+  // Get skill IDs from profile
   const { data: profile, error: profileError } = await supabase
     .from("userProfiles")
     .select("skills")
@@ -44,7 +44,7 @@ export const getMySkills = async (req, res) => {
     return res.json([]);
   }
 
-  // 2. Fetch full skill objects
+  // Fetch full skill objects
   const { data: skills, error: skillsError } = await supabase
     .from("skills")
     .select("skill_id, skill")
@@ -54,7 +54,7 @@ export const getMySkills = async (req, res) => {
     return res.status(500).json({ message: skillsError.message });
   }
 
-  // 3. Normalize response
+  // Normalize response
   const result = skills.map(s => ({
     id: s.skill_id,
     name: s.skill,
@@ -63,7 +63,47 @@ export const getMySkills = async (req, res) => {
   return res.json(result);
 };
 
-/* Update user skills */
+export const getUserSkills = async (req, res) => {
+  try {
+    const { userId } = req.params; // Get ID from URL parameters
+
+    // Get skill IDs from profile
+    const { data: profile, error: profileError } = await supabase
+      .from("userProfiles")
+      .select("skills")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (profileError) throw profileError;
+
+    // Handle no profile or no skills
+    if (!profile || !Array.isArray(profile.skills) || profile.skills.length === 0) {
+      return res.json([]);
+    }
+
+    // Fetch full skill objects
+    const { data: skills, error: skillsError } = await supabase
+      .from("skills")
+      .select("skill_id, skill")
+      .in("skill_id", profile.skills);
+
+    if (skillsError) throw skillsError;
+
+    // Normalize response
+    const result = skills.map(s => ({
+      id: s.skill_id,
+      name: s.skill,
+    }));
+
+    return res.json(result);
+
+  } catch (err) {
+    console.error("Get Skills Error:", err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+// Update user skills 
 export const updateMySkills = async (req, res) => {
   const userId = req.user.id;
   const { skills } = req.body;

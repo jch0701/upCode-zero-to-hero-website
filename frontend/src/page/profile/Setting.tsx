@@ -4,7 +4,7 @@ import type { RootState } from "@/store";
 
 import logout_icon from "@/assets/profile/logout.png";
 import delete_icon from "@/assets/profile/delete.png";
-import { userLogout } from "@/api/account/accountAPI";
+import { userLogout, deleteUserAccount } from "@/api/account/accountAPI";
 
 export function SettingContent(){
   const navigate = useNavigate();
@@ -13,9 +13,9 @@ export function SettingContent(){
     if (!confirmLogout) return;
 
     try {
-      await userLogout(); // call backend
+      await userLogout(); 
       localStorage.clear(); // remove all stored tokens & user info
-      navigate("/login"); // redirect
+      navigate("/login"); 
     } catch (error) {
       console.error("Logout failed:", error);
       alert("Failed to logout. Please try again.");
@@ -28,10 +28,10 @@ export function SettingContent(){
     );
     if(!confirmDelete){return};
     try{
-    // await axios.delete(`/api/users/${localStorage.getItem("userID")}`);
-
-    localStorage.clear();
-    alert("Your account has been deleted!");
+      await deleteUserAccount();
+      localStorage.clear();
+      alert("Your account has been deleted!");
+      navigate("/login");
     }catch (error){
       console.error("Delete account failed:", error);
       alert("Failed to delete account.");
@@ -66,7 +66,7 @@ export function SettingContent(){
       </button>
       {!isAdmin &&(
         <>
-        <label className="block text-start font-bold text-2xl text-indigo-400 mb-5">Permanant Delete Account</label>
+        <label className="block text-start font-bold text-2xl text-indigo-400 mb-5">Permanent Delete Account</label>
         <button
           onClick={handleDelete}
           className="bg-white/20 border border-white/20 text-white px-4 py-1 rounded-2xl hover:bg-red-500 flex items-center gap-2">
