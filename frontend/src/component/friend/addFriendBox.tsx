@@ -1,28 +1,33 @@
 import { useState } from "react";
-import { sendFriendRequest } from "@/component/friend/friendsService";
+import { sendFriendRequest } from "@/api/profile/friendAPI";
 
 type Props = {
-  currentUserId: number;
+  currentUserId: string;
 };
 
 export default function AddFriendBox({ currentUserId }: Props) {
-  const [input, setInput] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = () => {
-    const targetUserId = Number(input);
+  const handleSend = async () => {
+    const targetEmail = email.trim();
 
-    if (!targetUserId) {
-      alert("Please enter a valid user ID");
+    // Basic email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(targetEmail)) {
+      alert("Please enter a valid email address");
       return;
     }
 
-    const success = sendFriendRequest(currentUserId, targetUserId);
+    setLoading(true);
+    const result = await sendFriendRequest(currentUserId, targetEmail);
+    setLoading(false);
 
-    if (success) {
+    if (result.success) {
       alert("Friend request sent!");
-      setInput("");
+      setEmail("");
     } else {
-      alert("Cannot send request (already sent / invalid)");
+      alert(result.message);
     }
   };
 
@@ -34,18 +39,20 @@ export default function AddFriendBox({ currentUserId }: Props) {
 
       <div className="flex gap-2">
         <input
-          type="number"
-          placeholder="Enter user ID"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          className="flex-1 px-3 py-2 rounded bg-gray-200/90 border border-white/50"
+          type="email" 
+          placeholder="Enter friend's email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+          className="flex-1 px-3 py-2 rounded bg-gray-200/90 border border-white/50 text-black placeholder-gray-500"
         />
 
         <button
           onClick={handleSend}
-          className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-white border border-white/50"
+          disabled={loading}
+          className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 px-4 py-2 rounded text-white border border-white/50 transition-colors"
         >
-          Send
+          {loading ? "Sending..." : "Send"}
         </button>
       </div>
     </div>

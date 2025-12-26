@@ -4,7 +4,7 @@ export const userLogout = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
-    // Logout should ALWAYS succeed
+    // Logout should always succeed
     if (!token) {
       return res.status(200).json({ message: "Already logged out" });
     }

@@ -36,6 +36,7 @@ export const getMyProfile = async (req, res) => {
       return res.json(newProfile);
 };
 }
+
 export const updateMyProfile = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -71,13 +72,14 @@ export const getSingleProfile = async (req, res) => {
       .from("userProfiles")
       .select("*")
       .eq('user_id', userID)
+      .maybeSingle()
     
     if(profileError){
       console.error('Profiles Fetch Error:', profileError);
       return res.status(500).json({ message: 'Failed to fetch profiles.' });
     }
 
-    return res.status(200).json(profiles[0]);
+    return res.status(200).json(profiles);
   }
   catch {
     console.error('Internal Server Error in GET Controller:', error);

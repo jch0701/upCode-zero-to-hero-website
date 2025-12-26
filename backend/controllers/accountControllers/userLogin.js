@@ -29,7 +29,7 @@ export const userLogin = async (req, res) =>{
     .eq("user_id", user.id)
     .maybeSingle();
 
-  // 2 If profile does NOT exist, create it
+  // If profile does NOT exist, create it
   if (!profile) {
     const { data: newProfile, error: insertError } = await supabase
       .from("userProfiles")

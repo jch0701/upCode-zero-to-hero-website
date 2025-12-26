@@ -4,9 +4,8 @@ import descip_icon from "@/assets/profile/details.png";
 import user_icon from "@/assets/signuplogin/user.png";
 import email_icon from "@/assets/signuplogin/email.png"
 import role_icon from "@/assets/profile/role.png";
-import { getMyProfile } from "@/api/profile/profileAPI";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
+import { getMyProfile, getSingleProfile } from "@/api/profile/profileAPI";
+
 import api from "@/api";
 
 function ProfileRow({
@@ -61,40 +60,31 @@ const avatarOptions = [
   "/src/assets/profile/dinasour_avatar.png"
 ];
 
-export function ProfileContent() {
+export function ProfileContent({userId} : {userId: string}) {
   const [profile, setProfile] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showAvatar, setShowAvatar] = useState(false);
-  const userId = useSelector((state: any) => state.profile.userId);
-  const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if(!userId){
-  //   navigate("/login");
-  //   return;
-  //   }
-  //   const loadProfile = async () => {
-  //     try{
-  //       const res = await getMyProfile();
-  //       setProfile(res);
-  //     } catch (error) {
-  //       console.error("Failed to load profile:", error);
-  //     }
-  //   };
-  //   loadProfile();
-  // }, [userId,navigate]);
+  const activeUserRaw = localStorage.getItem("activeUser");
+  const currentUserId = activeUserRaw ? JSON.parse(activeUserRaw).userId : "";
+  const isOwner = currentUserId === userId;
+  
   useEffect(() => {
-      const loadProfile = async () => {
-        try {
-          const res = await getMyProfile();
-          setProfile(res);
-        } catch {
-          alert("Please login to view your profile");
-          
+    const loadProfile = async () => {
+      try {
+        // If viewing self, use getMyProfile, else use getSingleProfile
+        let res;
+        if (isOwner) {
+            res = await getMyProfile();
+        } else {
+            res = await getSingleProfile(userId); 
         }
-      };
-          loadProfile();
-      }, []);
+        setProfile(res);
+      } catch (err) {
+        console.error("Failed to load profile", err);
+      }
+    };
+    if (userId) loadProfile();
+  }, [userId, isOwner]);
 
   if (!profile) {
     return (
@@ -127,7 +117,7 @@ export function ProfileContent() {
         <div className="w-150 bg-gray-800/70 backdrop-blur-lg border border-white/30 rounded-3xl shadow-xl p-10 space-y-8">
           <div className="flex flex-col items-center space-y-4">
             <img src={profile.avatar || "/src/assets/profile/default_avatar.png"} alt="" className="w-50 h-50 rounded-full border-4 border-white/50 object-cover shadow-lg bg-fuchsia-200" />
-            {isEditing && !showAvatar && (
+            {isOwner && isEditing && !showAvatar && (
               <button className="text-sm text-indigo-400 hover:text-purple-200" onClick={() => setShowAvatar(true)}>
                 Change Picture
               </button>
@@ -149,7 +139,7 @@ export function ProfileContent() {
             )}
 
           </div>
-          {!isEditing && (
+          {isOwner && !isEditing && (
             <div className="flex justify-end">
               <button
                 onClick={() => setIsEditing(true)}
@@ -165,7 +155,7 @@ export function ProfileContent() {
             <ProfileRow label="Email" icon={email_icon} desc={profile.email} />
             <ProfileRow label="Bio" icon={descip_icon} desc={profile.bio} editable={isEditing} onChange={(val) => handleChange("bio", val)} />
           </div>
-          {isEditing && (
+          {isOwner && isEditing && (
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => { setIsEditing(false); }}

@@ -14,16 +14,14 @@ export function ActivityContent({userId}: ActivityContentProps){
   const [activity, setActivity] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   if (!userId || userId === "0") {
-  console.error("ActivityContent received invalid userId:", userId);
+
   return <p className="text-white">Invalid user</p>;
 }
 
 useEffect(() => {
   setLoading(true);
-  console.log("Fetching activity for userId:", userId);
   getUserActivity(userId)
     .then(data => {
-      console.log("Activity response:", data);
       setActivity(data);
     })
     .catch(err => {
