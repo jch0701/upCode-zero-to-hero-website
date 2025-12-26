@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge"
 // Load from local storage
 export function loadUserInfo() {
   try {
-    const raw = localStorage.getItem("userInfo");
+    const raw = localStorage.getItem("activeUser");
     if (!raw) return undefined;
     return JSON.parse(raw);
   } catch {

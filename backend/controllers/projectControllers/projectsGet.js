@@ -32,11 +32,14 @@ export const getAllBasicDetailsOnly = async (req, res) => {
     returnObj = await supabase.rpc('get_projects_without_tracking');
   } else{
     returnObj = await supabase
-      .rpc('get_projects_with_tracking', { user_id: userId });
+      .rpc('get_projects_with_tracking', { user_id_input: userId });
   }
   const { data: projects, error } = returnObj;
 
-  if (error) return res.status(500).json({ error: error.message || "Failed to fetch projects" });
+  if (error){
+    console.log(error);
+    return res.status(500).json({ error: error.message || "Failed to fetch projects" });
+  } 
 
   return res.json(projects);
 };
