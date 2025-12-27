@@ -29,6 +29,7 @@ export const ProjectDetails: React.FC = () => {
     data: project, 
     isLoading: isLoadingProjectData, 
     isError: isErrorProjectData, 
+    isSuccess: isSuccessProjectData,
     error: projectError 
   } = useGetByIdComplete(projectId, userId);
 

@@ -14,6 +14,17 @@ export const useGetRoadmaps = (userID?: string | null) => {
     });
 };
 
+export const useGetRoadmapsWithProgress = (userID: string) => {
+    return useQuery<RoadmapType[]>({
+        queryKey: ['roadmapsWithProgress', userID],
+        queryFn: async () => {
+            const response = await Api.get(`roadmaps/withProgress/${userID}`);
+            return response.data;
+        },
+        enabled: !!userID,
+    });
+}
+
 // 2. Get Specific Roadmap
 export const useGetSingleRoadmap = (roadmapID: number, userID?: string | null) => {
     return useQuery<RoadmapType>({

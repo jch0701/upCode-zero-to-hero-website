@@ -75,6 +75,7 @@ export function ProfileContent({userId} : {userId: string}) {
         let res;
         if (isOwner) {
             res = await getMyProfile();
+            console.log(res);
         } else {
             res = await getSingleProfile(userId); 
         }

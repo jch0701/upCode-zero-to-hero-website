@@ -1,11 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import projectsReducer from "./projectsSlice";
 import submissionsReducer from "./submissionsSlice";
-// import userListReducer from "./userListSlice";
 import profileReducer from "./profileSlice";
-import roadmapReducer from "./roadmapSlice";
-import pillarReducer from "./pillarsSlice";
-import linkReducer from "./linksSlice";
 import projectTrackingReducer from "./projectTrackingSlice";
 import recommendationReducer from "./recommendationSlice";
 import careerReducer from "./careerSlice";
@@ -13,6 +9,10 @@ import announcementSlice from "./announcementSlice";
 import overviewImagesReducer from "./overviewImageSlices";
 // Import your reducers here
 // Example: import userReducer from "./slices/userSlice";
+// import roadmapReducer from "./roadmapSlice";
+// import pillarReducer from "./pillarsSlice";
+// import linkReducer from "./linksSlice";
+// import userListReducer from "./userListSlice";
 
 // Load from local storage
 function loadUserInfo() {
@@ -40,18 +40,18 @@ export const store = configureStore({
   reducer: {
     // Add your reducers here
     // Example: user: userReducer,
-    projects: projectsReducer,
-    submissions: submissionsReducer,
-    // userList: userListReducer,
-    profile: profileReducer,
-    roadmap: roadmapReducer,
-    chapter: pillarReducer,
-    link: linkReducer,
-    projectTracking: projectTrackingReducer,
-    recommendations: recommendationReducer,
-    career: careerReducer,
-    announcement: announcementSlice,
-    overviewImages: overviewImagesReducer,
+    // projects: projectsReducer,
+    // submissions: submissionsReducer,
+    // // userList: userListReducer,
+    // profile: profileReducer,
+    // // roadmap: roadmapReducer,
+    // // chapter: pillarReducer,
+    // // link: linkReducer,
+    // projectTracking: projectTrackingReducer,
+    // recommendations: recommendationReducer,
+    // career: careerReducer,
+    // announcement: announcementSlice,
+    // overviewImages: overviewImagesReducer,
   } as any,
   preloadedState,
 });

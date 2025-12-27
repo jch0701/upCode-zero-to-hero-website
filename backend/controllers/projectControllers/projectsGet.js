@@ -89,7 +89,7 @@ export const getByTitleComplete = async (req, res) => {
   const { data: creator } = await supabase
     .from("userProfiles")
     .select("username")
-    .eq("userId", project.creatorId)
+    .eq("user_id", project.creatorId)
     .maybeSingle();
 
   // Fetch recommendations separately (polymorphic relationship)
@@ -181,7 +181,7 @@ export const getByIdComplete = async (req, res) => {
   const { data: creator } = await supabase
     .from("userProfiles")
     .select("username")
-    .eq("userId", project.creatorId)
+    .eq("user_id", project.creatorId)
     .maybeSingle();
 
   // Fetch recommendations separately (polymorphic relationship)

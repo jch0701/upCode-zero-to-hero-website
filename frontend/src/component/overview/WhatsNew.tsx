@@ -1,13 +1,13 @@
 import { useGetAllBasicDetailsOnly } from "@/api/projects/projectsAPI";
 import { useGetRoadmaps } from "@/api/roadmaps/roadmapAPI";
-import { useSelector } from "react-redux";
+import { loadUserInfo } from "@/lib/utils";
 import { useNavigate } from "react-router";
 import { RoadmapItemCard } from "../roadmaps/Selector/roadmapCard";
 import ProjectCard from "../projects/projectCard";
 
 export function WhatsNew() {
   const navigate = useNavigate();
-  const userId = useSelector((state: any) => state.profile.userId);
+  const userId = loadUserInfo()?.userId;
   const { data: projectsData, status: projectsStatus } = useGetAllBasicDetailsOnly(userId);
   const { data: roadmapsData, status: roadmapsStatus } = useGetRoadmaps(userId);
   if (projectsStatus === "pending" || roadmapsStatus === "pending") {
