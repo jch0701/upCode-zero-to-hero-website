@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import RoadmapDescription from "../../component/roadmaps/DetailSession/roadmapDesciption";
 import { useParams } from "react-router-dom";
 import PillarList from "@/component/roadmaps/Selector/pillarList";
-import { update_Activity } from "@/component/activity/activity_tracker";
+import { trackNewActivity } from "@/component/activity/activity_tracker";
 import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { Spinner } from "@/component/shadcn/spinner";
 import { getActiveUserField } from "@/lib/utils";
@@ -10,18 +10,13 @@ import { getActiveUserField } from "@/lib/utils";
 export const RoadmapDetails: React.FC = () => {
     const { roadmapID } = useParams<{ roadmapID: string }>(); // get id from URL
     const userID = getActiveUserField("userId");
-    
-    //for profile usage
     const hasCountedRef = useRef(false);
+    //for profile usage
     useEffect(() => {
         if (!roadmapID) return;
-        if(hasCountedRef.current) return;
-        update_Activity(activity => {
-            // count once
-            activity.opened.main_topic[roadmapID] =
-            (activity.opened.main_topic[roadmapID] || 0) + 1;
-        },{ type: "roadmap", id: roadmapID });
-        
+        if (hasCountedRef.current) return;
+        trackNewActivity("roadmap", roadmapID);
+
         hasCountedRef.current = true;
     }, [roadmapID]);
 

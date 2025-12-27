@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import FormBar from "../../formBox";
 import { validateDescription, validateTitle } from "../../validateFormBox";
 import { defaultImageSrc, bin, IMAGE_KEYWORD_MAP} from "../../../lib/image";
-import { update_Activity } from "@/component/activity/activity_tracker";
+import { trackNewActivity } from "@/component/activity/activity_tracker";
 import { useCreateRoadmap, useDeleteRoadmap, useGetSingleRoadmap, useUpdateRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { getActiveUserField } from "@/lib/utils";
 
@@ -70,9 +70,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
                     title: queryTitle,
                     description: queryDescription,
                 })
-                 update_Activity((activity) => {
-                    activity.roadmap_created = (activity.roadmap_created || 0) + 1;
-                }, { type: "roadmap_created", id: queryTitle });
+                 trackNewActivity("roadmap_created", queryTitle);
             }
             if (mode === 'edit'){
                 updateRoadmapMutation.mutate({
@@ -93,9 +91,7 @@ const RoadmapDetailForm: React.FC<RoadmapDetailFormProps> = ({
 
                 deleteRoadmapMutation.mutate(Number(selectedRoadmapID));
 
-                update_Activity((activity) => {
-                    activity.roadmap_deleted = (activity.roadmap_deleted || 0) + 1;
-                }, { type: "roadmap_deleted", id: queryTitle });
+                trackNewActivity("roadmap_deleted", queryTitle);
         }
         navigate(-2);
         };
