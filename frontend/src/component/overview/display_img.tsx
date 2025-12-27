@@ -57,7 +57,7 @@ export default function DisplayImage() {
   // Render  Carousel
   return (
     <div className="w-full">
-      <div className="relative w-full h-80 md:h-96 overflow-hidden rounded-3xl border-4 border-black shadow-2xl">
+      <div className="relative w-full h-80 md:h-96 overflow-hidden rounded-3xl ">
         {images.map((img, i) => (
           <img
             key={img.adv_id}
@@ -75,15 +75,17 @@ export default function DisplayImage() {
           <>
             <button
               type="button"
+              title="Previous"
               onClick={prev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white p-3 rounded-full hover:bg-black/60 transition-colors z-10"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-gray-400/40 text-white p-3 rounded-full hover:bg-black/60 transition-colors z-10"
             >
               <FaChevronLeft />
             </button>
             <button
+              title="Next"
               type="button"
               onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white p-3 rounded-full hover:bg-black/60 transition-colors z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-gray-400/40 text-white p-3 rounded-full hover:bg-black/60 transition-colors z-10"
             >
               <FaChevronRight />
             </button>
@@ -97,10 +99,10 @@ export default function DisplayImage() {
           {images.map((_, i) => (
             <button
               key={i}
+              title={`Go to slide ${i + 1}`}
               onClick={() => setIndex(i)}
-              className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                i === index ? "bg-white w-4" : "bg-white/40"
-              }`}
+              className={`h-2 w-2 rounded-full transition-all duration-300 ${i === index ? "bg-white w-4" : "bg-white/40"
+                }`}
             />
           ))}
         </div>

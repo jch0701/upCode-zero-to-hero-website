@@ -34,7 +34,9 @@ export function WhatsNew() {
       {/* Latest Roadmaps */}
       <div>
         <h3 className="text-2xl text-left font-semibold text-white mb-4">
-          <span onClick={() => navigate('/roadmap')} className="cursor-pointer hover:text-amber-200">Latest Roadmaps</span>
+          <span onClick={() => navigate('/roadmap')} className="cursor-pointer hover:text-amber-200">
+            The Latest Roadmaps
+          </span>
         </h3>
         {latestRoadmaps.length === 0 ? (
           <p className="text-white/95 text-2xl">No roadmaps available.</p>
@@ -49,7 +51,9 @@ export function WhatsNew() {
       {/* Latest Projects */}
       <div>
         <h3 className="text-2xl text-left font-semibold text-white mb-4">
-          <span onClick={() => navigate('/project')} className="cursor-pointer hover:text-amber-200">Latest Projects</span>
+          <span onClick={() => navigate('/project')} className="cursor-pointer hover:text-amber-200">
+            The Latest Projects
+          </span>
         </h3>
         {latestProjects.length === 0 ? (
           <p className="text-white/95 text-2xl">No projects available.</p>

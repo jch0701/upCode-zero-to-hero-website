@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllBasicDetailsOnly, getByTitleComplete, getByIdComplete } from '../controllers/projectControllers/projectsGet.js';
+import { getAllBasicDetailsOnly, getByTitleComplete, getByIdComplete, getAllRelatedToUser } from '../controllers/projectControllers/projectsGet.js';
 import { createProject, putTrackingData, updateProject, deleteProject } from '../controllers/projectControllers/projectsCUD.js';
 import { getAllSubmissions, getAllSubmissionsByUser, getSubmissionById } from '../controllers/projectControllers/submissionsGet.js';
 import { submitProject, updateSubmission, deleteSubmission } from '../controllers/projectControllers/submissionsCUD.js';
@@ -17,6 +17,7 @@ const router = express.Router();
 // Get all projects (not including recommendations and submissions)
 router.get('/projects/getAllBasicDetailsOnly', getAllBasicDetailsOnly);
 router.get('/projects/getAllBasicDetailsOnly/:userId', getAllBasicDetailsOnly);
+router.get('/projects/getAllRelatedToUser/:userID', getAllRelatedToUser);
 // Get project by title, including recommendations, tracking data (user) and submissions (surface data)
 router.get('/projects/getByTitleComplete/:title', getByTitleComplete);
 router.get('/projects/getByTitleComplete/:title/:userId', getByTitleComplete);

@@ -48,6 +48,19 @@ export function useGetByTitleComplete(title: string, userId: number) {
   })
 }
 
+export function useGetAllRelatedProjects(userId: number) {
+  return useQuery({
+    queryKey: ['projects', 'relatedProjects', userId],
+    queryFn: async () => {
+      if(userId === null || userId === undefined){
+        return [];
+      }
+      const response = await Api.get(`/projects/getAllRelatedToUser/${userId}`);
+      return response.data;
+    }
+  })
+}
+
 export function useGetByIdComplete(projectId: number, userId: number) {
   return useQuery({
     queryKey: ['projects', 'byIdComplete', projectId, userId],

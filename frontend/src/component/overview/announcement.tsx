@@ -7,7 +7,7 @@ type AnnouncementData = {
   title: string;
   message: string;
   image?: string;
-  created_at: string; 
+  created_at: string;
 };
 
 export default function Announcement() {
@@ -56,52 +56,52 @@ export default function Announcement() {
   const visibleAnnounce = expand ? announcements : announcements.slice(0, MAX_ANNOUNCE);
 
   return (
-    <div className="space-y-4 bg-black/40">
+    <div className="space-y-3 ">
       {visibleAnnounce.map((a: any) => (
         <div
           key={a.announcement_id}
-          className="relative bg-white/90 border border-black/70 rounded-2xl p-4 shadow"
-        > 
-        {isAdmin && (
+          className="relative bg-gray-800/90 border border-black/70 rounded-2xl p-4 shadow"
+        >
+          {isAdmin && (
             <button
               onClick={() => handleDelete(a.announcement_id)}
               className="absolute top-3 right-3 text-red-600 hover:text-red-800"
               title="Delete announcement"
             >
-              <span><FaTrash/></span>
+              <span><FaTrash /></span>
             </button>
           )}
           <div className="flex flex-col md:flex-row gap-6 pl-3 items-start">
-          {a.image && (
-            <img
-              src={a.image}
-              alt="Announcement"
-              className="mt-3 max-h-64 object-contain rounded-2xl border border-black/70  p-4 shadow"
-            />
-          )}
-          <div className="flex-1">
-            <p className="mt-3 text-xl font-semibold text-start underline text-black">
-              {a.title}
-            </p>
+            {a.image && (
+              <img
+                src={a.image}
+                alt="Announcement"
+                className="mt-3 max-h-64 object-contain rounded-2xl border border-black/70 p-4 shadow"
+              />
+            )}
+            <div className="flex-1">
+              <p className="mt-3 text-xl font-semibold text-start underline text-white">
+                {a.title}
+              </p>
 
-            <p className="text-sm text-start text-gray-800 mt-2 whitespace-pre-line">
-              {a.message}
-            </p>
+              <p className="text-sm text-start text-gray-300 mt-2 whitespace-pre-line">
+                {a.message}
+              </p>
 
-            <p className="text-xs text-start text-gray-500 mt-2">
-              Posted on {new Date(a.created_at).toLocaleDateString()}
-            </p>
+              <p className="text-xs text-start text-gray-500 mt-2">
+                Posted on {new Date(a.created_at).toLocaleDateString()}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
       ))}
       {announcements.length > MAX_ANNOUNCE && (
         <div className="text-center mt-4">
           <button
-            onClick={() => {setExpand(prev => !prev); if(expand) window.scrollTo({top:0, behavior: "smooth"})}}
+            onClick={() => { setExpand(prev => !prev); if (expand) window.scrollTo({ top: 0, behavior: "smooth" }) }}
             className="w-full bg-gray-700 border hover:bg-gray-800 border-white/20 rounded-2xl p-3 text-white hover:underline font-medium  "
           >
-            {expand ? "Show Less" : `Show ${announcements.length- MAX_ANNOUNCE}+ More`}
+            {expand ? "Show Less" : `Show ${announcements.length - MAX_ANNOUNCE}+ More`}
           </button>
         </div>
       )}

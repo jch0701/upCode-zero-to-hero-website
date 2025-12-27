@@ -17,7 +17,9 @@ import { LoadingIcon } from "@/component/LoadingIcon";
 
 const SubmissionDetails: React.FC = () => {
   const { projectId, submissionId } = useParams<{ projectId: string; submissionId: string }>();
-  const [displaySection, setDisplaySection] = useState<displaySectionType>("Commits History");
+
+  type displaySectionType = "commits" | "rationale";
+  const [displaySection, setDisplaySection] = useState<displaySectionType>("commits");
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const username = loadUserInfo()?.username || null;
 
@@ -46,7 +48,6 @@ const SubmissionDetails: React.FC = () => {
     throw new Error(`Error loading submission: ${submissionError?.message}`);
   }
 
-  type displaySectionType = "Commits History" | "Rationale File";
   function handleDisplaySectionChange(value: displaySectionType) {
     setDisplaySection(value);
   }
@@ -93,7 +94,10 @@ const SubmissionDetails: React.FC = () => {
       }
       <div className="flex justify-start items-center gap-5">
         <RadioGroup
-          options={["Commits History", "Rationale File"]}
+          options={[
+            { label: "Commits History", value: "commits" },
+            { label: "Rationale File", value: "rationale" }
+          ]}
           selected={displaySection}
           onClick={handleDisplaySectionChange}
           isHorizontal={true}
@@ -104,7 +108,7 @@ const SubmissionDetails: React.FC = () => {
       </div>
 
       <div className="text-white mt-4 mb-10">
-        {displaySection === "Commits History" && (
+        {displaySection === "commits" && (
           <div>
             <div className="prose prose-invert max-w-none mt-4 text-white text-left">
               {commitsIsLoading &&
@@ -127,7 +131,7 @@ const SubmissionDetails: React.FC = () => {
                     </thead>
                     <tbody>
                       {commitHistory.map((commit: any, idx: number) => (
-                        <tr key={commit.hash} className={`border-b border-gray-600 hover:bg-gray-700/50 transition-colors ${idx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-600'}`}>
+                        <tr key={commit.hash} className={`border-b border-gray-600 hover:bg-black transition-colors ${idx % 2 === 0 ? 'bg-gray-800' : 'bg-gray-600'}`}>
                           <td className="px-4 py-3 font-mono text-xs text-green-400">
                             <a href={commit.link} target="_blank" rel="noopener noreferrer" key={commit.hash}>
                               {ellipsifyText(commit.hash)}
@@ -146,7 +150,7 @@ const SubmissionDetails: React.FC = () => {
             }
           </div>
         )}
-        {displaySection === "Rationale File" && (
+        {displaySection === "rationale" && (
           <div className={`prose prose-invert max-w-none mt-4 text-white text-left ${commonMarkDownClass}`}>
             <RenderMD>
               {submission?.rationaleFile || "No project details available."}

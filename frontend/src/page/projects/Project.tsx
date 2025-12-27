@@ -49,7 +49,7 @@ export const Project: React.FC = () => {
     <div className="pt-6 px-3 w-full mx-auto flex">
       <div className="fixed w-65 top-20 bottom-0">
         <RadioGroup
-          options={selections}
+          options={selections.map((cat) => ({ label: cat, value: cat }))}
           selected={category}
           onClick={handleCategoryChange}
           isHorizontal={false}

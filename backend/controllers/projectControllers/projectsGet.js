@@ -28,18 +28,18 @@ export const getAllBasicDetailsOnly = async (req, res) => {
 
   let returnObj = {};
 
-  if(!userId || userId === undefined){
+  if (!userId || userId === undefined) {
     returnObj = await supabase.rpc('get_projects_without_tracking');
-  } else{
+  } else {
     returnObj = await supabase
       .rpc('get_projects_with_tracking', { user_id_input: userId });
   }
   const { data: projects, error } = returnObj;
 
-  if (error){
+  if (error) {
     console.log(error);
     return res.status(500).json({ error: error.message || "Failed to fetch projects" });
-  } 
+  }
 
   return res.json(projects);
 };
@@ -77,11 +77,11 @@ export const getByTitleComplete = async (req, res) => {
     .eq("title", req.params.title)
     .single();
 
-  if(initialFetchError){
-    if(initialFetchError.code === 'PGRST116') {
+  if (initialFetchError) {
+    if (initialFetchError.code === 'PGRST116') {
       return res.status(404).json({ error: "Project not found" });
-    } else{
-      return res.status(500).json({ error: initialFetchError.message || "Failed to fetch project" } );
+    } else {
+      return res.status(500).json({ error: initialFetchError.message || "Failed to fetch project" });
     }
   }
 
@@ -100,7 +100,7 @@ export const getByTitleComplete = async (req, res) => {
     .eq("sourceId", project.projectId)
     .eq("sourceType", "project");
 
-  if(projectSrcRecommendations){
+  if (projectSrcRecommendations) {
     recommendations = projectSrcRecommendations;
   }
 
@@ -110,13 +110,13 @@ export const getByTitleComplete = async (req, res) => {
     .eq("targetId", project.projectId)
     .eq("targetType", "project");
 
-  if(targetSrcRecommendations){
+  if (targetSrcRecommendations) {
     recommendations = recommendations.concat(targetSrcRecommendations);
   }
 
   // Get tracking data for the specified user (if userId provided)
   let trackingData = {};
-  if(req.params.userId){
+  if (req.params.userId) {
     trackingData = await supabase
       .from("Project_Tracking")
       .select("isTracking, isMarkedAsDone")
@@ -169,10 +169,10 @@ export const getByIdComplete = async (req, res) => {
     .eq("projectId", req.params.projectId)
     .single();
 
-  if(initialFetchError){
-    if(initialFetchError.code === 'PGRST116') {
+  if (initialFetchError) {
+    if (initialFetchError.code === 'PGRST116') {
       return res.status(404).json({ error: "Project not found" });
-    } else{
+    } else {
       return res.status(500).json({ error: initialFetchError.message || "Failed to fetch project" });
     }
   }
@@ -192,7 +192,7 @@ export const getByIdComplete = async (req, res) => {
     .eq("sourceId", project.projectId)
     .eq("sourceType", "project");
 
-  if(projectSrcRecommendations){
+  if (projectSrcRecommendations) {
     recommendations = projectSrcRecommendations;
   }
 
@@ -202,20 +202,20 @@ export const getByIdComplete = async (req, res) => {
     .eq("targetId", project.projectId)
     .eq("targetType", "project");
 
-  if(targetSrcRecommendations){
+  if (targetSrcRecommendations) {
     recommendations = recommendations.concat(targetSrcRecommendations);
   }
 
   // Get tracking data for the specified user (if userId provided)
 
   let trackingData = {};
-  if(req.params.userId){
+  if (req.params.userId) {
     trackingData = await supabase
       .from("Project_Tracking")
       .select("isTracking, isMarkedAsDone")
       .eq("projectId", project.projectId)
       .eq("userId", req.params.userId)
-    .single();
+      .single();
     trackingData = trackingData.data || {};
   }
 
@@ -228,3 +228,46 @@ export const getByIdComplete = async (req, res) => {
     isTracking: trackingData?.isTracking || false,
   });
 };
+
+export const getAllRelatedToUser = async (req, res) => {
+  const { userID } = req.params;
+  let allProjects = [];
+  const { data: relatedProjects, error } = await supabase
+    .from('Projects')
+    .select('projectId, title')
+    .eq('creatorId', userID);
+
+  if (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message || "Failed to fetch related projects" });
+  }
+
+  if(relatedProjects){
+    allProjects = relatedProjects.map(project => (
+      {...project, fetchType: 'created'}
+    ));
+  }
+
+  const { data: markedProjects, error: markedError } = await supabase
+    .from('Project_Tracking')
+    .select('Projects(projectId, title), isMarkedAsDone, isTracking')
+    .eq('userId', userID)
+    .or('isMarkedAsDone.eq.true,isTracking.eq.true');
+
+  if (markedError) {
+    console.log(markedError);
+    return res.status(500).json({ error: markedError.message || "Failed to fetch completed/tracked projects" });
+  }
+
+  if(markedProjects){
+    const markedProjectsFormatted = markedProjects.map(entry => (
+      {
+        ...entry.Projects,
+        fetchType: entry.isMarkedAsDone ? 'markedAsDone' : 'tracking'
+      }
+    ));
+    allProjects = allProjects.concat(markedProjectsFormatted);
+  }
+
+  return res.json(allProjects);
+}

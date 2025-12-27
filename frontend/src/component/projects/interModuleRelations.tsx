@@ -2,6 +2,7 @@ import { RoadmapItemCard } from "../roadmaps/Selector/roadmapCard";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import search_icon from "../../assets/search_icon.png"
 import { useGetAllRecommendations } from "@/api/projects/recommendationsAPI";
+import Recommendation from "../roadmaps/Selector/recommendation";
 interface InterModuleRelationsProps {
   projectId: number;
 }
@@ -34,12 +35,12 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
 
   return (
     <Collapsible className="w-[90%] rounded-2xl p-[0.1rem] text-sm font-semibold bg-gray-800 text-white">
-      <div className="flex items-center pl-5 justify-between gap-4 px-4 text-white">
-        <p>Related Roadmaps and Career opportunities</p>
-        <CollapsibleTrigger className="p-2">
+      <CollapsibleTrigger className="p-2 rounded-2xl w-full cursor-pointer">
+        <div className="flex items-center pl-5 justify-between gap-4 px-4 text-white">
+          <p>Related Roadmaps and Career opportunities</p>
           <img src={search_icon} alt="Toggle" className="w-7 rotate-90 cursor-pointer hover:bg-gray-600/80 p-1 rounded-xl" />
-        </CollapsibleTrigger>
-      </div>
+        </div>
+      </CollapsibleTrigger>
       <CollapsibleContent className="pl-5 my-2 pb-5 pt-3 px-4 space-y-3 border-t-2 border-gray-700">
         <div>
           <h1 className="text-2xl">Related Roadmaps</h1>
@@ -58,13 +59,13 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
                       />
                     </div>
                   ); else
-                  return (
-                    <div key={rec.id}>
-                      <RoadmapItemCard
-                        selectedRoadmapID={rec.sourceType === "roadmap" ? rec.sourceId : rec.targetId}
-                      />
-                    </div>
-                  )
+                    return (
+                      <div key={rec.id}>
+                        <RoadmapItemCard
+                          selectedRoadmapID={rec.sourceType === "roadmap" ? rec.sourceId : rec.targetId}
+                        />
+                      </div>
+                    )
                 })}
               </div>
             }
@@ -77,16 +78,17 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
           </span>
           <div className="mt-2">
             {/* replace && with ? later on */}
-            {relatedCareers?.length === 0 && <p>No related careers found.</p>
-              // : <div className="flex flex-wrap gap-4 mt-4">
-              //   {relatedCareers?.map((rec: any) => (
-              //     <div key={rec.id} onClick={() => navigate(`/careers/${rec.targetId}`)}>
-              //       <CareerItemCard
-              //         selectedCareerID={rec.sourceType === "career" ? rec.sourceId : rec.targetId}
-              //       />
-              //     </div>
-              //   ))}
-              // </div>
+            {relatedCareers?.length === 0 ? <p>No related careers found.</p>
+              : <div className="flex flex-wrap gap-4 mt-4">
+                {relatedCareers?.map((rec: any) => (
+                  <Recommendation
+                    mode="career"
+                    selectedID={rec.sourceType === "career" ? rec.sourceId : rec.targetId}
+                    navigateDetails={() => { }}
+                    creator={""}
+                  />
+                ))}
+              </div>
             }
           </div>
         </div>

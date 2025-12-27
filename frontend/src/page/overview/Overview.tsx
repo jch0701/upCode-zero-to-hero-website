@@ -3,6 +3,7 @@ import AdminAnnouncement from "@/component/admin/ad_announcement";
 import DisplayImage from "@/component/overview/display_img";
 import AdminOverviewImages from "@/component/admin/ad_overview_img";
 import { WhatsNew } from "@/component/overview/WhatsNew";
+import { ProgressDisplay } from "@/component/overview/ProgressDisplay";
 import { useState } from "react";
 
 export function Overview() {
@@ -36,7 +37,7 @@ export function Overview() {
       </div>
 
       {/* Announcements Section */}
-      <div className="flex justify-start pt-6">
+      <div className="flex justify-start pt-3">
         <div className="max-w-7xl w-full space-y-6">
           <h2 className="text-4xl font-bold text-white mb-8 text-left">Notice board</h2>
           <Announcement key={refreshVersion}/>
@@ -44,16 +45,23 @@ export function Overview() {
       </div>
 
       {/* Admin-only Section */}
-      <div className="flex justify-center pt-6">
+      <div className="flex justify-center pt-3">
         <div className="max-w-7xl w-full">
           <AdminAnnouncement onPostSuccess={handleUpdateSuccess} />
         </div>
       </div>
+      {/* Progress Display Section */}
+      <div className="flex justify-start pt-3">
+        <div className="max-w-7xl w-full">
+          <h2 className="text-4xl font-bold text-white mb-8 text-left">What you've done</h2>
+            <ProgressDisplay />
+        </div>
+      </div>
 
       {/* What's New Section */}
-      <div className="flex justify-start pt-6">
+      <div className="flex justify-start pt-3">
         <div className="max-w-7xl w-full">
-          <h2 className="text-4xl font-bold text-white mb-8 text-left">What's New</h2>
+          <h2 className="text-4xl font-bold text-white mb-8 text-left">Check these out too</h2>
             <WhatsNew />
         </div>
       </div>

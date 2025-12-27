@@ -39,8 +39,9 @@ export const ProjectDetails: React.FC = () => {
     isLoading: isLoadingSubmissions, 
     isError: isErrorSubmissions,
   } = useGetSubmissionsSurfaceDataOnly(projectId);
-
-  const [displaySection, setDisplaySection] = useState<DisplaySectionType>("Project Description");
+  
+  type DisplaySectionType = "description" | "communitySubmissions" | "mySubmissions";
+  const [displaySection, setDisplaySection] = useState<DisplaySectionType>("description");
 
   if (isLoadingProjectData) {
     return (
@@ -65,7 +66,6 @@ export const ProjectDetails: React.FC = () => {
     });
   }
 
-  type DisplaySectionType = "Project Description" | "Community Submissions" | "My Submissions";
   function handleDisplaySectionChange(value: DisplaySectionType) {
     setDisplaySection(value);
   }
@@ -104,7 +104,11 @@ export const ProjectDetails: React.FC = () => {
 
       <div>
         <RadioGroup
-          options={["Project Description", "Community Submissions", "My Submissions"]}
+          options={[
+            {label: "Project Description", value: "description"}, 
+            {label: "Community Submissions", value: "communitySubmissions"}, 
+            {label: "My Submissions", value: "mySubmissions"}
+          ]}
           selected={displaySection}
           onClick={handleDisplaySectionChange}
           isHorizontal={true}
@@ -117,7 +121,7 @@ export const ProjectDetails: React.FC = () => {
       <div className="text-white mt-4 mb-10">
         {(() => {
           switch (displaySection) {
-            case "Project Description":
+            case "description":
               return (
                 <div>
                   <div className={`prose prose-invert max-w-none mt-4 text-white text-left ${commonMarkDownClass}`}>
@@ -128,7 +132,7 @@ export const ProjectDetails: React.FC = () => {
                 </div>
               );
 
-            case "Community Submissions":
+            case "communitySubmissions":
               return (
                 <div className="grid grid-cols-1 gap-3.5">
                   {
@@ -152,7 +156,7 @@ export const ProjectDetails: React.FC = () => {
                         <div className="flex flex-col justify-center items-center gap-4 mt-10">
                           <h1 className="text-2xl font-semibold text-white">Wow! You're the first to contribute!</h1>
                           <Button
-                          onClick={()=>setDisplaySection("My Submissions")}
+                          onClick={()=>setDisplaySection("mySubmissions")}
                           className="w-fit mx-auto cursor-pointer">
                             See my submissions
                           </Button>
@@ -176,7 +180,7 @@ export const ProjectDetails: React.FC = () => {
                 </div>
               );
 
-            case "My Submissions":
+            case "mySubmissions":
               return (
                 <div>
                   { 

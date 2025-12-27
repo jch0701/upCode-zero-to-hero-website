@@ -15,9 +15,12 @@ export const useGetRoadmaps = (userID?: string | null) => {
 };
 
 export const useGetRoadmapsWithProgress = (userID: string) => {
-    return useQuery<RoadmapType[]>({
+    return useQuery<any[]>({
         queryKey: ['roadmapsWithProgress', userID],
         queryFn: async () => {
+            if(userID === null || userID === undefined){
+                return [];
+            }
             const response = await Api.get(`roadmaps/withProgress/${userID}`);
             return response.data;
         },
