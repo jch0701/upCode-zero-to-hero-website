@@ -2,7 +2,7 @@ import ChapterDescription from '@/component/roadmaps/DetailSession/chapterDescri
 import LinkList from '@/component/roadmaps/Selector/linkList';
 import React, {useEffect, useRef} from 'react';
 import { useParams } from 'react-router-dom';
-import { update_Activity } from '@/component/activity/activity_tracker';
+import { trackNewActivity } from '@/component/activity/activity_tracker';
 import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
 import { Spinner } from '@/component/shadcn/spinner';
 import { getActiveUserField } from '@/lib/utils';
@@ -10,19 +10,14 @@ import { getActiveUserField } from '@/lib/utils';
 export const ChapterDetails: React.FC = () => {
     const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string }>();
     const userID = getActiveUserField("userId");
-
-    //  Use ref instead of useState to avoid warnings
     const hasCountedRef = useRef(false);
-    useEffect(()=> {
-        if(!chapterID)return;
+    useEffect(() => {
+        if (!chapterID) return;
         if (hasCountedRef.current) return;
-        
-        update_Activity(activity =>{
-            activity.opened.chapters[chapterID] = (
-                activity.opened.chapters[chapterID]||0)+1;
-        },{ type: "chapter", id: chapterID });
-        hasCountedRef.current = true;//marked as counted
-    },[chapterID]);
+        trackNewActivity("chapter", chapterID);
+
+        hasCountedRef.current = true;
+    }, [chapterID]);
 
     const { data: chapterItem, isLoading } = useGetSingleChapter(Number(roadmapID), Number(chapterID), userID);
     if (isLoading)  {

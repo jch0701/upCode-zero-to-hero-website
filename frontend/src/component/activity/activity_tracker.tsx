@@ -1,60 +1,71 @@
-import { initial_Completion } from "./activity_details";
-import type { completion_activity_type } from "./activity_details";
 import { saveUserActivity } from "@/api/profile/activityAPI";
+import { getActiveUserField } from "@/lib/utils";
 
-export function update_Activity(
-  updateFn: (activity: completion_activity_type) => void,
-  meta?: { type: string; id: string | number }
-) {
-  const raw = localStorage.getItem("activeUser");
-  if (!raw) return;
+// Holds new actions that haven't been saved yet
+let pendingIncrements: any = {
+  submissions: 0,
+  opened: { main_topic: {}, chapters: {} },
+  history: []
+};
 
-  const user = JSON.parse(raw);
-  const key = `activity_${user.userId}`;
+let timer: NodeJS.Timeout | null = null;
 
-  let activity: completion_activity_type;
+// 2. The Save Function
+// This runs automatically 2 seconds after the user stops clicking.
+const saveToBackend = async () => {
+  const userId = getActiveUserField("userId");
+  if (!userId) return;
+
+  const hasData = 
+    pendingIncrements.submissions > 0 ||
+    Object.keys(pendingIncrements.opened.main_topic).length > 0 ||
+    Object.keys(pendingIncrements.opened.chapters).length > 0 ||
+    pendingIncrements.history.length > 0;
+
+  if (!hasData) return;
+  const payload = { ...pendingIncrements };
+
+  // Reset the bucket ensures we never send the same "plus one" twice.
+  pendingIncrements = {
+    submissions: 0,
+    opened: { main_topic: {}, chapters: {} },
+    history: []
+  };
 
   try {
-    const saved = localStorage.getItem(key);
-    const parsed = saved ? JSON.parse(saved) : null;
-
-    // Ensure 'opened' fields are NOT arrays
-    const isValid =
-      parsed &&
-      typeof parsed.submissions === "number" &&
-      parsed.opened &&
-      !Array.isArray(parsed.opened.main_topic) &&  
-      !Array.isArray(parsed.opened.chapters) &&   
-      Array.isArray(parsed.history);
-
-    activity = isValid
-      ? parsed
-      : structuredClone(initial_Completion); 
-  } catch {
-    activity = structuredClone(initial_Completion);
+    console.log("Syncing Activity Increment:", payload);
+    await saveUserActivity(userId, payload);
+  } catch (e) {
+    console.error("Failed to sync activity", e);
   }
+};
 
-  // Force these to be Objects if they are missing or wrongly typed
-  if (!activity.opened) activity.opened = { main_topic: {}, chapters: {} };
-  if (Array.isArray(activity.opened.main_topic)) activity.opened.main_topic = {};
-  if (Array.isArray(activity.opened.chapters)) activity.opened.chapters = {};
-  // ------------------------
+// Helper Function
+export const trackNewActivity = (
+  type: string,
+  id: string | number
+) => {
+  const key = String(id);
 
-  // Apply user update
-  updateFn(activity);
-
-  // Add history entry
-  activity.history.push({
-    type: meta?.type || "update",
-    id: meta?.id || "",
-    timestamp: Date.now(),
+  // Add timestamp to history
+  pendingIncrements.history.push({
+    type,
+    id: key,
+    timestamp: Date.now()
   });
 
-  // Save to LocalStorage
-  localStorage.setItem(key, JSON.stringify(activity));
+  // Add 1 to the specific counter
+  if (type === "chapter") {
+    pendingIncrements.opened.chapters[key] = (pendingIncrements.opened.chapters[key] || 0) + 1;
+  } 
+  else if (type === "roadmap") {
+    pendingIncrements.opened.main_topic[key] = (pendingIncrements.opened.main_topic[key] || 0) + 1;
+  } 
+  else if (type === "submission") {
+    pendingIncrements.submissions += 1;
+  }
 
-  // Sync to Database
-  saveUserActivity(user.userId, activity)
-    .then(() => console.log("Activity synced to DB"))
-    .catch((err) => console.error("Failed to sync activity:", err));
-}
+  // Auto-Save Logic (Debounce) Wait 1 seconds, then save.
+  if (timer) clearTimeout(timer);
+  timer = setTimeout(saveToBackend, 1000); 
+};

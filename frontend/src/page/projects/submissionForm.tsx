@@ -12,7 +12,7 @@ import { useState, useRef } from "react";
 import { loadUserInfo } from "@/lib/utils";
 import { useCreateSubmission } from "@/api/projects/submissionsAPI";
 // import { uint8ToBase64, convertFileToUInt8 } from "@/lib/utils";
-import { update_Activity } from "@/component/activity/activity_tracker";
+import { trackNewActivity } from "@/component/activity/activity_tracker";
 import { useCallback } from "react";
 import { LoadingIcon } from "@/component/LoadingIcon";
 type SubmissionFormProps = {
@@ -48,10 +48,8 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
 
     //Profile usage
     if (openAsCreateForm && !submissionCounted.current) {
-      update_Activity(activity => {
-        activity.submissions = (activity.submissions || 0) + 1;
-      }, { type: "submission", id: projectId });
-      submissionCounted.current = true; // prevent double count in the same submit event
+      trackNewActivity("submission", projectId);
+      submissionCounted.current = true;
     }
     close();
   }, [createSubmission, creatorId, close, openAsCreateForm, projectId]);
