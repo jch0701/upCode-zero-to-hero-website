@@ -67,7 +67,7 @@ export const All: React.FC = () => {
         : isOwner 
             ? ["All", "Profile", "Activity", "Skill", "Setting"] 
             : ["All", "Profile", "Activity", "Skill"];
-
+    const navOptions = click.map(name => ({ label: name, value: name }));
     const [category, setCategory] = useState<string>(click[0]);
     const [friendsOpen, setFriendsOpen] = useState(false);
 
@@ -82,7 +82,7 @@ export const All: React.FC = () => {
                 <div className="relative">
                     <RadioGroup
                         onClick={handleCategoryChange}
-                        options={click}
+                        options={navOptions}
                         selected={category}
                         isHorizontal={false}
                         className="w-60 fixed"

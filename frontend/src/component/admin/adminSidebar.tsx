@@ -6,7 +6,6 @@ const menu = [
   { name: "Users", path: "/admin/users_admin" },
   { name: "Roadmaps", path: "/admin/roadmaps_admin" },
   { name: "Projects", path: "/admin/projects_admin" },
-  { name: "Analytics", path: "/admin/analytics_admin" }
 ];
 
 export default function AdminSidebar() {

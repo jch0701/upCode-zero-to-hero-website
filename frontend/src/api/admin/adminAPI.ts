@@ -1,8 +1,20 @@
 import Api from '../index.ts';
-
+//Admin dashboard
 export const getAdminStats = async () => {
   const response = await Api.get("/admin/stats");
   return response.data;
+};
+
+//get all users
+export const getAllUsers = async () => {
+  const res = await Api.get("/admin/users");
+  return res.data;
+};
+
+// Delete User
+export const deleteUser = async (userId: string) => {
+  const res = await Api.delete(`/admin/users/${userId}`);
+  return res.data;
 };
 
 // Announcements
