@@ -22,28 +22,39 @@ interface ProjectInteractiveProps {
   project: any;
   submissionDialogOpen: boolean;
   setSubmissionDialogOpen: (value: boolean) => void;
+  isAdmin?: boolean;
 }
 
 export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, projectId, project, 
-  submissionDialogOpen, setSubmissionDialogOpen }) => {
+  submissionDialogOpen, setSubmissionDialogOpen, isAdmin = false }) => {
   const navigate = useNavigate();
   const { mutate: putTrackingData } = usePutTrackingData(userId, projectId);
   const { mutate: deleteProject } = useDeleteProject(projectId);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isTracking, setIsTracking] = useState(project?.isTracking || false);
   const [isMarkedAsDone, setIsMarkedAsDone] = useState(project?.isMarkedAsDone || false);
+
+  const isCreator = userId === project?.creatorId;
+  const hasManagementAccess = isCreator || isAdmin;
+  
   function handleDeleteProject() {
     if (window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
-      navigate("/projects");
-      deleteProject();
+      deleteProject(undefined, {
+      onSuccess: () => {
+        navigate("/projects");
+      },
+      onError: (error) => {
+        alert("Failed to delete project: " + error.message);
+      }
+    });
     }
   }
   return (
     <div className="flex h-auto items-center mt-5 bg-black/50 text-sm w-fit rounded-2xl">
       {
-        userId === project?.creatorId && (
           <>
-            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+            {isCreator && (
+              <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
@@ -66,21 +77,26 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
                 </FieldGroup>
               </DialogContent>
             </Dialog>
-            <Button
-              variant="outline"
-              className="cursor-pointer rounded-none hover:bg-red-600 hover:border-red-600 hover:text-white"
-              onClick={handleDeleteProject}
-            >
-              Delete Project
-            </Button>
+            )}
+            
+            {hasManagementAccess && (
+              <Button
+                variant="outline"
+                className={`cursor-pointer rounded-none hover:bg-red-600 hover:border-red-600 hover:text-white ${
+                  !isCreator ? "rounded-l-2xl" : "" 
+                }`}
+                onClick={handleDeleteProject}
+              >
+                Delete Project
+              </Button>
+            )} 
           </>
-        )
       }
       <Dialog open={submissionDialogOpen} onOpenChange={setSubmissionDialogOpen}>
         <DialogTrigger asChild>
           <Button
             variant="outline"
-            className={`cursor-pointer rounded-none hover:bg-blue-600 hover:border-blue-600 hover:text-white ${userId !== project?.creatorId && "rounded-l-2xl"}`}
+           className={`cursor-pointer rounded-none hover:bg-blue-600 hover:border-blue-600 hover:text-white ${!hasManagementAccess ? "rounded-l-2xl" : "" }`}
           >+ Add a Submission</Button>
         </DialogTrigger>
         <DialogContent className={commonBackgroundClass}>

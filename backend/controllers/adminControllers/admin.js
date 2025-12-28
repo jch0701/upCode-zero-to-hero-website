@@ -1,5 +1,5 @@
-import { supabase } from "../../config.js";
-
+import { supabase  } from "../../config.js";
+// dashboard
 export const getDashboardStats = async (req, res) => {
   try {
     const { count: totalUsers } = await supabase.from("userProfiles").select("*", { count: "exact", head: true });
@@ -38,9 +38,13 @@ export const getDashboardStats = async (req, res) => {
     // Project 
     const { data: allSubmissions, error: subError } = await supabase
       .from("Submissions")
-      .select("projectId"); // We only need the ID to count
-
+      .select("projectId"); 
     if (subError) throw subError;
+
+    const { count: pendingRequests } = await supabase
+        .from("roleApplications")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "pending");
 
     const projectCounts = {};
     const totalSubmissions = allSubmissions.length;
@@ -95,7 +99,7 @@ export const getDashboardStats = async (req, res) => {
       totalCreated,
       totalDeleted,
       totalSubmissions,
-      
+      pendingRequests: pendingRequests || 0,
       // Full Lists (For detailed pages)
       allPopularRoadmaps: finalAllRoadmaps,
       allPopularChapters: finalAllChapters, 
@@ -117,7 +121,7 @@ export const getUsersList = async (req, res) => {
   try {
     const { data: users, error } = await supabase
       .from("userProfiles")
-      .select("user_id, username, email")
+      .select("user_id, username, email, role, verification_status, is_verified")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
@@ -144,7 +148,7 @@ export const deleteUser = async (req, res) => {
       }
     }
     // Delete from Database Tables 
-    await supabaseAdmin.from("activity").delete().eq("user_id", userId);
+    await supabase.from("activity").delete().eq("user_id", userId);
 
     const { error: dbError } = await supabaseAdmin
         .from("userProfiles")
@@ -156,6 +160,66 @@ export const deleteUser = async (req, res) => {
     return res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     console.error("Delete User Error:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// Fetch Pending Applications
+export const getPendingApplications = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("roleApplications")
+      .select(`*,userProfiles:user_id (username, email, role)`)
+      .eq("status", "pending");
+    if (error) throw error;
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUserApplication = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const { data, error } = await supabase 
+      .from("roleApplications") 
+      .select(`*,userProfiles:user_id (username, email)`)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false }) 
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw error;
+    
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error("Get Single App Error:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// Review Application 
+export const reviewApplication = async (req, res) => {
+  const { applicationId, userId, action, roleRequested } = req.body; // action = 'approve' or 'decline'
+
+  try {
+    if (action === 'approve') {
+      await supabase.from("roleApplications").update({ status: 'approved' }).eq("apply_id", applicationId);
+      await supabase.from("userProfiles").update({ 
+        role: roleRequested, 
+        is_verified: true,
+        verification_status: 'approved'
+      }).eq("user_id", userId);
+
+    } else {
+      await supabase.from("roleApplications").update({ status: 'rejected' }).eq("apply_id", applicationId);
+      await supabase.from("userProfiles").update({ 
+        verification_status: 'rejected',
+        is_verified: false 
+      }).eq("user_id", userId);
+    }
+    return res.status(200).json({ message: `Application ${action}d` });
+  } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };

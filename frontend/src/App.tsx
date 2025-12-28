@@ -31,6 +31,7 @@ import AdminDashboard from "./page/admin/ad_dashboard";
 import Admin_Users from "./page/admin/ad_user";
 import Admin_Roadmaps from "./page/admin/ad_roadmap";
 import Admin_Projects from "./page/admin/ad_project";
+import VerifyRole from "./page/profile/verifyRole";
 import CareerDetailsModal from "@/page/career/CareerInfoSub";
 
 const router = createBrowserRouter([
@@ -95,6 +96,7 @@ const router = createBrowserRouter([
       { path: "signup", element: <Signup_Pg /> },
       { path: "forgot-password", element: <ForgotPassword_Pg /> },
       { path: "reset-password", element: <ResetPassword_Pg /> },
+      { path: "request-verification", element:<VerifyRole /> },
       // fallback route still optional; errorElement will catch unknown paths
       { path: "*", element: <ErrorBoundary /> },
     ],

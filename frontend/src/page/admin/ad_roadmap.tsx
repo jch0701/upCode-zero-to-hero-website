@@ -32,13 +32,10 @@ export default function Admin_Roadmaps() {
     return <div className="p-10 text-white text-center text-xl">Loading analytics data...</div>;
   }
 
-  // Helper to render a leaderboard section
+  // Render a leaderboard section
   const renderLeaderboard = (title: string, icon: any, data: TopItem[], colorTheme: "indigo" | "orange") => {
-    // 1. Calculate TOTAL visits to determine the percentage share
     const totalVisits = data.reduce((acc, item) => acc + item.count, 0);
     const safeTotal = totalVisits === 0 ? 1 : totalVisits;
-
-    // Theme backgrounds for the header icon
     const bgColor = colorTheme === "indigo" ? "bg-indigo-500/20" : "bg-orange-500/20";
     const headerTextColor = colorTheme === "indigo" ? "text-indigo-400" : "text-orange-400";
 
@@ -87,11 +84,8 @@ export default function Admin_Roadmaps() {
                   rankColor = "text-orange-400";
                   rankIcon = <FaMedal className="w-6 h-6 mx-auto" />;
                 }
-
-                // Percentage Calculation
                 const percentage = Math.round((item.count / safeTotal) * 100);
-
-                // Color Logic based on Percentage
+                // diff % diff color
                 let barColor = "bg-orange-500"; 
 
                 if (percentage > 70) {
@@ -133,9 +127,8 @@ export default function Admin_Roadmaps() {
                       </div>
                       <span className={`text-xs font-medium ${
                         percentage > 70 ? "text-green-400" : 
-                        percentage < 25 ? "text-red-400" : "text-orange-400"
-                      }`}>
-                          {percentage}% of total traffic
+                        percentage < 25 ? "text-red-400" : "text-orange-400"}`}>
+                          {percentage}% of total visit
                       </span>
                     </div>
                   </div>
