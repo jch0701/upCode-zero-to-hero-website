@@ -114,7 +114,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
   }
 
   if (!isSuccessRoadmaps)
-    return <LoadingIcon text="Loading Roadmaps..." iconClass="flex-col" />;
+    return <LoadingIcon text="Loading Data..." iconClass="flex-col" />;
 
   return (
     <form id={"project-form"} className="w-full max-w-2xl mx-auto p-4 sm:p-6">

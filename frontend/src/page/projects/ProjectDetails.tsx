@@ -18,12 +18,17 @@ import { LoadingIcon } from "@/component/LoadingIcon";
 import { Button } from "@/component/shadcn/button";
 import { NotLoggedIn } from "@/component/NotLoggedIn";
 
+import { useGetMyProfile } from "@/api/profile/profileAPI";
+
 export const ProjectDetails: React.FC = () => {
   const navigate = useNavigate();
   const [submissionDialogOpen, setSubmissionDialogOpen] = useState(false);
   let { projectId: projectIdParam } = useParams<{ projectId: string }>();
   const projectId = Number(projectIdParam);
   const userId = loadUserInfo()?.userId || null;
+  //admin use
+  const { data: userProfile } = useGetMyProfile();
+  const isAdmin = userProfile?.role === 'admin';
 
   const { 
     data: project, 
@@ -96,6 +101,7 @@ export const ProjectDetails: React.FC = () => {
         project={project}
         submissionDialogOpen={submissionDialogOpen}
         setSubmissionDialogOpen={setSubmissionDialogOpen}
+        isAdmin={isAdmin}
       />
 
       <InterModuleRelations

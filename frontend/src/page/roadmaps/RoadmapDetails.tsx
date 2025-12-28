@@ -6,19 +6,29 @@ import { trackNewActivity } from "@/component/activity/activity_tracker";
 import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { Spinner } from "@/component/shadcn/spinner";
 import { getActiveUserField } from "@/lib/utils";
-
+import { useGetMyProfile } from "@/api/profile/profileAPI";
 export const RoadmapDetails: React.FC = () => {
     const { roadmapID } = useParams<{ roadmapID: string }>(); // get id from URL
     const userID = getActiveUserField("userId");
     const hasCountedRef = useRef(false);
     //for profile usage
+    const { data: userProfile, isLoading: isProfileLoading } = useGetMyProfile();
+
     useEffect(() => {
         if (!roadmapID) return;
+        // Wait for profile to load before deciding to track
+        if (isProfileLoading) return; 
         if (hasCountedRef.current) return;
+        // If Admin mark it as "counted" (to stop retries) but not track.
+        if (userProfile?.role === 'admin') {
+            hasCountedRef.current = true;
+            return; 
+        }
+        // If user, track it.
         trackNewActivity("roadmap", roadmapID);
-
         hasCountedRef.current = true;
-    }, [roadmapID]);
+
+    }, [roadmapID, userProfile, isProfileLoading]);
 
     const { data: roadmapItem, isLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
     if (isLoading) {

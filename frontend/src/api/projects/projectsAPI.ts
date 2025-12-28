@@ -113,6 +113,9 @@ export function useDeleteProject(projectId: number) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects', 'basicDetailsOnly'] });
+    },
+    onError: (error) => {
+      alert("Failed to delete project: " + error.message);
     }
   });
 }

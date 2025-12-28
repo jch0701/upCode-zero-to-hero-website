@@ -7,17 +7,27 @@ import { useGetSingleChapter } from '@/api/roadmaps/chapterAPI';
 import { Spinner } from '@/component/shadcn/spinner';
 import { getActiveUserField } from '@/lib/utils';
 
+import { useGetMyProfile } from "@/api/profile/profileAPI";
+
 export const ChapterDetails: React.FC = () => {
     const { roadmapID, chapterID } = useParams<{ roadmapID: string, chapterID: string }>();
     const userID = getActiveUserField("userId");
     const hasCountedRef = useRef(false);
+    //check role
+    const { data: userProfile, isLoading: isProfileLoading } = useGetMyProfile();
     useEffect(() => {
         if (!chapterID) return;
+        if (isProfileLoading) return; // Wait for loading
         if (hasCountedRef.current) return;
-        trackNewActivity("chapter", chapterID);
 
+        // Skip tracking if admin
+        if (userProfile?.role === 'admin') {
+            hasCountedRef.current = true;
+            return;
+        }
+        trackNewActivity("chapter", chapterID);
         hasCountedRef.current = true;
-    }, [chapterID]);
+    }, [chapterID, userProfile, isProfileLoading]);
 
     const { data: chapterItem, isLoading } = useGetSingleChapter(Number(roadmapID), Number(chapterID), userID);
     if (isLoading)  {

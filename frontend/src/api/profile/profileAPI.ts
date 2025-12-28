@@ -6,6 +6,14 @@ export const getMyProfile  = async () => {
   return res.data;
 };
 
+export const useGetMyProfile = () => {
+  return useQuery({
+    queryKey: ["myProfile"], // Unique key for caching
+    queryFn: getMyProfile,   // The function above
+    retry: 1,
+  });
+};
+
 export const updateMyProfile = async (payload: {
   username: string;
   bio: string;
@@ -28,4 +36,18 @@ export const useGetSingleProfile = (userID: string) => {
 export const getSingleProfile = async (userID: string) => {
   const response = await Api.get(`/profile/${userID}`);
   return response.data;
+};
+
+export const submitApplication = async (userId: string, role: "mentor" | "company", extraData: any) => {
+  try {
+    const response = await Api.post(`/submit-application`, {
+      userId,
+      roleRequested: role,
+      extraData
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Submit Application Error:", error);
+    throw error;
+  }
 };
