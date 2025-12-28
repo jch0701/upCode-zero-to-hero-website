@@ -5,7 +5,7 @@ import { ProjectForm } from "../../page/projects/projectForm";
 import { SubmissionForm } from "../../page/projects/submissionForm";
 import { useState } from "react";
 import { usePutTrackingData, useDeleteProject } from "@/api/projects/projectsAPI";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogTrigger,
@@ -34,8 +34,8 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
   const [isMarkedAsDone, setIsMarkedAsDone] = useState(project?.isMarkedAsDone || false);
   function handleDeleteProject() {
     if (window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
-      navigate("/projects");
       deleteProject();
+      navigate("/project");
     }
   }
   return (

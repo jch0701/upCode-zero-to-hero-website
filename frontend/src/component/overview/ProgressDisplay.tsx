@@ -21,7 +21,6 @@ export const ProgressDisplay: React.FC = () => {
       createdProjects.push(project);
     } else if (project.fetchType === "markedAsDone" || project.fetchType === "tracking") {
       markedProjects.push(project);
-      console.log(project.fetchType);
     }
   });
 

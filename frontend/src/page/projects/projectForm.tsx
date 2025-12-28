@@ -32,16 +32,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
   const { mutateAsync: createProject, status: formSubmissionStatus, error: formSubmissionError } = useCreateProject(userId);
   const { mutateAsync: updateProject, status: formUpdateStatus, error: formUpdateError } = useUpdateProject(projectId || -1);
   const { data: allRecommendations = [], status: getAllRecStatus, error: getAllRecError } = useGetAllRecommendations(projectId || -1);
-  const {data: roadmaps, isSuccess: isSuccessRoadmaps} = useGetRoadmaps();
+  const { data: roadmaps, isSuccess: isSuccessRoadmaps } = useGetRoadmaps();
 
-  if(!isSuccessRoadmaps) 
-    return <LoadingIcon text="Loading Roadmaps..." iconClass="flex-col" />;
-
-  const roadmapsFetched = getAllRecStatus === "success" 
-  && allRecommendations.filter(rec => rec.sourceType === "roadmap" || rec.targetType === "roadmap" 
-    || rec.sourceType === "chapter" || rec.targetType === "chapter") || [];
-  const careersFetched = getAllRecStatus === "success" 
-  && allRecommendations.filter(rec => rec.sourceType === "career" || rec.targetType === "career") || [];
+  const roadmapsFetched = getAllRecStatus === "success"
+    && allRecommendations.filter(rec => rec.sourceType === "roadmap" || rec.targetType === "roadmap"
+      || rec.sourceType === "chapter" || rec.targetType === "chapter") || [];
+  const careersFetched = getAllRecStatus === "success"
+    && allRecommendations.filter(rec => rec.sourceType === "career" || rec.targetType === "career") || [];
 
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,7 +53,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
     careers: getAllRecStatus === "success" ? careersFetched : [],
   });
 
-  const creatorId = loadUserInfo()?.userId || null;
   const careers: any[] = []; // Placeholder careers array
 
   const handleSubmit = useCallback(async () => {
@@ -69,7 +65,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
       startingRepoLink: formData.startingRepoLink,
       detailsFile: formData.detailsFile,
       recommendations: [],
-      creatorId: creatorId
+      creatorId: userId || undefined,
     };
     const combinedSelections = [...formData.roadmaps, ...formData.careers];
     finalFormData.recommendations = combinedSelections.map((item: any) => {
@@ -87,14 +83,14 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
       finalFormData.detailsFile = text;
     }
 
-    if(initialData && initialData.projectId) {
+    if (initialData && initialData.projectId) {
       await updateProject(finalFormData);
-    } else{
+    } else {
       await createProject(finalFormData);
     }
 
     close();
-  }, [formData, fileInput, createProject, close, creatorId]);
+  }, [formData, fileInput, createProject, close, userId]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const { name, value } = e.target;
@@ -117,6 +113,9 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
       </div>;
   }
 
+  if (!isSuccessRoadmaps)
+    return <LoadingIcon text="Loading Roadmaps..." iconClass="flex-col" />;
+
   return (
     <form id={"project-form"} className="w-full max-w-2xl mx-auto p-4 sm:p-6">
       {(() => {
@@ -129,7 +128,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
                     readOnly
                     hidden
                     name="creatorId"
-                    value={creatorId}
+                    value={userId || undefined}
                   />
                   <FieldLabel>Project Title</FieldLabel>
                   <FieldContent>
