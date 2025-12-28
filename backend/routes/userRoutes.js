@@ -6,7 +6,7 @@ import { forgotPassword, resetPassword} from "../controllers/accountControllers/
 import { userLogout } from "../controllers/accountControllers/userLogout.js";
 import { deleteUser } from "../controllers/accountControllers/deleteAccount.js";
 import { requireAuth } from "../controllers/profileController/requireAuth.js";
-import { getMyProfile, getSingleProfile, updateMyProfile } from "../controllers/profileController/profile.js";
+import { getMyProfile, getSingleProfile, updateMyProfile, submitRoleApplication } from "../controllers/profileController/profile.js";
 import { getAllSkills, getMySkills, updateMySkills, getUserSkills } from "../controllers/profileController/skill.js";
 import { getUserActivity } from "../controllers/profileController/activity.js";
 import { updateUserActivity } from "../controllers/profileController/activity.js";
@@ -24,6 +24,7 @@ router.delete("/delete-account", requireAuth, deleteUser);
 router.get("/profile/me", requireAuth ,getMyProfile);
 router.put("/profile/me", requireAuth, updateMyProfile);
 router.get("/profile/:userID", getSingleProfile);
+router.post("/submit-application", submitRoleApplication);
 
 //skills api  
 router.get("/skills/options", getAllSkills);

@@ -31,9 +31,6 @@ export default function Admin_Projects() {
   if (loading) {
     return <div className="p-10 text-white text-center text-xl">Loading project data...</div>;
   }
-
-  // 1. Calculate the TOTAL based on the list to ensure accurate bar proportions
-  // (We use this sum instead of 'totalSubmissions' state to ensure the math matches the visible list exactly)
   const calculatedTotal = allProjects.reduce((acc, item) => acc + item.count, 0);
   const safeTotal = calculatedTotal === 0 ? 1 : calculatedTotal;
 
@@ -41,13 +38,13 @@ export default function Admin_Projects() {
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <div className="p-4 bg-yellow-500/20 rounded-2xl">
-          <FaProjectDiagram className="text-yellow-400 text-4xl" />
+        <div className="p-4 bg-cyan-500/20 rounded-2xl">
+          <FaProjectDiagram className="text-cyan-400 text-4xl" />
         </div>
         <div>
           <h1 className="text-3xl font-bold text-white text-start">Project Submissions</h1>
           <p className="text-gray-400 mt-1 text-start">
-            Total Submissions: <span className="text-yellow-400 font-bold">{totalSubmissions}</span> across {allProjects.length} projects.
+            Total Submissions: <span className="text-cyan-400 font-bold">{totalSubmissions}</span> across <span className="text-cyan-200 font-semibold"> {allProjects.length} </span>projects.
           </p>
         </div>
       </div>
@@ -70,7 +67,6 @@ export default function Admin_Projects() {
 
             {/* List Items */}
             {allProjects.map((project, index) => {
-              // Styling for Ranks
               let rankColor = "text-gray-400 font-mono";
               let rankIcon = <span className="text-lg">#{index + 1}</span>;
 
@@ -84,14 +80,10 @@ export default function Admin_Projects() {
                 rankColor = "text-orange-400";
                 rankIcon = <FaMedal className="w-6 h-6 mx-auto" />;
               }
-
-              // 2. Percentage Calculation (Share of Total)
               const percentage = Math.round((project.count / safeTotal) * 100);
-
-              // 3. Color Logic based on Percentage
+              // Based on diff % display diff color
               let barColor = "bg-orange-500"; 
               let textColor = "text-orange-400";
-
               if (percentage > 70) {
                 barColor = "bg-green-500";
                 textColor = "text-green-400";
@@ -103,8 +95,7 @@ export default function Admin_Projects() {
               return (
                 <div 
                   key={project.id} 
-                  className="grid grid-cols-12 gap-4 p-6 items-center bg-gray-400/10 border-b border-white/5 "
-                >
+                  className="grid grid-cols-12 gap-4 p-6 items-center bg-gray-400/10 border-b border-white/5 ">
                   {/* Rank Column */}
                   <div className={`col-span-1 text-center font-bold ${rankColor}`}>
                     {rankIcon}
@@ -121,14 +112,14 @@ export default function Admin_Projects() {
                       <div 
                         className={`h-2.5 rounded-full transition-all duration-1000 ease-out ${barColor}`}
                         style={{ width: `${percentage}%` }}
-                      ></div>
+                        >
+                      </div>
                     </div>
                   </div>
 
                   {/* Count Column */}
                   <div className="col-span-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      {/* Using Eye icon to match your previous code, or use FaCheck/FaFileAlt */}
                       <FaEye className="text-gray-500" />
                       <span className="text-2xl font-bold text-white">{project.count}</span>
                     </div>

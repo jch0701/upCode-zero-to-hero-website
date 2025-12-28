@@ -1,5 +1,6 @@
 import { supabase } from "../../config.js";
 
+// anouncement
 export const createAnnouncement = async (req, res) => {
   const { title, message, image } = req.body;
   
@@ -46,8 +47,7 @@ export const deleteAnnouncement = async (req, res) => {
   }
 };
 
-// ADVERTISEMENTS 
-
+// advertisements
 export const getAdvertisements = async (req, res) => {
   try {
     const { data, error } = await supabase
@@ -74,7 +74,7 @@ export const updateAdvertisements = async (req, res) => {
 
     if (deleteError) throw deleteError;
 
-    // 2. Insert new ads
+    // Insert new ads
     if (images.length > 0) {
       const { error: insertError } = await supabase
         .from("advertisements")

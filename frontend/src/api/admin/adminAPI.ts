@@ -17,6 +17,47 @@ export const deleteUser = async (userId: string) => {
   return res.data;
 };
 
+export const fetchUserApplication = async (userId: string) => {
+  try {
+    const response = await Api.get(`/admin/users/${userId}/application`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetch User App Error:", error);
+    return null; 
+  }
+};
+
+// Admin fetches all pending applications
+export const getPendingApps = async () => {
+  try {
+    const response = await Api.get("/admin/pending-applications");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Pending Apps Error:", error);
+    throw error;
+  }
+};
+// Admin approve / decline the applications
+export const reviewApp = async (
+  applicationId: string, 
+  userId: string, 
+  action: "approve" | "decline", 
+  roleRequested: string
+) => {
+  try {
+    const response = await Api.post("/admin/review-application", {
+      applicationId,
+      userId,
+      action,
+      roleRequested
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Review Application Error:", error);
+    throw error;
+  }
+};
+
 // Announcements
 export const postAnnouncement = async (data: { title: string, message: string, image?: string }) => {
   const res = await Api.post("/admin/announcements", data);

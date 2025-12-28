@@ -1,4 +1,5 @@
-import { FaUsers, FaFire, FaBookOpen, FaProjectDiagram } from "react-icons/fa";
+import { FaUsers, FaHourglassHalf, FaFire, FaBookOpen, FaProjectDiagram } from "react-icons/fa";
+import { FaHouseChimneyUser } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { getAdminStats } from "@/api/admin/adminAPI";
 
@@ -10,6 +11,7 @@ interface TopItem {
 
 interface DashboardStats {
   totalUsers: number;
+  pendingRequests?: number;
   topRoadmaps: TopItem[];
   topChapters: TopItem[];
   topProjects: TopItem[];
@@ -18,6 +20,7 @@ interface DashboardStats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 0,
+    pendingRequests: 0,
     topRoadmaps: [],
     topChapters: [],
     topProjects: []
@@ -50,9 +53,16 @@ export default function AdminDashboard() {
   return (
     <div className="p-6">
       {/* Users Management */}
-      <div className="mb-8 flex flex-col items-start">
-        <h1 className="text-3xl font-bold text-white mb-4">Overview</h1>
-        <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl inline-flex items-center gap-6 pr-12">
+      <div className="mb-8 flex flex-col items-start">  
+        <h1 className="text-5xl font-bold text-white mb-6">Overview</h1>
+
+        <h1 className="text-3xl font-bold text-white mb-8 flex items-center gap-3"> 
+          <FaHouseChimneyUser className="text-orange-500"/>
+          User 
+        </h1>
+
+        <div className="flex flex-wrap gap-6">
+          <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl inline-flex items-center gap-6 pr-12">
            <div className="p-4 bg-purple-500/20 rounded-2xl">
               <FaUsers className="text-purple-400 text-4xl" />
            </div>
@@ -60,6 +70,16 @@ export default function AdminDashboard() {
               <p className="text-gray-400 font-medium">Total Registered Users</p>
               <h2 className="text-4xl font-bold text-white">{stats.totalUsers}</h2>
            </div>
+          </div>
+          <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl flex items-center gap-6 min-w-[280px]">
+                <div className="p-4 bg-yellow-500/20 rounded-2xl">
+                    <FaHourglassHalf className="text-yellow-400 text-4xl" />
+                </div>
+                <div>
+                    <p className="text-gray-400 font-medium">Pending Requests</p>
+                    <h2 className="text-4xl font-bold text-white">{stats.pendingRequests || 0}</h2>
+                </div>
+            </div>
         </div>
       </div>
 
@@ -131,8 +151,8 @@ export default function AdminDashboard() {
         {/* Top Projects */}
         <div className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-xl">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-3 bg-yellow-500/20 rounded-lg">
-              <FaProjectDiagram className="text-yellow-400 text-2xl" />
+            <div className="p-3 bg-cyan-500/20 rounded-lg">
+              <FaProjectDiagram className="text-cyan-400 text-2xl" />
             </div>
             <h3 className="text-xl font-bold text-white">Top Projects</h3>
           </div>
@@ -149,7 +169,7 @@ export default function AdminDashboard() {
                       {item.title}
                     </span>
                   </div>
-                  <span className="text-yellow-400 font-bold text-sm bg-yellow-400/10 px-2 py-1 rounded-full">
+                  <span className="text-cyan-400 font-bold text-sm bg-cyan-400/10 px-2 py-1 rounded-full">
                     {item.count} subs
                   </span>
                 </li>
