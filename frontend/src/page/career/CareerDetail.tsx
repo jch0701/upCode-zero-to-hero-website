@@ -3,11 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { RootState } from "@/store";
 import type { CareerItem } from "@/store/careerSlice";
-<<<<<<< HEAD
 import CareerInfoSub from "./CareerInfoSub";
-=======
-import { CareerItemCard } from "@/component/career/Selector/careerCard";
->>>>>>> 663b8feb5af7fc3e5690c4564b80f6c82a814500
 
 export const CareerDetails: React.FC = () => {
   const { id, slug } = useParams<{ id: string; slug?: string }>();
