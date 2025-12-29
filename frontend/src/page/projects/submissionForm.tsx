@@ -4,6 +4,7 @@ import {
   FieldGroup,
   FieldLabel
 } from "@/component/shadcn/field";
+import { toast } from "sonner";
 
 import { Input } from "@/component/shadcn/input";
 import { Button } from "@/component/shadcn/button";
@@ -45,6 +46,7 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
     }
 
     await createSubmission(payload);
+    toast.success("Your submission has been uploaded and shared with the wider community.");
 
     //Profile usage
     if (openAsCreateForm && !submissionCounted.current) {

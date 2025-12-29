@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/component/shadcn/dialog";
+import { toast } from "sonner";
 import { commonBackgroundClass } from "@/lib/styles";
 
 interface ProjectInteractiveProps {
@@ -41,9 +42,36 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
 
   async function handleDeleteProject() {
     const response = await deleteProject();
-    console.log(response);
-    if (response.message === "Project deleted successfully") {
+    if (response.message === "SUCCESS") {
+      toast.success("Project deleted successfully.");
       navigate("/project");
+    } else {
+      toast.error(`Failed to delete the project. ${response.message}`);
+    }
+    setDeleteDialogOpen(false);
+  }
+
+  async function handleTrackingToggle(aspect: "tracking" | "done") {
+    let response;
+    if(aspect === "tracking"){
+      setIsTracking(!isTracking);
+      response = await putTrackingData({
+        isTracking: !isTracking,
+        isMarkedAsDone: isMarkedAsDone,
+      });
+    } else{
+      setIsMarkedAsDone(!isMarkedAsDone);
+      response = await putTrackingData({
+        isTracking: isTracking,
+        isMarkedAsDone: !isMarkedAsDone,
+      });
+    }
+    if (response.message === "SUCCESS") {
+      if(aspect === "tracking"){
+        toast.success(`${!isTracking ? "Started" : "Stopped"} tracking this project.`);
+      } else {
+        toast.success(`Project marked as ${!isMarkedAsDone ? "done" : "not done"}.`);
+      }
     }
   }
 
@@ -132,12 +160,8 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
       </Dialog>
       <Toggle
         pressed={isTracking}
-        onPressedChange={() => {
-          setIsTracking(!isTracking);
-          putTrackingData({
-            isTracking: !isTracking,
-            isMarkedAsDone: isMarkedAsDone,
-          })
+        onPressedChange={async () => {
+          handleTrackingToggle("tracking");
         }}
         disabled={!userId}
         className={`${!userId ? "cursor-not-allowed" : "cursor-pointer"} bg-black text-white px-4 rounded-none hover:bg-blue-300 hover:text-black data-[state=on]:bg-blue-600 data-[state=on]:text-white`}
@@ -147,11 +171,7 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
       <Toggle
         pressed={isMarkedAsDone}
         onPressedChange={() => {
-          setIsMarkedAsDone(!isMarkedAsDone);
-          putTrackingData({
-            isTracking: isTracking,
-            isMarkedAsDone: !isMarkedAsDone,
-          })
+          handleTrackingToggle("done");
         }}
         disabled={!userId}
         className={`${!userId ? "cursor-not-allowed" : "cursor-pointer"} bg-black text-white px-4 rounded-r-2xl rounded-l-none hover:bg-green-300 hover:text-black data-[state=on]:bg-green-600 data-[state=on]:text-white`}

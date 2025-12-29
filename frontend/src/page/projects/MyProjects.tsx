@@ -12,13 +12,25 @@ import ProjectCard from "../../component/projects/projectCard.tsx";
 import SubmissionCard from "@/component/projects/submissionCard.tsx";
 import { LoadingIcon } from "@/component/LoadingIcon";
 import { NotLoggedIn } from "@/component/NotLoggedIn";
+const selections = ["All", ...categoryList];
+const categories = [{
+  value: "created",
+  label: "Created Projects",
+}, {
+  value: "tracked",
+  label: "Tracked Projects",
+}, {
+  value: "done",
+  label: "Projects Marked as Done",
+}, {
+  value: "submissions",
+  label: "Project Submissions",
+}]
 export const MyProjects: React.FC = () => {
   const navigate = useNavigate();
-  const selections = ["All", ...categoryList];
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(selections[0]);
-  const [submissionType, setSubmissionType] = useState<"Created Projects" | "Tracked Projects" |
-    "Projects Marked as Done" | "Project Submissions">("Created Projects");
+  const [submissionType, setSubmissionType] = useState<"created" | "tracked" | "done" | "submissions">("created");
   const userId = loadUserInfo()?.userId || null;
 
   const { data: createdProjects = [], isLoading: isLoadingCreatedProjects,
@@ -57,17 +69,17 @@ export const MyProjects: React.FC = () => {
   let targetArr = [];
   if (isSuccessCreatedProjects && isSuccessSubmissions) {
     switch (submissionType) {
-      case "Created Projects":
+      case "created":
         targetArr = filteredProjects;
         break;
-      case "Tracked Projects":
+      case "tracked":
         targetArr = createdProjects.filter((project: ProjectType & { isTracking: boolean }) => project.isTracking);
         break;
-      case "Projects Marked as Done":
+      case "done":
         targetArr = createdProjects.filter((project: ProjectType & { isMarkedAsDone: boolean }) =>
           project.isMarkedAsDone);
         break;
-      case "Project Submissions":
+      case "submissions":
         targetArr = submissions;
         break;
       default:
@@ -91,7 +103,7 @@ export const MyProjects: React.FC = () => {
         </div>
         <div className="mx-auto">
           <RadioGroup
-            options={["Created Projects", "Tracked Projects", "Projects Marked as Done", "Project Submissions"]}
+            options={categories}
             selected={submissionType}
             onClick={(value) => setSubmissionType(value)}
             isHorizontal={true}
@@ -110,7 +122,7 @@ export const MyProjects: React.FC = () => {
           className="w-50"
         />
         <div className="overflow-y-scroll mt-1 pb-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {submissionType === "Project Submissions" ? (
+          {submissionType === "submissions" ? (
             hasContentToShow ? (
               <div className="pt-5 flex flex-col gap-2">
                 {filteredProjects.map((submission: any) => {

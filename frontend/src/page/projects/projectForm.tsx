@@ -5,6 +5,7 @@ import {
   FieldGroup,
   FieldLabel
 } from "@/component/shadcn/field";
+import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useCallback } from "react";
 import { loadUserInfo } from "@/lib/utils";
@@ -18,13 +19,17 @@ import { categoryList } from "@/lib/types";
 import { useCreateProject, useUpdateProject } from "@/api/projects/projectsAPI";
 import { useGetAllRecommendations } from "@/api/projects/recommendationsAPI";
 import type { ExtendedProjectType } from "@/lib/projectModuleTypes";
+import { useGetAllCareers } from "@/api/careers/careerAPI";
 import { LoadingIcon } from "@/component/LoadingIcon";
+import type { ItemType } from "@/component/projects/searchableMultiSelect";
 
 type ProjectFormProps = {
   initialData?: any;
   projectId?: number;
   close: () => void;
 }
+
+const requiredInputs = ["title", "difficulty", "category", "shortDescription"];
 
 export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId, close }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -33,27 +38,42 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
   const { mutateAsync: updateProject, status: formUpdateStatus, error: formUpdateError } = useUpdateProject(projectId || -1);
   const { data: allRecommendations = [], status: getAllRecStatus, error: getAllRecError } = useGetAllRecommendations(projectId || -1);
   const { data: roadmaps, isSuccess: isSuccessRoadmaps } = useGetRoadmaps();
+  // const { data: careers, isSuccess: isSuccessCareers } = useGetAllCareers(); // Placeholder for careers fetching
+  const careers: any = [];
+  const isSuccessCareers = true; // Placeholder for careers fetching
 
+  // Only deletable are those set by project side
   const roadmapsFetched = getAllRecStatus === "success"
-    && allRecommendations.filter(rec => rec.sourceType === "roadmap" || rec.targetType === "roadmap"
-      || rec.sourceType === "chapter" || rec.targetType === "chapter") || [];
+    && allRecommendations.filter(rec => rec.targetType === "roadmap" || rec.targetType === "chapter") || [];
   const careersFetched = getAllRecStatus === "success"
-    && allRecommendations.filter(rec => rec.sourceType === "career" || rec.targetType === "career") || [];
+    && allRecommendations.filter(rec => rec.targetType === "career") || [];
+
+  // Convert to item type
+  const roadmapsAsItems: ItemType[] = roadmapsFetched.map((rec: any) => ({
+    referenceId: rec.targetId,
+    referenceType: "roadmap",
+    title: rec.title,
+    existing: true
+  }));
+  const careersAsItems: ItemType[] = careersFetched.map((rec: any) => ({
+    referenceId: rec.targetId,
+    referenceType: "career",
+    title: rec.careerName,
+    existing: true
+  }));
 
   const [fileInput, setFileInput] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState<any>({
     title: initialData?.title || "",
     difficulty: initialData?.difficulty || "",
-    category: initialData?.category || categoryList[0],
+    category: initialData?.category || "",
     shortDescription: initialData?.shortDescription || "",
     detailsFile: initialData?.detailsFile || null,
     startingRepoLink: initialData?.startingRepoLink || "",
-    roadmaps: getAllRecStatus === "success" ? roadmapsFetched : [],
-    careers: getAllRecStatus === "success" ? careersFetched : [],
+    roadmaps: getAllRecStatus === "success" ? roadmapsAsItems : [],
+    careers: getAllRecStatus === "success" ? careersAsItems : [],
   });
-
-  const careers: any[] = []; // Placeholder careers array
 
   const handleSubmit = useCallback(async () => {
     // Create a deep copy to avoid any reference issues
@@ -67,12 +87,17 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
       recommendations: [],
       creatorId: userId || undefined,
     };
+    if(!requiredInputs.every(input => finalFormData[input as keyof ExtendedProjectType] !== "")){
+      toast.error("Title, Difficulty, Category, and Short Description are required fields.");
+      return;
+    }
     const combinedSelections = [...formData.roadmaps, ...formData.careers];
     finalFormData.recommendations = combinedSelections.map((item: any) => {
       return (
         {
-          targetId: item.roadmapID || item.careerID,
-          targetType: item.roadmapID ? "roadmap" : "career"
+          targetId: item.referenceId,
+          targetType: item.referenceType,
+          existing: item.existing
         }
       )
     });
@@ -82,14 +107,26 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
       const text = await fileInput.text();
       finalFormData.detailsFile = text;
     }
-
+    let response;
+    // Remove unchanged fields if updating (initial data given)
     if (initialData && initialData.projectId) {
-      await updateProject(finalFormData);
+      for (const key in finalFormData) {
+        if (finalFormData[key as keyof ExtendedProjectType] === initialData[key]) {
+          delete finalFormData[key as keyof ExtendedProjectType];
+        }
+      }
+      response = await updateProject(finalFormData);
     } else {
-      await createProject(finalFormData);
+      response = await createProject(finalFormData);
     }
 
-    close();
+    if (response.message === "SUCCESS") {
+      toast.success(`Project ${initialData ? "updated" : "created"} successfully!`);
+      close();
+    } else {
+      toast.error(`Failed to ${initialData ? "update" : "create"} the project. ${response.message}`);
+    }
+    
   }, [formData, fileInput, createProject, close, userId]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
@@ -113,7 +150,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
       </div>;
   }
 
-  if (!isSuccessRoadmaps)
+  if (!isSuccessRoadmaps || !isSuccessCareers)
     return <LoadingIcon text="Loading Data..." iconClass="flex-col" />;
 
   return (
@@ -241,14 +278,15 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
                   }
                   <SearchableMultiSelect
                     label="Related Roadmaps"
+                    openFor="roadmap"
+                    isEditing={!!initialData}
                     description="Link this project to relevant learning roadmaps"
                     placeholder="Search and select roadmaps..."
                     items={roadmaps}
-                    selectedItems={formData.roadmaps}
+                    chosenItems={formData.roadmaps}
                     onSelect={(roadmaps) =>
                       setFormData((prev: any) => ({ ...prev, roadmaps }))
                     }
-                    maxSelections={5}
                     renderItem={(roadmap) => (
                       <div>
                         <p className="font-medium text-white">{roadmap.title}</p>
@@ -268,14 +306,15 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
                 <FieldSet className="gap-4 sm:gap-3">
                   <SearchableMultiSelect
                     label="Related Careers"
+                    openFor="career"
+                    isEditing={!!initialData}
                     description="Link this project to relevant career paths"
                     placeholder="Search and select careers..."
                     items={careers}
-                    selectedItems={formData.careers}
+                    chosenItems={formData.careers}
                     onSelect={(careers) =>
                       setFormData((prev: any) => ({ ...prev, careers }))
                     }
-                    maxSelections={5}
                     renderItem={(career) => (
                       <div>
                         <p className="font-medium text-white">{career.name}</p>

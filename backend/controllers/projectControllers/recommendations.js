@@ -101,7 +101,7 @@ export const addRecommendation = async (req, res) => {
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-  return res.status(201).json({ message: "Recommendation added successfully" });
+  return res.status(201).json({ message: "SUCCESS" });
 }
 
 // Update recommendation for a project (might be useful if we add weightage later)
@@ -132,7 +132,7 @@ export const updateRecommendation = async (req, res) => {
     return res.status(404).json({ error: "Recommendation not found" });
   }
   
-  return res.status(200).json({ message: "Recommendation updated successfully", recommendation: data[0] });
+  return res.status(200).json({ message: "SUCCESS"});
 }
 
 // Delete recommendation for a project
@@ -151,5 +151,5 @@ export const deleteRecommendation = async (req, res) => {
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-  return res.status(200).json({ message: "Recommendation deleted successfully" });
+  return res.status(200).json({ message: "SUCCESS" });
 }

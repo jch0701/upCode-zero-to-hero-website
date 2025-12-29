@@ -23,7 +23,7 @@ export const submitProject = async (req, res) => {
     .insert([{ projectId, creatorId, title, postedOn, lastUpdated, repoLink, rationaleFile }]);
 
   if (error) return res.status(500).json({ error: error.message });
-  return res.status(201).json({ message: "Submission created successfully" });
+  return res.status(201).json({ message: "SUCCESS" });
 }
 
 // Controller to update project submission
@@ -47,7 +47,7 @@ export const updateSubmission= async (req, res) => {
     .update(updateData)
     .eq("submissionId", submissionId);
   if (error) return res.status(500).json({ error });
-  return res.status(200).json({ message: "Submission updated successfully" });
+  return res.status(200).json({ message: "SUCCESS" });
 }
 
 // Controller to delete project submission
@@ -65,5 +65,5 @@ export const deleteSubmission = async (req, res) => {
     .delete()
     .eq("submissionId", submissionId);
   if (error) return res.status(500).json({ error });
-  return res.status(200).json({ message: "Submission deleted successfully" });
+  return res.status(200).json({ message: "SUCCESS" });
 }

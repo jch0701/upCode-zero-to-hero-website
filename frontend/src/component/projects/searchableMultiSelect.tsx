@@ -5,10 +5,12 @@ import { X } from "lucide-react";
 
 interface SearchableMultiSelectProps {
   label: string;
+  openFor: string;
+  isEditing: boolean;
   description?: string;
   placeholder: string;
   items: any[];
-  selectedItems: any[];
+  chosenItems: any[];
   onSelect: (items: any[]) => void;
   maxSelections?: number;
   renderItem: (item: any) => React.ReactNode;
@@ -16,39 +18,58 @@ interface SearchableMultiSelectProps {
   idtag?: string;
 }
 
+export type ItemType = {
+  referenceId: number; //roadmapId or careerId
+  referenceType: string; //"roadmap" or "career"
+  title: string;
+  existing: boolean;
+}
+
 export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
   label,
+  openFor,
+  isEditing,
   description,
   placeholder,
   items,
-  selectedItems,
+  chosenItems,
   onSelect,
-  maxSelections = 5,
+  maxSelections = 15,
   renderItem,
   searchKey,
-  idtag = "id"
+  idtag = "recommendationID"
 }) => {
+  const selectedItems = chosenItems;
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
   const filteredItems = items.filter(
     (item) =>
       item[searchKey].toLowerCase().includes(query.toLowerCase()) &&
-      !selectedItems.some((selected) => selected[idtag] === item[idtag])
+      !selectedItems.some((selected) => selected.referenceId === item[idtag])
   );
 
   const handleSelect = (item: any) => {
+    if(selectedItems.some((selected) => selected.referenceId === item[idtag])){
+      return;
+    }
     if (selectedItems.length < maxSelections) {
-      onSelect([...selectedItems, item]);
+      const newItem: ItemType = {
+        referenceId: item[idtag],
+        referenceType: openFor,
+        title: openFor === "roadmap" ? item.title : item.careerName,
+        existing: false //new item
+      }
+      onSelect([...selectedItems, newItem]);
       setQuery("");
       setIsOpen(false);
     }
   };
 
   const handleRemove = (itemId: number) => {
-    onSelect(selectedItems.filter((item) => item[idtag] !== itemId));
+    const remainingItems = selectedItems.filter((item) => item.referenceId !== itemId);
+    onSelect(remainingItems);
   };
 
   useEffect(() => {
@@ -111,13 +132,13 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
       <div className="mt-3 flex flex-wrap gap-2">
         {selectedItems?.map((item) => (
           <div
-            key={item[idtag]}
+            key={item.referenceId}
             className="bg-blue-600 text-white px-3 py-[0.15rem] rounded-full flex items-center gap-2"
           >
-            <span className="text-sm">{item?.roadmapTitle ? `${item.roadmapTitle} - ${item[searchKey]}` : item[searchKey]}</span>
+            <span className="text-sm">{item.title}</span>
             <Button
               type="button"
-              onClick={() => handleRemove(item[idtag])}
+              onClick={() => handleRemove(item.referenceId)}
               className="hover:opacity-70 hover:bg-blue-900 rounded-4xl bg-transparent cursor-pointer"
             >
               <X size={16} />
