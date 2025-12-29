@@ -5,7 +5,6 @@ import { Roadmap } from "./page/roadmaps/Roadmap";
 import { RoadmapDetails } from "./page/roadmaps/RoadmapDetails";
 import { Project } from "./page/projects/Project";
 import { Career } from "./page/career/Career";
-import { AddCareer } from "./page/career/AddCareer";
 import { CareerDetails } from "./page/career/CareerDetail";
 import { All } from "./page/profile/All";
 import Login_Pg from "./page/signuplogin/Login_Pg";
@@ -32,8 +31,7 @@ import Admin_Users from "./page/admin/ad_user";
 import Admin_Roadmaps from "./page/admin/ad_roadmap";
 import Admin_Projects from "./page/admin/ad_project";
 import Admin_Analytics from "./page/admin/ad_analytics";
-import { AddCareer } from "./page/career/AddCareer.tsx";
-import CareerDetailsModal from "@/page/career/CareerInfoSub";
+import { AddCareer } from "./page/career/AddCareer";
 
 const router = createBrowserRouter([
   {
