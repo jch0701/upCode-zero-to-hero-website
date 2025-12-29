@@ -1,22 +1,28 @@
-// src/admin/components/AdminTopbar.tsx
 import { getActiveUser } from "@/admin/auth/auth";
-import { logout as reduxLogout } from "@/store/profileSlice";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { userLogout } from "@/api/account/accountAPI";
+
 export default function AdminTopbar() {
   const user = getActiveUser();
   const [open, setOpen] = useState(false);
   const toggleIcon = () => setOpen(!open);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   
-  const handleLogout = () =>{
-    localStorage.removeItem("activeUser");
-    localStorage.removeItem("userId");
-    dispatch(reduxLogout());
-    window.location.href = "/login";
+  // 🟢 2. Update handleLogout to be async
+  const handleLogout = async () => {
+    try {
+      // A. Kill the session with the Auth Provider
+      await userLogout(); 
+      localStorage.clear(); 
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Logout failed", error);
+      // Force redirect even if API call fails
+      window.location.href = "/login";
+    }
   }
+
   return (
     <div className="w-full bg-gray-900 p-4 flex justify-end items-center border-b border-gray-700">
 
@@ -28,10 +34,11 @@ export default function AdminTopbar() {
 
       {open &&(
         <div className="absolute right-4 top-16 w-40 bg-gray-700 shadow-lg rounded-lg text-white p-2 z-50">
-            <button onClick={()=> {
+            <button onClick={() => {
               handleLogout();
+              setOpen(false); // Close dropdown immediately
             }}
-              className="w-full text-left px-3 py-2 hover:bg-gray-600 rounded-md">
+            className="w-full text-left px-3 py-2 hover:bg-gray-600 rounded-md">
                 Logout
             </button>
 
