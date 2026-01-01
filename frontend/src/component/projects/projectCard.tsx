@@ -21,7 +21,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project}) => {
     hover:shadow-lg hover:scale-102 transform transition duration-300"
       onClick={() => navigate(`/project/${projectId}`)}
     >
-      <CardTitle className="text-2xl text-white text-left mb-0.5">
+      <CardTitle className="text-[1.2rem] text-white text-left mb-0.5">
         {title}
       </CardTitle>
       <CardDescription className="text-gray-300/80 mb-2">
@@ -31,7 +31,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project}) => {
             <li><TagPill tag={{ label: difficulty, type: "Difficulty" }} /></li>
             <li><TagPill tag={{ label: category, type: "Category" }} /></li>
           </ul>
-          <p className="text-left"> {ellipsifyText(shortDescription, 90)} </p>
+          <p className="text-left"> {ellipsifyText(shortDescription, 60)} </p>
         </div>
       </CardDescription>
       <CardFooter className="block px-0 text-gray-300/80 space-y-1 text-sm">
