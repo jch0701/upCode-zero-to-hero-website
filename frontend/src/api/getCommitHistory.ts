@@ -1,6 +1,5 @@
 import axios from "axios";
-import Api from "./index.ts";
-import { useQuery} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export function useGetCommitHistory(repoLink: string) {
   return useQuery({
@@ -22,9 +21,9 @@ export function useGetMainRepoLanguage(repoLink: string) {
       }
       const { owner, repo } = parseGitHubRepoLink(repoLink);
       const url = `https://api.github.com/repos/${owner}/${repo}`;
-      const response = await Api.get(url, {
-        headers: { 
-          Accept: "application/vnd.github+json" 
+      const response = await axios.get(url, {
+        headers: {
+          Accept: "application/vnd.github+json",
         },
       });
       return response.data.language;
@@ -51,7 +50,7 @@ export async function fetchAllCommits(owner: string, repo: string) {
 
   try {
     while (true) {
-      const response = await Api.get(
+      const response = await axios.get(
         `https://api.github.com/repos/${owner}/${repo}/commits`,
         {
           params: { per_page: perPage, page },
