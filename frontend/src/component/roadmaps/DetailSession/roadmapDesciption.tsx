@@ -4,7 +4,7 @@ import { TagPill } from "../../tag";
 import type { RoadmapItemCardProps } from "../Selector/roadmapCard";
 import { generateTags } from '../groupTag';
 import { Heart, X } from 'lucide-react';
-import { useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
+import { useGetRoadmapProgress, useGetSingleRoadmap } from "@/api/roadmaps/roadmapAPI";
 import { IMAGE_MAP, defaultImageSrc } from "@/lib/image";
 import { useGetRoadmapChapters } from "@/api/roadmaps/chapterAPI";
 import { useCreateFavourite, useDeleteFavourite } from "@/api/roadmaps/recordAPI";
@@ -26,16 +26,15 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
         }
     }, [roadmapItem]);
 
-    // const { data: userData, isLoading: userLoading } = useGetSingleUser(localRoadmapItem?.creatorID);
-    // const username = userData?.username ?? 'Unknown Username';
     const { data: pillarsData = [], isLoading: pillarsLoading } = useGetRoadmapChapters(selectedRoadmapID, userID);
     const { data: userProfile, isLoading: userLoading } = useGetSingleProfile(roadmapItem!.creatorID);
+    const { data: progress, isLoading: progressLoading } = useGetRoadmapProgress(selectedRoadmapID, userID);
 
     const favouriteMutation = useCreateFavourite();
     const unfavouriteMutation = useDeleteFavourite();
 
-    if (roadmapLoading || pillarsLoading || userLoading ) return null;
-    if (!localRoadmapItem || !pillarsData ) return <p className="text-white text-center mt-10">Roadmap not found</p>;
+    if (roadmapLoading || pillarsLoading || userLoading || progressLoading ) return null;
+    if (!localRoadmapItem || !pillarsData || progress === undefined || progress === null) return <p className="text-white text-center mt-10">Roadmap not found</p>;
 
     const username = userProfile?.username ?? 'Unknown username';
 
@@ -144,6 +143,21 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
                                 </Link>
                             </div>
                         )}
+                        <div >
+                            <h3 className="font-semibold">Overall Progress</h3>
+                            <div className="flex items-center gap-2">
+                                <div className="w-62 h-2 bg-gray-300 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-green-500 transition-all duration-300"
+                                        style={{ width: `${progress}%` }}
+                                    ></div>
+                                </div>
+                                <p className="mt-1 text-gray-300">
+                                    {`${progress}%`}
+                                </p>
+                            </div>
+                        </div>
+                        {(userID === localRoadmapItem.creatorID) && <br></br>}
                         <div>
                             <h3 className="font-semibold">Created On</h3>
                             <p className="mt-1 text-gray-300">{localRoadmapItem.createdDate}</p>
