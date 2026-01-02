@@ -79,7 +79,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
             );
         }
         else {
-            if( viewPercentage !== 100){
+            if( viewPercentage !== 100 || linksData.length === 0 ){
                 setLocalChapterItem({ ...localChapterItem, isViewed: false });
                 unviewMutation.mutate(
                     { userID: userID!, recordID: Number(selectedChapterID) },

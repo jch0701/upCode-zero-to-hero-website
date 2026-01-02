@@ -17,6 +17,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
     const location = useLocation();
     const navigate = useNavigate();
     const userID = getActiveUserField("userId");
+    const role = getActiveUserField("role");
     const { roadmapID, roadmapSlug, chapterID, chapterSlug } = useParams<{ roadmapID: string, roadmapSlug: string,  chapterID: string, chapterSlug: string }>();
     const [localLinkItem, setLocalLinkItem] = useState<any>(null);
 
@@ -95,7 +96,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
                 {localLinkItem.title}
             </div>
             
-            {creator != userID ? (
+            {(creator !== userID && role !== "admin") ? (
             // Viewed Indicator
             <div onClick={handleToggleViewed} className="ml-4 cursor-pointer">
                 {localLinkItem.isViewed ? (
@@ -115,7 +116,7 @@ const LinkCard : React.FC<LinkCardProps> = ({
     );
     return (
         <>
-        {creator == userID ? (
+        {(creator == userID || role === "admin") ? (
             // If creator → internal edit link
                 <Link to={`/roadmap/${roadmapID}/${roadmapSlug}/${chapterID}/${chapterSlug}/${localLinkItem.nodeID}/edit`}
                 state={{ backgroundLocation: location }}
