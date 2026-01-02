@@ -21,6 +21,7 @@ interface RecommendationProps {
 const Recommendation: React.FC<RecommendationProps> = 
     ({mode, selectedID, creator }) => {
     const userID = getActiveUserField("userId");
+    const role = getActiveUserField("role");
     const { roadmapID, roadmapSlug } = useParams<{ roadmapID: string, roadmapSlug: string }>();
 
 
@@ -66,12 +67,12 @@ const Recommendation: React.FC<RecommendationProps> =
                             />
                         </div>
                     ))}
-                    {userID === creator && (
+                    {(userID === creator || role === "admin") && (
                     <AddRecommendation extraClass="h-full" link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar!.chapterID}/${pillar!.chapterSlug}/recommend-project`}/>)}
                 </div>
                 ) : (
                 <>
-                {userID === creator ?
+                {(userID === creator || role === "admin") ?
                     (<AddRecommendation extraClass=' flex flex-nowrap w-full' link={`/roadmap/${roadmapID}/${roadmapSlug}/${pillar!.chapterID}/${pillar!.chapterSlug}/recommend-project`}/>)
                     :
                     (<p className="pl-5 text-sm text-gray-400">No suggested projects found.</p>)}
@@ -90,13 +91,13 @@ const Recommendation: React.FC<RecommendationProps> =
                             <CareerItemCard key={career.id} {...career}/>
                         </div>
                     ))}
-                    {userID === creator && (
+                    {(userID === creator || role === "admin") && (
                     <AddRecommendation extraClass=' h-full hover:scale-105 transform transition duration-300' 
                                        link={`/roadmap/${roadmapID}/${roadmapSlug}/recommend-career`}/>)}
                 </div>
                 ) : (
                 <>
-                {userID === creator ?
+                {(userID === creator || role === "admin") ?
                     (<AddRecommendation extraClass=' flex flex-nowrap w-full hover:scale-105 transform' 
                                         link={`/roadmap/${roadmapID}/${roadmapSlug}/recommend-career`}/>)
                     :

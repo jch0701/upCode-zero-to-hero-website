@@ -15,6 +15,7 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
     const navigate = useNavigate();
     const location = useLocation();
     const userID = getActiveUserField("userId");
+    const role = getActiveUserField("role");
     const [localRoadmapItem, setLocalRoadmapItem] = useState<any>(null);
 
     const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(selectedRoadmapID, userID);
@@ -115,6 +116,16 @@ const RoadmapDescription: React.FC<RoadmapItemCardProps> = ({ selectedRoadmapID 
                                 Edit
                             </button>
                         </Link>
+                    }
+                    {(role === "admin" && userID !== localRoadmapItem.creatorID) &&
+                        <div className="mt-1">
+                            <Link to={`/roadmap/${selectedRoadmapID}/${localRoadmapItem.roadmapSlug}/edit`}>
+                                <button className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl">
+                                    Edit
+                                </button>
+                            </Link>
+                        </div>
+
                     }
                 </div>
 
