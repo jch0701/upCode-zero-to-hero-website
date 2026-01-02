@@ -41,7 +41,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
     
     // percentage generator
     const generateViewPercentage = () =>  {
-        if (!linksData || linksData.length === 0) return 0;
+        if (!linksData || linksData.length === 0) return 100;
         const viewedCount = linksData.filter(link => link.isViewed).length;
         return Math.round((viewedCount / linksData.length) * 100);
     }
