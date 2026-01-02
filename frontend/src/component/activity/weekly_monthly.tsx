@@ -1,43 +1,58 @@
-export function getWeeklyStats(history: any[]) {
-  const ONE_DAY = 86400000;
-  const now = Date.now();
+export const getWeeklyStats = (history: any[]) => {
+  const today = new Date();
+  
+  // Calculate the start of the current week (Sunday)
+  const startOfWeek = new Date(today);
+  startOfWeek.setHours(0, 0, 0, 0);
+  startOfWeek.setDate(today.getDate() - today.getDay());
 
-  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  // Calculate the end of the current week (Saturday)
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  endOfWeek.setHours(23, 59, 59, 999);
 
-  // Convert JS getDay() (0=Sun) → 0=Mon mapping
-  const convertDay = (jsDay: number) => (jsDay === 0 ? 6 : jsDay - 1);
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const counts = Array(7).fill(0);
 
-  return weekDays.map((label, index) => {
-    const count = history.filter((log) => {
-      if (now - log.timestamp > 7 * ONE_DAY) return false;
+  history.forEach((item: any) => {
+    const dateValue = item.timestamp || item.date || item.created_at;
+    if (!dateValue) return;
 
-      const jsDay = new Date(log.timestamp).getDay();
-      const mappedDay = convertDay(jsDay);
+    const itemDate = new Date(dateValue);
 
-      return mappedDay === index;
-    }).length;
-
-    return { day: label, count };
+    // Only count if the date is actually inside this week's range
+    if (itemDate >= startOfWeek && itemDate <= endOfWeek) {
+      const dayIndex = itemDate.getDay(); // 0 = Sunday, 6 = Saturday
+      counts[dayIndex]++;
+    }
   });
-}
 
-export function getMonthlyStats(history: any[]) {
-  const ONE_MONTH = 86400000 * 30;
-  const now = Date.now();
+  return days.map((day, index) => ({
+    day: day,
+    count: counts[index]
+  }));
+};
 
-  const monthNames = ["Jan","Feb","Mar","Apr","May","Jun",
-                      "Jul","Aug","Sep","Oct","Nov","Dec"];
+export const getMonthlyStats = (history: any[]) => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const counts = Array(12).fill(0);
 
-  return monthNames.map((monthLabel, index) => {
-    const count = history.filter(log => {
-      const diff = now - log.timestamp;
-      if (diff > ONE_MONTH) return false;
+  history.forEach((item: any) => {
+      const dateValue = item.timestamp || item.date || item.created_at;
+      if (!dateValue) return;
 
-      return new Date(log.timestamp).getMonth() === index;
-    }).length;
-
-    return { month: monthLabel, count };
+      const itemDate = new Date(dateValue);
+      
+      if (itemDate.getFullYear() === currentYear) {
+          counts[itemDate.getMonth()]++;
+      }
   });
-}
 
-
+  return months.map((month, index) => ({
+      month: month,
+      count: counts[index]
+  }));
+};

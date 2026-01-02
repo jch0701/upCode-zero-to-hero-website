@@ -230,7 +230,7 @@ export function ProfileContent({userId} : {userId: string}) {
           {isOwner && isEditing && (
             <div className="flex justify-end gap-4">
               <button
-                onClick={() => { setIsEditing(false); }}
+                onClick={() => { setIsEditing(false); setShowAvatar(false);}}
                 className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600">
                 Cancel
               </button>
