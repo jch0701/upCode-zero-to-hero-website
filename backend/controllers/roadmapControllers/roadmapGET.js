@@ -143,6 +143,66 @@ export const getAllWithProgress = async (req, res) => {
     }));
     return res.status(200).json(roadmaps);
 }
+
+export const getRoadmapProgress = async (req, res) => {
+    if (req.method !== 'GET') {
+        return res.status(405).end(`Method ${req.method} Not Allowed. Use GET only.`);
+    }
+
+    const { roadmapID } = req.params;
+    if (!roadmapID) {
+        return res.status(400).json({ message: 'Missing roadmap ID query parameter.' });
+    }
+
+    // Get User ID from query parameter
+    const userID = req.headers['x-user-id']
+    const isLoggedIn = !!userID;
+
+    try {
+        const { data: chapters, error: chapterError } = await supabase
+            .from("Chapters")
+            .select('chapterID')
+            .eq('roadmapID', roadmapID)
+    
+        if (chapterError) {
+            return res.status(500).json({ message: "Failed to fetch chapters." });
+        }
+
+        const chapterIDs = chapters ? chapters.map(chapter => chapter.chapterID): [];
+
+        const { data: links, error: linkError } = await supabase
+            .from("Nodes")
+            .select('nodeID')
+            .in("chapterID", chapterIDs)
+
+        if (linkError) {
+            return res.status(500).json({ message: "Failed to fetch nodes." });
+        }
+
+        const nodeIDs = links ? links.map(link => link.nodeID): [];
+        
+        let viewIds = []
+        if (isLoggedIn && nodeIDs.length > 0) {
+            const { data: views } = await supabase
+                .from('ReadNode')
+                .select('nodeID')
+                .eq('userID', userID)
+                .in('nodeID', nodeIDs);
+            viewIds = views ? views.map(view => view.nodeID) : [];
+        }
+
+        const progress = nodeIDs.length === 0
+                         ? 0 : Math.round((viewIds.length / nodeIDs.length) * 100);
+
+        return res.status(200).json(progress);
+
+    }
+    catch (error) {
+        console.error('Internal Server Error in GET Controller:', error);
+        return res.status(500).json({ message: 'Internal Server Error.' });
+    }
+}
+
 /*
 select * from Roadmaps r
 where r.roadmapID in (
