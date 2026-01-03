@@ -17,6 +17,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
     const { default: userRoutes } = await import('./routes/userRoutes.js');
     const { default: careerRoutes } = await import('./routes/careerRoutes.js');
     const { default: adminRoutes } = await import('./routes/adminRoutes.js');
+    const { default: applicationRoutes } = await import('./routes/applicationRoutes.js');
 
     // Now do: app.use("/api", <routeName>);
     // app.use("/api", exampleRoutes);
@@ -25,6 +26,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
     app.use("/api", roadmapRoutes);
     app.use("/api", userRoutes);
     app.use("/api", careerRoutes);
+    app.use("/api", applicationRoutes);
     app.use("/api/admin", adminRoutes);
     
     console.log("Registered profile routes");

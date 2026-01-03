@@ -1,12 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import Api from "../api/index";
 
 export interface CareerApplication {
-  userId: string; // store userId
-  resumeUrl?: string;
-  projectUrl?: string;
-  repoUrl?: string;
-  submittedAt: string;
+  id: number;
+  userId: string;
+  career_id: number;
+  status: "Pending" | "Accepted" | "Rejected";
+  resume_link?: string;
+  applied_date: string;
+  user?: { username: string };
 }
 
 export interface CareerItem {
@@ -22,7 +25,7 @@ export interface CareerItem {
   location?: string;
   level?: "Beginner" | "Intermediate" | "Advanced";
   createdDate?: string;
-  mapLink?: string; // embed link for Google Maps
+  mapLink?: string;
   prerequisites?: string[];
   slug?: string;
   applications?: CareerApplication[];
@@ -30,64 +33,59 @@ export interface CareerItem {
 
 interface CareerState {
   careerList: CareerItem[];
+  status: "idle" | "loading" | "succeeded" | "failed";
+  error: string | null;
 }
 
 const initialState: CareerState = {
-  careerList: [
-    {
-      id: 1,
-      title: "Full-Stack Developer Trainee",
-      description:
-        "Hands-on training in full-stack web development, focusing on JavaScript and React.",
-      category: "Software Developer",
-      postedBy: "Admin",
-      level: "Beginner",
-      createdDate: "2025-12-10",
-      mapLink:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63560.739184568134!2d100.25236006953129!3d5.333234845004132!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac1a96f010e97%3A0x8b91d5d092b91828!2sSchool%20of%20Computer%20Sciences%2C%20USM!5e0!3m2!1sen!2smy!4v1765641942623!5m2!1sen!2smy",
-      prerequisites: ["JavaScript", "React", "GitHub Portfolio"],
-      applications: [],
-    },
-    {
-      id: 2,
-      title: "Data Scientist Intern",
-      description:
-        "Introductory role in data science, focusing on Python, Pandas, and ML basics.",
-      category: "Data Scientist",
-      postedBy: "Admin",
-      level: "Beginner",
-      createdDate: "2025-12-11",
-      mapLink:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d997.123456789!2d100.285!3d5.417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac123456789ab%3A0xabcdefabcdef!2sPenang%20Science%20Park!5e0!3m2!1sen!2smy!4v1765642000000!5m2!1sen!2smy",
-      prerequisites: ["Python", "Pandas", "Machine Learning Basics"],
-      applications: [],
-    },
-  ],
+  careerList: [],
+  status: "idle",
+  error: null,
 };
+
+// Async thunk to fetch all careers
+export const fetchCareers = createAsyncThunk(
+  "career/fetchCareers",
+  async () => {
+    const res = await Api.get("/careers");
+    return res.data as CareerItem[];
+  }
+);
+
+// Async thunk to add a career
+export const addCareerAsync = createAsyncThunk(
+  "career/addCareerAsync",
+  async (newCareer: CareerItem) => {
+    const res = await Api.post("/careers", newCareer);
+    return res.data as CareerItem;
+  }
+);
+
+// Async thunk to edit a career
+export const editCareerAsync = createAsyncThunk(
+  "career/editCareerAsync",
+  async (updatedCareer: CareerItem) => {
+    const res = await Api.put(
+      `/careers/${updatedCareer.id}`,
+      updatedCareer
+    );
+    return res.data as CareerItem;
+  }
+);
+
+// Async thunk to delete a career
+export const deleteCareerAsync = createAsyncThunk(
+  "career/deleteCareerAsync",
+  async (careerId: number) => {
+    await Api.delete(`/careers/${careerId}`);
+    return careerId;
+  }
+);
 
 const careerSlice = createSlice({
   name: "career",
   initialState,
   reducers: {
-    addCareer(state, action: PayloadAction<CareerItem>) {
-      state.careerList.push(action.payload);
-    },
-    editCareer(state, action: PayloadAction<CareerItem>) {
-      const index = state.careerList.findIndex(
-        (c) => c.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.careerList[index] = {
-          ...state.careerList[index],
-          ...action.payload,
-        };
-      }
-    },
-    deleteCareer(state, action: PayloadAction<number>) {
-      state.careerList = state.careerList.filter(
-        (c) => c.id !== action.payload
-      );
-    },
     markViewed(state, action: PayloadAction<number>) {
       const item = state.careerList.find((c) => c.id === action.payload);
       if (item) item.isViewed = true;
@@ -108,13 +106,72 @@ const careerSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder
+      // Fetch careers
+      .addCase(fetchCareers.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(fetchCareers.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.careerList = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchCareers.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Error fetching careers";
+      })
+
+      // Add career
+      .addCase(addCareerAsync.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(addCareerAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.careerList.push(action.payload);
+        state.error = null;
+      })
+      .addCase(addCareerAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Error adding career";
+      })
+
+      // Edit career
+      .addCase(editCareerAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(editCareerAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const index = state.careerList.findIndex(
+          (c) => c.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.careerList[index] = action.payload;
+        }
+      })
+      .addCase(editCareerAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Error editing career";
+      })
+
+      // Delete career
+      .addCase(deleteCareerAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteCareerAsync.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.careerList = state.careerList.filter(
+          (c) => c.id !== action.payload
+        );
+      })
+      .addCase(deleteCareerAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Error deleting career";
+      });
+  },
 });
 
-export const {
-  addCareer,
-  editCareer,
-  deleteCareer,
-  markViewed,
-  addApplication,
-} = careerSlice.actions;
+export const { markViewed, addApplication } = careerSlice.actions;
 export default careerSlice.reducer;

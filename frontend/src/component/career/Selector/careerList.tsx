@@ -7,11 +7,13 @@ import {
 interface CareerItemListProps {
   items: CareerItemCardProps[];
   filterTag?: string;
+  onAddCard?: () => void;
 }
 
 export const CareerItemList: React.FC<CareerItemListProps> = ({
   items,
   filterTag,
+  onAddCard,
 }) => {
   const MAX_VISIBLE = 3;
   const [showAll, setShowAll] = useState(false);
@@ -39,6 +41,17 @@ export const CareerItemList: React.FC<CareerItemListProps> = ({
         {visibleItems.map((item, index) => (
           <CareerItemCard key={index} {...item} />
         ))}
+        {onAddCard && (
+           <div className="flex items-center justify-center">
+              <button 
+                  onClick={onAddCard}
+                  className="w-[70%] aspect-square bg-gray-800/50 hover:bg-gray-700/50 border-2 border-dashed border-gray-600 hover:border-green-500 rounded-xl flex items-center justify-center transition-all group"
+                  title="Add New Career"
+              >
+                  <span className="text-6xl text-gray-500 group-hover:text-green-500 font-light">+</span>
+              </button>
+           </div>
+        )}
       </div>
 
       {filteredItems.length > MAX_VISIBLE && (

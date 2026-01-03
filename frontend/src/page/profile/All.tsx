@@ -28,14 +28,15 @@ export const All: React.FC = () => {
     const viewUserId = userId ?? currentUser.userId;
     const isOwner = currentUser.userId === viewUserId;
     const isAdmin = currentUser?.role?.toLowerCase() === "admin";
+    const isCompany = currentUser?.role?.toLowerCase() === "company"; //for recruiters to check profile
 
     // State for permission checking 
     const [canView, setCanView] = useState(isOwner); // Owners can always view
     const [loadingAuth, setLoadingAuth] = useState(!isOwner); // Only load if visitor
 
     useEffect(() => {
-        // If owner or admin, allow immediately
-        if (isOwner || isAdmin) {
+        // If owner or admin or company (recruiter), allow immediately
+        if (isOwner || isAdmin || isCompany) {
             setCanView(true);
             setLoadingAuth(false);
             return;
@@ -58,7 +59,7 @@ export const All: React.FC = () => {
             .finally(() => {
                 setLoadingAuth(false);
             });
-    }, [currentUser.userId, viewUserId, isOwner, isAdmin]);
+    }, [currentUser.userId, viewUserId, isOwner, isAdmin, isCompany]);
 
 
     // Navigation Options
@@ -67,6 +68,7 @@ export const All: React.FC = () => {
         : isOwner 
             ? ["All", "Profile", "Activity", "Skill", "Setting"] 
             : ["All", "Profile", "Activity", "Skill"];
+            //i added project for the career recruiter to check it out
     const navOptions = click.map(name => ({ label: name, value: name }));
     const [category, setCategory] = useState<string>(click[0]);
     const [friendsOpen, setFriendsOpen] = useState(false);
@@ -119,6 +121,8 @@ export const All: React.FC = () => {
                             {(category === "All" || category === "Skill") && !isAdmin && (
                                 <SkillContent key={`skill-${viewUserId}`} userId={viewUserId} editable={isOwner} />
                             )}
+
+
 
                             {isOwner && (category === "All" || category === "Setting") && (
                                 <SettingContent />

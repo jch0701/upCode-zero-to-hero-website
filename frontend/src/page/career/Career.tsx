@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RoadmapSidebar from "@/component/roadmaps/sidebar";
 import SectionBlock from "@/component/roadmaps/sectionBlock";
 import SearchBar from "@/component/searchBar";
 import CareerItemList from "@/component/career/Selector/careerList";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/component/shadcn/button";
 import type { RootState } from "@/store";
 import { careerCategories } from "./CareerCategories";
+import { fetchCareers } from "@/store/careerSlice"; 
+import { fetchUserApplications } from "@/store/applicationSlice"; 
 
 type Section = {
   id: string;
@@ -25,6 +27,7 @@ const careerSections: Section[] = [
 export const Career: React.FC = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Active user from localStorage
   const activeUser = JSON.parse(localStorage.getItem("activeUser") || "{}");
@@ -33,12 +36,25 @@ export const Career: React.FC = () => {
   const careerData = useSelector(
     (state: RootState) => state.career?.careerList || []
   );
+  const careerStatus = useSelector((state: RootState) => state.career.status);
+  const careerError = useSelector((state: RootState) => state.career.error);
+
   const applicationsData = useSelector(
     (state: RootState) => state.application?.applicationList || []
   );
   const interactionsData = useSelector(
     (state: RootState) => state.interaction?.interactionList || []
   );
+
+  // Fetch careers and applications on mount
+  useEffect(() => {
+    if (careerStatus === "idle") {
+      dispatch(fetchCareers() as any);
+    }
+    if (activeUser?.userId) {
+       dispatch(fetchUserApplications(activeUser.userId) as any);
+    }
+  }, [careerStatus, dispatch, activeUser?.userId]);
 
   const getRecentlyViewedCareers = (sourceData: any[]) => {
     return sourceData.filter((career: any) => {
@@ -57,7 +73,19 @@ export const Career: React.FC = () => {
     });
   };
 
-  const filteredCareerData = careerData.filter((item: any) => {
+  // Role-based logic
+  const isCompany = userRole?.toLowerCase() === "company";
+  const isAdmin = userRole?.toLowerCase() === "admin";
+  const canAddCareer = isCompany || isAdmin;
+
+  // Company users only see their own careers, unless they are Admin
+  const visibleCareers =
+    isCompany && !isAdmin
+      ? careerData.filter((c: any) => c.postedBy === activeUser.username)
+      : careerData;
+
+  // Unify filtering source: Use visibleCareers (which already handles Company/Admin logic)
+  const filteredCareerData = visibleCareers.filter((item: any) => {
     const q = query.toLowerCase();
     return (
       item.title.toLowerCase().includes(q) ||
@@ -66,27 +94,68 @@ export const Career: React.FC = () => {
   });
 
   const getItemsForSection = (section: Section) => {
-    if (section.id === "whats-new")
-      return filteredCareerData.filter((item: any) => item.isNew);
+    if (section.id === "whats-new") {
+       return filteredCareerData.filter((item: any) => {
+          if (item.isNew !== undefined) return item.isNew;
+          if (item.createdDate) {
+             const d = new Date(item.createdDate);
+             const now = new Date();
+             const diffTime = Math.abs(now.getTime() - d.getTime());
+             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+             return diffDays <= 30;
+          }
+          return false;
+       });
+    }
+
     if (section.id === "recently-viewed")
       return getRecentlyViewedCareers(filteredCareerData);
-    if (section.id === "your-applications")
-      return filteredCareerData.filter((item: any) => item.isUserApplication);
+    if (section.id === "your-applications") {
+       if (!applicationsData || applicationsData.length === 0) return [];
+       // Get all career IDs the user has applied to
+       // Get all career IDs the user has applied to
+       // Get all career IDs the user has applied to
+       // Handle both career_id (DB) and careerId (potential prop), compare as Strings
+       const appliedSet = new Set(
+           applicationsData.map((app: any) => String(app.career_id || app.careerId))
+       );
+       
+       return filteredCareerData.filter((item: any) => appliedSet.has(String(item.id)));
+    }
+
     return filteredCareerData.filter(
       (item: any) => item.category === section.title
     );
   };
 
+  // Handle loading/error states
+  if (careerStatus === "loading") {
+    return <p className="text-white">Loading careers...</p>;
+  }
+  if (careerStatus === "failed") {
+    return <p className="text-red-500">Error: {careerError}</p>;
+  }
+
   const availableSections = careerSections.filter((section) => {
-    if (
-      ["recently-viewed", "your-applications"].includes(section.id) &&
-      userRole === "Company"
-    ) {
-      return false; // hide for company users
+    if (["recently-viewed", "your-applications"].includes(section.id) && userRole?.toLowerCase() === "company") {
+       return false;
     }
-    if (["cybersecurity", "your-applications"].includes(section.id))
-      return true;
+    
     const items = getItemsForSection(section);
+    
+    // If user is searching, only show sections that contain matching items
+    if (query.trim()) {
+        return items.length > 0;
+    }
+    
+    // Always show "Your Applications" for learners to confirm it exists
+    if (section.id === "your-applications") return true;
+
+    // Otherwise (Browsing mode), always show standard categories
+    const isStandardCategory = careerCategories.some(c => c.id === section.id);
+    if (isStandardCategory) return true;
+
+    // For dynamic/special sections, check if items exist
     return items.length > 0;
   });
 
@@ -95,11 +164,13 @@ export const Career: React.FC = () => {
     id: s.id,
   }));
 
-  // Company users only see their own careers (ownership by postedBy = username)
-  const visibleCareers =
-    userRole === "Company"
-      ? careerData.filter((c: any) => c.postedBy === activeUser.username)
-      : careerData;
+  // Handle loading/error states
+  if (careerStatus === "loading") {
+    return <p className="text-white">Loading careers...</p>;
+  }
+  if (careerStatus === "failed") {
+    return <p className="text-red-500">Error: {careerError}</p>;
+  }
 
   return (
     <div className="flex">
@@ -116,7 +187,7 @@ export const Career: React.FC = () => {
               Career Opportunities
             </h1>
 
-            {userRole === "Company" && (
+            {canAddCareer && (
               <Button
                 onClick={() => navigate("/career/addCareer")}
                 className="bg-green-600 text-white hover:bg-green-500 transition"
@@ -132,25 +203,54 @@ export const Career: React.FC = () => {
             placeholder="Search career paths, roles, or applications..."
           />
 
-          {userRole === "Company" ? (
-            // Company layout: only their own careers
-            <CareerItemList items={visibleCareers} />
-          ) : (
-            // Student/Mentor layout: sectioned view
-            availableSections.map((section) => {
+          {availableSections.map((section) => {
               const items = getItemsForSection(section);
-              if (items.length === 0) return null;
               return (
                 <SectionBlock
                   key={section.id}
                   id={section.id}
                   title={section.title}
                 >
-                  <CareerItemList items={items} filterTag={section.title} />
+                  {items.length > 0 ? (
+                      <CareerItemList 
+                        items={items} 
+                        filterTag={["recently-viewed", "your-applications", "whats-new"].includes(section.id) ? undefined : section.title} 
+                        // Only show "Add Card" for company users, and maybe only in standard categories?
+                        // For now, showing it everywhere for them to ensure it's accessible.
+                        onAddCard={isCompany && !isAdmin ? () => navigate("/career/addCareer") : undefined}
+                      />
+                  ) : (
+                      <div className="text-gray-500 italic p-4 border border-dashed border-gray-700 rounded-lg text-center">
+                          {isCompany && !isAdmin ? (
+                             <div className="flex flex-col items-center gap-2">
+                                <p>No careers posted in {section.title} yet.</p>
+                                <button onClick={() => navigate("/career/addCareer")} className="text-green-500 hover:underline">+ Create One</button>
+                             </div>
+                          ) : (
+                             <div>
+                                 <p>No {section.title} careers available at the moment.</p>
+                                 {section.id === "your-applications" && (
+                                     applicationsData.length > 0 ? (
+                                         <p className="text-xs text-yellow-500 mt-2">
+                                             (You have applied to {applicationsData.length} active roles, but they don't match the current list/search.)
+                                         </p>
+                                     ) : (
+                                         <p className="text-gray-400 mt-2">
+                                             You haven't applied to any careers yet. 
+                                             <br/>
+                                             <span className="text-xs text-gray-500">
+                                                 (User ID found: {activeUser?.userId ? "Yes" : "No"})
+                                             </span>
+                                         </p>
+                                     )
+                                 )}
+                             </div>
+                          )}
+                      </div>
+                   )}
                 </SectionBlock>
               );
-            })
-          )}
+            })}
         </div>
       </div>
     </div>

@@ -23,18 +23,22 @@ export function Overview() {
       </p>
 
       {/* Advertisement Section */}
+      
       <div className="flex justify-start mt-8">
         <div className="w-full max-w-7xl rounded-3xl overflow-hidden">
           <DisplayImage key={refreshVersion}/>
         </div>
       </div>
+      
 
       {/* Overview Images */}
+      
       <div className="flex justify-start">
         <div className="w-full max-w-7xl">
           <AdminOverviewImages onPostSuccess={handleUpdateSuccess}/>
         </div>
       </div>
+      
 
       {/* Announcements Section */}
       <div className="flex justify-start pt-3">
@@ -51,20 +55,24 @@ export function Overview() {
         </div>
       </div>
       {/* Progress Display Section */}
+      
       <div className="flex justify-start pt-3">
         <div className="max-w-7xl w-full">
           <h2 className="text-4xl font-bold text-white mb-8 text-left">What you've done</h2>
             <ProgressDisplay />
         </div>
       </div>
+      
 
       {/* What's New Section */}
+      
       <div className="flex justify-start pt-3">
         <div className="max-w-7xl w-full">
           <h2 className="text-4xl font-bold text-white mb-8 text-left">Check these out too</h2>
             <WhatsNew />
         </div>
       </div>
+      
     </div>
   );
 }

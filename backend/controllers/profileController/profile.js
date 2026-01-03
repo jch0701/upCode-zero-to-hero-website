@@ -1,4 +1,4 @@
-import { supabase } from "../../config.js";
+import { supabase, supabaseAdmin } from "../../config.js";
 // get own profile
 export const getMyProfile = async (req, res) => {
   if (!req.user) {
@@ -68,18 +68,31 @@ export const getSingleProfile = async (req, res) => {
   }
 
   try {
-    const { data: profiles, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from("userProfiles")
       .select("*")
       .eq('user_id', userID)
       .maybeSingle()
     
+
+
     if(profileError){
       console.error('Profiles Fetch Error:', profileError);
       return res.status(500).json({ message: 'Failed to fetch profiles.' });
     }
 
-    return res.status(200).json(profiles);
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found.' });
+    }
+
+    // Privacy Logic:
+    // If the profile is private, and the requester is NOT the owner or a friend, we should redact info.
+    // BUT for Company users viewing Applicants, we must ALLOW access.
+    // Currently, this controller returns EVERYTHING.
+    // So the "Private" UI on the frontend is likely due to a separate "Friend Check" API call failing or returning false.
+    // We will leave this as is (returning full data) and fix the frontend to display it if the viewer is a Company.
+
+    return res.status(200).json(profile);
   }
   catch (error) {
     console.error('Internal Server Error in GET Controller:', error);

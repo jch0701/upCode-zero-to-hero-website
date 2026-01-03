@@ -6,7 +6,11 @@ import { validateTitle, validateCategory } from "../../validateFormBox";
 import { defaultImageSrc, bin } from "../../../lib/image";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
-import { addCareer, editCareer, deleteCareer } from "@/store/careerSlice";
+import {
+  addCareerAsync,
+  editCareerAsync,
+  deleteCareerAsync,
+} from "@/store/careerSlice";
 import { careerCategories } from "@/page/career/CareerCategories";
 
 const categoryOptions: SelectorOption[] = careerCategories.map((section) => ({
@@ -93,7 +97,7 @@ const CareerDetailForm: React.FC<CareerDetailFormProps> = ({
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
 
@@ -108,25 +112,24 @@ const CareerDetailForm: React.FC<CareerDetailFormProps> = ({
         queryLevel.charAt(0).toUpperCase() + queryLevel.slice(1).toLowerCase();
 
       if (mode === "add") {
-        dispatch(
-          addCareer({
-            id: Date.now(),
+         // Use manual ID to bypass broken DB sequence
+         const newCareerPayload = {
+            id: Date.now(), // Generate unique ID
             title: queryTitle,
             description: queryDescription,
             category: queryCategory,
             postedBy: loggedInUsername,
             level: normalizedLevel as "Beginner" | "Intermediate" | "Advanced",
-            createdDate: new Date().toISOString().split("T")[0],
+            createdDate: new Date().toISOString().split("T")[0], // YYYY-MM-DD
             mapLink: queryMapLink,
             prerequisites: selectedPrerequisites,
-          })
-        );
+         };
+        await dispatch(addCareerAsync(newCareerPayload as any));
       }
 
       if (mode === "edit" && id !== undefined) {
-        dispatch(
-          editCareer({
-            id,
+         const payload = {
+            id: id,
             title: queryTitle,
             description: queryDescription,
             category: queryCategory,
@@ -135,8 +138,8 @@ const CareerDetailForm: React.FC<CareerDetailFormProps> = ({
             createdDate: new Date().toISOString().split("T")[0],
             mapLink: queryMapLink,
             prerequisites: selectedPrerequisites,
-          })
-        );
+        };
+        await dispatch(editCareerAsync(payload));
       }
 
       navigate(-1);
@@ -146,11 +149,13 @@ const CareerDetailForm: React.FC<CareerDetailFormProps> = ({
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     try {
       if (id !== undefined) {
-        dispatch(deleteCareer(id));
-        navigate(-2);
+        if (window.confirm("Are you sure you want to delete this career? This action cannot be undone.")) {
+            await dispatch(deleteCareerAsync(id));
+            navigate(-2);
+        }
       }
     } catch (error: any) {
       console.error("Failed to delete career:", error);
@@ -195,7 +200,7 @@ const CareerDetailForm: React.FC<CareerDetailFormProps> = ({
 
       <form id={"career-form"} onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Left Section: Title, Description, Map */}
+          {/* Left Section */}
           <div className="w-full md:w-1/2">
             <h3 className="text-xl font-bold mb-2 text-left">Career Title</h3>
             <FormBar
@@ -218,12 +223,20 @@ const CareerDetailForm: React.FC<CareerDetailFormProps> = ({
             <h3 className="text-xl font-bold mb-2 text-left">Map Link</h3>
             <FormBar
               query={queryMapLink}
-              setQuery={setQueryMapLink}
-              placeholder="Paste Google Maps embed link"
+              setQuery={(val) => {
+                  // Auto-extract src if user pastes full iframe code
+                  const srcMatch = val.match(/src=["'](.*?)["']/);
+                  if (srcMatch && srcMatch[1]) {
+                      setQueryMapLink(srcMatch[1]);
+                  } else {
+                      setQueryMapLink(val);
+                  }
+              }}
+              placeholder="Paste Google Maps embed link (or full iframe code)"
             />
           </div>
 
-          {/* Right Section: Category, Level, Prerequisites */}
+          {/* Right Section */}
           <div className="w-full md:w-1/2">
             <h3 className="text-xl font-bold mb-2 text-left">Category</h3>
             <FormBar

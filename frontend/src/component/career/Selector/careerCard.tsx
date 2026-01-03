@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import type { Tag } from "../../tag.tsx";
 import { TagPill } from "../../tag.tsx";
 import type { CareerItem } from "@/store/careerSlice";
-import { deleteCareer } from "@/store/careerSlice";
+import { deleteCareerAsync } from "@/store/careerSlice";
 
 export interface CareerItemCardProps extends CareerItem {
   slug?: string; // for routing
@@ -38,7 +38,10 @@ export const CareerItemCard: React.FC<CareerItemCardProps> = ({
   // Build tags
   const effectiveTags: Tag[] = [];
   if (level) effectiveTags.push({ label: level, type: "Difficulty" });
-  prerequisites.forEach((req) =>
+  
+  // Safe check for prerequisites in case it comes as null from backend
+  const safePrereqs = prerequisites || [];
+  safePrereqs.forEach((req) =>
     effectiveTags.push({ label: req, type: "Prerequisite" })
   );
 
@@ -47,8 +50,11 @@ export const CareerItemCard: React.FC<CareerItemCardProps> = ({
   const showMoreButton = remainingTagsCount > 0;
 
   // Company users can only edit/delete their own careers
-  const isOwnCareer =
-    userRole === "Company" && postedBy === activeUser.username;
+  // Admin can delete ANY career
+  const isOwnCareer = userRole?.toLowerCase() === "company" && postedBy === activeUser.username;
+  const isAdmin = userRole?.toLowerCase() === "admin";
+  const canDelete = isOwnCareer || isAdmin;
+  const canEdit = isOwnCareer; // Only owner should edit (?) or maybe Admin too? defaulting to owner for edit
 
   // Build route for details
   const careerRoute = `/career/${id}/${
@@ -122,7 +128,7 @@ export const CareerItemCard: React.FC<CareerItemCardProps> = ({
 
       {/* Role-based actions */}
       <div className="mt-4 flex gap-2">
-        {userRole === "Student" || userRole === "Mentor" ? (
+        {userRole?.toLowerCase() === "learner" || userRole?.toLowerCase() === "mentor" ? (
           <button
             onClick={() => navigate(careerRoute)}
             className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 transition"
@@ -131,21 +137,26 @@ export const CareerItemCard: React.FC<CareerItemCardProps> = ({
           </button>
         ) : null}
 
-        {isOwnCareer && (
-          <>
-            <button
-              onClick={() => navigate(`/career/edit/${id}`)}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 transition"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => dispatch(deleteCareer(id))}
-              className="flex-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition"
-            >
-              Delete
-            </button>
-          </>
+        {canEdit && (
+          <button
+            onClick={() => navigate(`/career/edit/${id}`)}
+            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 transition"
+          >
+            Edit
+          </button>
+        )}
+        
+        {canDelete && (
+          <button
+            onClick={() => {
+                if(window.confirm("Are you sure you want to delete this career?")) {
+                    dispatch(deleteCareerAsync(id) as any);
+                }
+            }}
+            className="flex-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500 transition"
+          >
+            Delete
+          </button>
         )}
       </div>
     </div>

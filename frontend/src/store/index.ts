@@ -5,6 +5,7 @@ import profileReducer from "./profileSlice";
 import projectTrackingReducer from "./projectTrackingSlice";
 import recommendationReducer from "./recommendationSlice";
 import careerReducer from "./careerSlice";
+import applicationReducer from "./applicationSlice";
 import announcementSlice from "./announcementSlice";
 import overviewImagesReducer from "./overviewImageSlices";
 // Import your reducers here
@@ -38,20 +39,15 @@ const preloadedState = {
 
 export const store = configureStore({
   reducer: {
-    // Add your reducers here
-    // Example: user: userReducer,
-    // projects: projectsReducer,
-    // submissions: submissionsReducer,
-    // // userList: userListReducer,
-    // profile: profileReducer,
-    // // roadmap: roadmapReducer,
-    // // chapter: pillarReducer,
-    // // link: linkReducer,
-    // projectTracking: projectTrackingReducer,
-    // recommendations: recommendationReducer,
-    // career: careerReducer,
-    // announcement: announcementSlice,
-    // overviewImages: overviewImagesReducer,
+    projects: projectsReducer,
+    submissions: submissionsReducer,
+    profile: profileReducer,
+    projectTracking: projectTrackingReducer,
+    recommendations: recommendationReducer,
+    career: careerReducer,
+    application: applicationReducer,
+    announcement: announcementSlice,
+    overviewImages: overviewImagesReducer,
   } as any,
   preloadedState,
 });

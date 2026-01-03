@@ -28,6 +28,7 @@ const Login_Pg: FC = () => {
         JSON.stringify({
           userId: data.user.user_id,
           role: data.user.role,
+          username: data.user.username,
         })
       );
       if (data.user.role && data.user.role.toLowerCase() === "admin") {

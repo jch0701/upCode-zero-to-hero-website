@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import Api from '../index.ts';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import Api, { queryClient } from '../index.ts';
 import type { CareerItem } from '@/store/careerSlice.ts';
 
 // 1. Get All Chapter
@@ -23,4 +23,43 @@ export const useGetSingleCareer = (careerID: number) => {
         },
         enabled: !!careerID,
     })
+}
+
+// 3. Create Career
+export const useCreateCareer = () => {
+    return useMutation({
+        mutationFn: async (newCareer: any) => {
+            const response = await Api.post('/careers', newCareer);
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['careers'] });
+        }
+    });
+}
+
+// 4. Update Career
+export const useUpdateCareer = () => {
+    return useMutation({
+        mutationFn: async ({ id, ...updatedCareer }: any) => {
+            const response = await Api.put(`/careers/${id}`, updatedCareer);
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['careers'] });
+        }
+    });
+}
+
+// 5. Delete Career
+export const useDeleteCareer = () => {
+    return useMutation({
+        mutationFn: async (careerID: number) => {
+            const response = await Api.delete(`/careers/${careerID}`);
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['careers'] });
+        }
+    });
 }

@@ -11,7 +11,7 @@ interface SectionBlockProps {
 
 const SectionBlock: React.FC<SectionBlockProps> = ({ id, title, extraClass, children}) => {
     return (
-        <section id={id} className={`${extraClass}`}>
+        <section id={id} className={`scroll-mt-24 ${extraClass || ''}`}>
             <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-semibold text-white text-left">{title}</h2>
                     {id === "your-design" && (
@@ -23,6 +23,9 @@ const SectionBlock: React.FC<SectionBlockProps> = ({ id, title, extraClass, chil
                     )}
                 </div>
             {children}
+            
+            {/* Partially visible horizontal line - Made sharper and more visible */}
+            <div className="h-[2px] bg-gradient-to-r from-transparent via-gray-400/50 to-transparent my-10 w-full rounded-full" />
         </section>
     );
 };

@@ -1,12 +1,22 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { RootState } from "@/store";
+import { fetchCareers } from "@/store/careerSlice";
 import type { CareerItem } from "@/store/careerSlice";
 import CareerInfoSub from "./CareerInfoSub";
 
 export const CareerDetails: React.FC = () => {
   const { id, slug } = useParams<{ id: string; slug?: string }>();
+
+  const dispatch = useDispatch();
+  const careerStatus = useSelector((state: RootState) => state.career.status);
+
+  useEffect(() => {
+    if (careerStatus === "idle") {
+      dispatch(fetchCareers() as any);
+    }
+  }, [careerStatus, dispatch]);
 
   const careerList = useSelector(
     (state: RootState) => state.career.careerList
@@ -15,6 +25,10 @@ export const CareerDetails: React.FC = () => {
   const careerItem = careerList.find(
     (c) => c.id === Number(id) || (slug && c.slug === slug)
   );
+
+  if (careerStatus === "loading") {
+    return <p className="text-white text-center mt-10">Loading career details...</p>;
+  }
 
   if (!careerItem) {
     return <p className="text-white text-center mt-10">Career not found</p>;

@@ -96,8 +96,11 @@ export function ProfileContent({userId} : {userId: string}) {
 
   if (!profile) {
     return (
-      <div className="text-white text-center py-20">
-        Loading profile...
+      <div className="text-white text-center py-20 flex flex-col items-center gap-4">
+        <div>Loading profile...</div>
+        <div className="text-xs text-gray-500">
+           {(isOwner ? "Fetching your profile..." : `Fetching user ${userId}...`)}
+        </div>
       </div>
     );
   }

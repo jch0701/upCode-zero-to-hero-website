@@ -21,6 +21,12 @@ if (!supabaseUrl || !supabaseKey || !anonKey) {
   
 // Create and export the Supabase client
 export const supabase = createClient(supabaseUrl, supabaseKey); //service key
+export const supabaseAdmin = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+}); // Explicit admin alias with server-side options
 export const supabaseAuth = createClient(supabaseUrl, anonKey); //public key
 
 export const initDB = async () => {
