@@ -14,16 +14,16 @@ export const useGetRoadmaps = (userID?: string | null) => {
     });
 };
 
+export const getRoadmapsWithProgress = async (userID: string) => {
+    if (!userID) return [];
+    const response = await Api.get(`roadmaps/withProgress/${userID}`);
+    return response.data;
+};
+
 export const useGetRoadmapsWithProgress = (userID: string) => {
     return useQuery<any[]>({
         queryKey: ['roadmapsWithProgress', userID],
-        queryFn: async () => {
-            if(userID === null || userID === undefined){
-                return [];
-            }
-            const response = await Api.get(`roadmaps/withProgress/${userID}`);
-            return response.data;
-        },
+        queryFn: async () => getRoadmapsWithProgress(userID),
         enabled: !!userID,
     });
 }
@@ -85,3 +85,16 @@ export const useDeleteRoadmap = () => {
         }
     })
 }
+
+// 6. Get Specific Roadmap Progress
+export const useGetRoadmapProgress = (roadmapID: number, userID?: string | null) => {
+    return useQuery<number>({
+        queryKey: ['roadmapProgress', roadmapID, userID],
+        queryFn: async () => {
+            const headers = userID ? { 'x-user-id': userID } : {};
+            const response = await Api.get(`roadmapProgress/${roadmapID}`, { headers });
+            return response.data;
+        },
+        enabled: !!roadmapID, // Only run if ID exists
+    });
+};

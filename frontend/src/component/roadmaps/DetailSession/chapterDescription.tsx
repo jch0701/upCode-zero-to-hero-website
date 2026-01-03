@@ -18,6 +18,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
 }) => {
     const navigate = useNavigate();
     const userID = getActiveUserField("userId");
+    const role = getActiveUserField("role");
     const { roadmapID } = useParams<{ roadmapID: string }>();
 
     const { data: roadmapItem, isLoading: roadmapLoading } = useGetSingleRoadmap(Number(roadmapID), userID);
@@ -64,7 +65,7 @@ const ChapterDescription: React.FC<PillarDescription> = ({
                             }}
                         />
                     </div>
-                    {(userID === creator) && 
+                    {(userID === creator || role === "admin") && 
                     (<Link to={`/roadmap/${chapterItem.roadmapID}/${roadmapSlug}/${chapterItem.chapterID}/${chapterItem.chapterSlug}/edit`}>
                             <button 
                                 className="w-full bg-gray-900/80 hover:bg-gray-900 rounded-lg font-semibold transition shadow-xl"

@@ -22,7 +22,6 @@ export type ItemType = {
   referenceId: number; //roadmapId or careerId
   referenceType: string; //"roadmap" or "career"
   title: string;
-  existing: boolean;
 }
 
 export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
@@ -59,7 +58,6 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
         referenceId: item[idtag],
         referenceType: openFor,
         title: openFor === "roadmap" ? item.title : item.careerName,
-        existing: false //new item
       }
       onSelect([...selectedItems, newItem]);
       setQuery("");

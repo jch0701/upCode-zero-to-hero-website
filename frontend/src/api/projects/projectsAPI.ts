@@ -101,6 +101,8 @@ export function useUpdateProject(projectId: number) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects', 'byIdComplete', projectId] });
+      queryClient.invalidateQueries({ queryKey: ['recommendations', 'byProjectId', projectId]});
+      queryClient.invalidateQueries({ queryKey: ['submissions', 'byProjectId', projectId]});
     }
   })
 }
