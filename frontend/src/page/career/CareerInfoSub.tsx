@@ -36,7 +36,7 @@ const CareerInfoSub: React.FC<CareerItem> = ({
   ];
 
   // Helper: Find the application for the current user
-  const userApplication = applications?.find((app: any) => app.user_id === activeUser?.userId);
+  const userApplication = applications?.find((app) => app.user_id === activeUser?.userId);
   const isApplied = !!userApplication;
 
   const handleApply = async () => {
