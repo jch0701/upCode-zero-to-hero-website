@@ -25,7 +25,7 @@ export default function FriendsDrawer({
 
       {/* Drawer */}
       <div
-        className={`fixed right-6 bottom-1 mb-11 z-50 w-[360px] max-h-[70vh] bg-purple-500/90 backdrop-blur-xl rounded-3xl shadow-2xl transform transition-transform duration-300 ${isOpen ? "translate-y-0" : "translate-y-[120%]"}`
+        className={`fixed right-1 bottom-1 mb-11 z-50 w-[360px] max-h-[70vh] bg-purple-500/90 backdrop-blur-xl rounded-3xl shadow-2xl transform transition-transform duration-300 ${isOpen ? "translate-y-0" : "translate-y-[120%]"}`
       }>
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-black/20">

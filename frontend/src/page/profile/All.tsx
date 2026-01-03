@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useReactToPrint} from "react-to-print";
+import { FaDownload } from "react-icons/fa";
 
 import RadioGroup from "@/component/projects/radioGroup";
 import { ProfileContent } from "./Profile";
@@ -9,11 +11,19 @@ import { SettingContent } from "./Setting";
 import { getFriendStatus } from "@/api/profile/friendAPI"; 
 import { FriendsOwnerContent, FriendsVisitorContent } from "@/component/friend/friendContent";
 import FriendsDrawer from "@/component/friend/drawerFriend";
+import { ResumeDocument } from "@/component/resume/resumeDoc";
+import { getMySkills } from "@/api/profile/skillAPI";
+import { getMyProfile } from "@/api/profile/profileAPI";
+import { getRoadmapsWithProgress } from "@/api/roadmaps/roadmapAPI";
+import { getUserSubmissions } from "@/api/projects/submissionsAPI";
+import { getCompletedChapters } from "@/api/roadmaps/chapterAPI";
 
 export const All: React.FC = () => {
     const { userId } = useParams();
     const activeUserRaw = localStorage.getItem("activeUser");
     const currentUser = activeUserRaw ? JSON.parse(activeUserRaw) : null; 
+    const resumeRef = useRef<HTMLDivElement>(null);
+    const [resumeData, setResumeData] = useState({ profile:null, skills: [], roadmaps: [], chapters: [], projects: []});
 
     // Handle Not Logged In
     if (!currentUser) {
@@ -61,7 +71,6 @@ export const All: React.FC = () => {
             });
     }, [currentUser.userId, viewUserId, isOwner, isAdmin, isCompany]);
 
-
     // Navigation Options
     const click = isAdmin 
         ? ["All", "Profile", "Setting"] 
@@ -72,11 +81,59 @@ export const All: React.FC = () => {
     const navOptions = click.map(name => ({ label: name, value: name }));
     const [category, setCategory] = useState<string>(click[0]);
     const [friendsOpen, setFriendsOpen] = useState(false);
+    //Resume
+    useEffect(() =>{
+        if(isOwner){
+            const fetchData = async () =>{
+                try{
+                    const [profileRes, skillRes, roadmapRes, submissionRes, chapterRes] = await Promise.all([
+                        getMyProfile(),
+                        getMySkills(),
+                        getRoadmapsWithProgress(viewUserId),
+                        getUserSubmissions(viewUserId),
+                        getCompletedChapters(viewUserId)
+                ]);
+                const completedRoadmaps = (roadmapRes || [])
+                    .filter((r: any) => {
+                        console.log(`Roadmap: ${r.title}, Progress: ${r.progress}`);
+                        return r.progress >= 100 || (r.progress >= 0.99 && r.progress <= 1.0);
+                    })
+                    .map((r: any) => ({
+                        title: r.title,
+                        date: r.lastUpdated || r.modifiedDate,
+                        type: "Topic Completed",
+                        description: `Mastered ${r.title} roadmap.`
+                }));
 
+                const projects = (submissionRes || []).map((s: any) => ({
+                    title: s.title,
+                    date: s.postedAt,
+                    type: "Project Submitted",
+                    description: s.repoLink ? `Repository: ${s.repoLink}` : "Project Submission"
+                }));
+
+                const completedChapters = (chapterRes || []).map((c: any) => ({
+                        title: c.title,
+                        date: c.completedAt || c.created_at, // Adjust based on your DB
+                        description: `Completed chapter in ${c.roadmapTitle || "Roadmap"}`
+                    }));
+                setResumeData({ profile: profileRes, skills: skillRes || [], roadmaps: completedRoadmaps, chapters: completedChapters,          projects: projects });
+            }catch(error){
+                console.error("Error fetching resume data", error);
+            }
+        };
+        fetchData();
+    }},[isOwner, viewUserId]);
+
+    const handlePrintResume = useReactToPrint({
+        contentRef: resumeRef, 
+        documentTitle: `${currentUser.username}_Resume`,
+    });
+    //change side bar
     function handleCategoryChange(value: string) {
         setCategory(value);
     }
-
+console.log("RESUME DATA:", resumeData);
     return (
         <div className="flex">
             {/* Navbar Vertically */}
@@ -88,7 +145,18 @@ export const All: React.FC = () => {
                         selected={category}
                         isHorizontal={false}
                         className="w-60 fixed"
-                    />  
+                    />
+                    {isOwner && !isAdmin &&(
+                        <div className="fixed bottom-12 -ml-1 w-60 mt-4">
+                            <button 
+                                onClick={() => handlePrintResume()}
+                                className="w-full hover:bg-white/20 text-white font-bold py-2 px-4  shadow-lg 
+                                transition flex items-center justify-center gap-2"
+                            >
+                                <FaDownload/> Download Resume
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Contents */}
@@ -136,17 +204,15 @@ export const All: React.FC = () => {
                     <>
                         <button
                             onClick={() => setFriendsOpen(o => !o)}
-                            className="fixed bottom-12 right-6 z-50 bg-purple-600 hover:bg-purple-700
-                                text-white font-bold px-6 py-3 rounded-full shadow-2xl transition-all transform hover:scale-105 flex items-center gap-2"
-                        >
+                            className="fixed bottom-12 right-1 z-50 bg-purple-600 hover:bg-purple-700
+                                text-white font-bold px-6 py-3 rounded-full shadow-2xl  flex items-                                 center gap-2">
                             <span>Users & Friends</span>
                         </button>
 
                         <FriendsDrawer
                             isOpen={friendsOpen}
                             onClose={() => setFriendsOpen(false)}
-                            title={isOwner ? "Friends" : "Mutual Friends"}
-                        >
+                            title={isOwner ? "Friends" : "Mutual Friends"}>
                             {isOwner ? (
                                 <FriendsOwnerContent userId={currentUser.userId} />
                             ) : (
@@ -159,6 +225,17 @@ export const All: React.FC = () => {
                         </FriendsDrawer>
                     </>
                 )}
+            </div>
+            <div style={{ position: "absolute", top: "-9999px", left: "-9999px"}}>
+                <div ref={resumeRef}>
+                    <ResumeDocument 
+                        user={resumeData.profile || currentUser}
+                        skills={resumeData.skills} 
+                        roadmaps={resumeData.roadmaps}
+                        chapters={resumeData.chapters}
+                        projects={resumeData.projects}
+                    />
+                </div>
             </div>
         </div>
     );

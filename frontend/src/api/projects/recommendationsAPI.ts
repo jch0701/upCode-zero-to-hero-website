@@ -38,7 +38,7 @@ export function useUpdateRecommendation(recommendationId: number) {
         ...updatedRecommendationData
       });
       return response.data;
-    }
+    },
   });
 }
 

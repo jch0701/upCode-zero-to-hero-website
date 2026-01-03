@@ -53,13 +53,11 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
     referenceId: rec.targetId,
     referenceType: "roadmap",
     title: rec.title,
-    existing: true
   }));
   const careersAsItems: ItemType[] = careersFetched.map((rec: any) => ({
     referenceId: rec.targetId,
     referenceType: "career",
     title: rec.careerName,
-    existing: true
   }));
 
   const [fileInput, setFileInput] = useState<File | null>(null);
@@ -92,15 +90,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
       return;
     }
     const combinedSelections = [...formData.roadmaps, ...formData.careers];
-    finalFormData.recommendations = combinedSelections.map((item: any) => {
-      return (
-        {
-          targetId: item.referenceId,
-          targetType: item.referenceType,
-          existing: item.existing
-        }
-      )
-    });
+    finalFormData.recommendations = combinedSelections.map((item: any) => ({
+      targetId: item.referenceId,
+      targetType: item.referenceType
+    }));
 
     // Handle file separately if it exists
     if (fileInput) {

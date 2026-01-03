@@ -41,7 +41,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
     
     // percentage generator
     const generateViewPercentage = () =>  {
-        if (!linksData || linksData.length === 0) return 0;
+        if (!linksData || linksData.length === 0) return 100;
         const viewedCount = linksData.filter(link => link.isViewed).length;
         return Math.round((viewedCount / linksData.length) * 100);
     }
@@ -79,7 +79,7 @@ const PillarCard : React.FC<PillarCardProps> = ({
             );
         }
         else {
-            if( viewPercentage !== 100){
+            if( viewPercentage !== 100 || linksData.length === 0 ){
                 setLocalChapterItem({ ...localChapterItem, isViewed: false });
                 unviewMutation.mutate(
                     { userID: userID!, recordID: Number(selectedChapterID) },

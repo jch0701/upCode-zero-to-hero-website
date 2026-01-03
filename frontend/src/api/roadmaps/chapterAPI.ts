@@ -87,3 +87,7 @@ export const useDeleteChapter = () => {
         }
     })
 }
+export const getCompletedChapters = async (userId: string) => {
+  const res = await Api.get(`/chapters/completed/${userId}`); 
+  return res.data;
+};

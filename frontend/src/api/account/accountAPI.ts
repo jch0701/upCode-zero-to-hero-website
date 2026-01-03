@@ -8,9 +8,9 @@ export const userLogin = async (email: string, password: string) => {
   //  Save active user + token locally
   if (data?.user && data?.access_token) {
     const activeUser = {
-      userId: data.user.user_id,          // from your Supabase profile
-      token: data.access_token,           // used for Bearer authorization
-      role: data.user.role || "learner",  // fallback just in case
+      userId: data.user.user_id,          
+      token: data.access_token,           
+      role: data.user.role || "learner",  
     };
 
     localStorage.setItem("activeUser", JSON.stringify(activeUser));

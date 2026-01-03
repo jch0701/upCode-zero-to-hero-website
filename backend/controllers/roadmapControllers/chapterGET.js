@@ -142,3 +142,44 @@ export const getChapter = async(req, res) => {
         return res.status(500).json({ message: 'Internal Server Error.' });
     }
 }
+
+export const getCompletedChapters = async (req, res) => {
+    if (req.method !== 'GET') {
+        return res.status(405).end(`Method ${req.method} Not Allowed. Use GET only.`);
+    }
+
+    const { userID } = req.params;
+    if (!userID) {
+        return res.status(400).json({ message: 'Missing User ID.' });
+    }
+
+    try {
+        const { data: chapters, error } = await supabase
+            .from('ReadChapter') 
+            .select(`
+                chapterID,
+                Chapters!inner (
+                    title,
+                    description,
+                    roadmapID
+                )
+            `)
+            .eq('userID', userID);
+
+        if (error) {
+             console.error('Completed Chapters Fetch Error:', error);
+             return res.status(500).json({ message: 'Failed to fetch completed chapters.' });
+        }
+
+        const formatted = chapters.map(item => ({
+            title: item.Chapters.title,
+            description: item.Chapters.description || "Chapter Completed",
+        }));
+
+        return res.status(200).json(formatted);
+
+    } catch (error) {
+        console.error('Server Logic Error:', error);
+        return res.status(500).json({ message: 'Internal Server Error.' });
+    }
+}

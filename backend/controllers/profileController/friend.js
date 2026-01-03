@@ -133,21 +133,48 @@ export const getIncomingRequests = async (req, res) => {
   }
 };
 
-// Accept Request (Using RPC) 
+// Accept Request 
 export const acceptRequest = async (req, res) => {
   try {
     const { requestId } = req.body;
 
-    // Call the SQL function (RPC) created earlier in supabase
-    const { data, error } = await supabase
-      .rpc('accept_friend_request', { 
-        current_request_id: requestId 
+    const numericId = Number(requestId);
+    if (isNaN(numericId)) {
+      return res.status(400).json({ error: "Invalid request ID" });
+    }
+
+    // Find the pending request
+    const { data: reqData, error: reqError } = await supabase
+      .from("friend_requests")
+      .select("*")
+      .eq("request_id", numericId)
+      .single();
+
+    if (reqError || !reqData) {
+      return res.status(404).json({ error: "Friend request not found" });
+    }
+
+    // Create friendship
+    const { error: insertError } = await supabase
+      .from("friendships")
+      .insert({
+        user_id_1: reqData.from_user_id,
+        user_id_2: reqData.to_user_id,
       });
 
-    if (error) throw error;
+    if (insertError) throw insertError;
 
-    return res.status(200).json({ message: "Friend request accepted" });
+    // 3️⃣ Remove the original request
+    const { error: deleteError } = await supabase
+      .from("friend_requests")
+      .delete()
+      .eq("request_id", numericId);
+
+    if (deleteError) throw deleteError;
+
+    return res.status(200).json({ message: "Friend request accepted successfully" });
   } catch (err) {
+    console.error("Accept request error:", err);
     return res.status(500).json({ error: err.message });
   }
 };

@@ -1,8 +1,8 @@
 import express from 'express';
 
-import { getAllRoadmap, getRoadmap, getAllWithProgress } from '../controllers/roadmapControllers/roadmapGET.js';
+import { getAllRoadmap, getRoadmap, getAllWithProgress, getRoadmapProgress } from '../controllers/roadmapControllers/roadmapGET.js';
 import { createRoadmap, editRoadmap, deleteRoadmap } from '../controllers/roadmapControllers/roadmapCUD.js';
-import { getAllChapter, getRoadmapChapter, getChapter } from '../controllers/roadmapControllers/chapterGET.js';
+import { getAllChapter, getRoadmapChapter, getChapter, getCompletedChapters } from '../controllers/roadmapControllers/chapterGET.js';
 import { createChapter, editChapter, deleteChapter } from '../controllers/roadmapControllers/chapterCUD.js';
 import { getAllLink, getChapterLink, getLink } from '../controllers/roadmapControllers/linkGET.js';
 import { createLink, editLink, deleteLink } from '../controllers/roadmapControllers/linkCUD.js';
@@ -12,6 +12,7 @@ import { getAllRoadmapRecommendation, createRoadmapRecommendation, deleteRoadmap
 const router = express.Router();
 router.get('/roadmaps', getAllRoadmap);
 router.get('/roadmaps/:roadmapID', getRoadmap);
+router.get('/roadmapProgress/:roadmapID', getRoadmapProgress);
 router.get('/roadmaps/withProgress/:userID', getAllWithProgress);
 
 router.post('/roadmaps', createRoadmap);
@@ -27,8 +28,7 @@ router.get('/roadmaps/:roadmapID/chapters/:chapterID', getChapter);
 router.post('/roadmaps/:roadmapID/chapters', createChapter);
 router.patch('/roadmaps/:roadmapID/chapters/:chapterID', editChapter);
 router.delete('/chapters/:chapterID', deleteChapter);
-
-
+router.get('/chapters/completed/:userID', getCompletedChapters);
 
 router.get('/links', getAllLink)
 router.get('/chapters/:chapterID/links', getChapterLink)

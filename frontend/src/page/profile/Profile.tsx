@@ -30,7 +30,7 @@ function ProfileRow({
       <div className="w-full flex items-center bg-white/50 px-4 py-2 rounded-full text-black gap-2">
         {icon && (
           <img src={icon}
-            className="w-5 h-5 opacity-20"
+            className="w-5 h-5 opacity-50"
             alt="icon"
           />
         )}
@@ -233,7 +233,7 @@ export function ProfileContent({userId} : {userId: string}) {
           {isOwner && isEditing && (
             <div className="flex justify-end gap-4">
               <button
-                onClick={() => { setIsEditing(false); }}
+                onClick={() => { setIsEditing(false); setShowAvatar(false);}}
                 className="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600">
                 Cancel
               </button>

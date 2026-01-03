@@ -80,3 +80,9 @@ export function useDeleteSubmission(projectId: number, submissionId: number) {
     }
   });
 }
+
+//used for resume purpose
+export const getUserSubmissions = async (userId: string | number) => {
+  const res = await Api.get(`/projects/${userId}/submissions/getAllSubmissionsByUser`);
+  return res.data.submissions; 
+};
