@@ -47,7 +47,7 @@ const Recommendation: React.FC<RecommendationProps> =
         filterRecommendedData = recommendedData.filter(data => (data.sourceId === selectedID && data.sourceType === "roadmap"));
         const uniqueCareerIds = [...new Set(filterRecommendedData.map(data => data.targetId))];
         roadmapCareers = careers.filter((career: CareerItem) => 
-            uniqueCareerIds.includes(career.id)
+            uniqueCareerIds.includes(career.career_id)
         );
     };
 
@@ -86,9 +86,9 @@ const Recommendation: React.FC<RecommendationProps> =
                 {filterRecommendedData.length > 0 ? (
                     <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
                     {roadmapCareers.map((career: CareerItem) => (
-                        <div className="flex-shrink-0 w-70" key={career.id}>
+                        <div className="flex-shrink-0 w-70" key={career.career_id}>
                             {/* Roadmap Suggested Career */}
-                            <CareerItemCard key={career.id} {...career}/>
+                            <CareerItemCard key={career.career_id} {...career}/>
                         </div>
                     ))}
                     {(userID === creator || role === "admin") && (

@@ -2,7 +2,8 @@ import { RoadmapItemCard } from "../roadmaps/Selector/roadmapCard";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import search_icon from "../../assets/search_icon.png"
 import { useGetAllRecommendations } from "@/api/projects/recommendationsAPI";
-import Recommendation from "../roadmaps/Selector/recommendation";
+import { CareerItemCard } from "@/component/career/Selector/careerCard";
+import { useGetAllCareers } from "@/api/careers/careerAPI";
 interface InterModuleRelationsProps {
   projectId: number;
 }
@@ -15,7 +16,9 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
     isSuccess: isSuccessLoadingRecommendations
   } = useGetAllRecommendations(projectId);
 
-  if (isLoadingRecommendations) {
+  const { data: allCareers = [], isLoading: isCareersLoading } = useGetAllCareers();
+
+  if (isLoadingRecommendations || isCareersLoading) {
     return <p>Loading related modules...</p>;
   }
 
@@ -26,12 +29,20 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
   let relatedRoadmaps: any[] = [], relatedCareers: any[] = [];
   if (isSuccessLoadingRecommendations && recommendations.length > 0) {
     relatedRoadmaps = recommendations?.filter((rec: any) =>
-      rec.sourceId === projectId && rec.targetType === "roadmap" || rec.targetType === "chapter" ||
-      rec.targetId === projectId && rec.sourceType === "roadmap" || rec.sourceType === "chapter");
+      rec.targetType === "roadmap" || rec.targetType === "chapter" ||
+      rec.sourceType === "roadmap" || rec.sourceType === "chapter");
     relatedCareers = recommendations?.filter((rec: any) =>
-      rec.sourceId === projectId && rec.targetType === "career" ||
-      rec.targetId === projectId && rec.sourceType === "career");
+      rec.targetType === "career" ||
+      rec.sourceType === "career");
   }
+
+    // Get career details for the career IDs in recommendations
+    const careerIds = relatedCareers.map((rec: any) => 
+      rec.sourceType === "career" ? rec.sourceId : rec.targetId
+    );
+    const careersToDisplay = allCareers.filter((career: any) => 
+      careerIds.includes(career.career_id)
+    );
 
   return (
     <Collapsible className="w-[90%] rounded-2xl p-[0.1rem] text-sm font-semibold bg-gray-800 text-white">
@@ -77,16 +88,13 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
             Look at all these career opportunities that require skills from this project!
           </span>
           <div className="mt-2">
-            {/* replace && with ? later on */}
-            {relatedCareers?.length === 0 ? <p>No related careers found.</p>
+              {careersToDisplay?.length === 0 ? <p>No related careers found.</p>
               : <div className="flex flex-wrap gap-4 mt-4">
-                {relatedCareers?.map((rec: any) => (
-                  <Recommendation
-                    mode="career"
-                    selectedID={rec.sourceType === "career" ? rec.sourceId : rec.targetId}
-                    navigateDetails={() => { }}
-                    creator={""}
-                  />
+                  {careersToDisplay?.map((career: any) => (
+                    <CareerItemCard
+                      key={career.career_id}
+                      {...career}
+                    />
                 ))}
               </div>
             }

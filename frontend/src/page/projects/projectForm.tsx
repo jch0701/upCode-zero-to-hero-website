@@ -38,9 +38,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
   const { mutateAsync: updateProject, status: formUpdateStatus, error: formUpdateError } = useUpdateProject(projectId || -1);
   const { data: allRecommendations = [], status: getAllRecStatus, error: getAllRecError } = useGetAllRecommendations(projectId || -1);
   const { data: roadmaps, isSuccess: isSuccessRoadmaps } = useGetRoadmaps();
-  // const { data: careers, isSuccess: isSuccessCareers } = useGetAllCareers(); // Placeholder for careers fetching
-  const careers: any = [];
-  const isSuccessCareers = true; // Placeholder for careers fetching
+  const { data: careers, isSuccess: isSuccessCareers } = useGetAllCareers();
+  if(isSuccessCareers){
+    console.log(careers);
+  }
 
   // Only deletable are those set by project side
   const roadmapsFetched = getAllRecStatus === "success"
@@ -310,12 +311,12 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
                     }
                     renderItem={(career) => (
                       <div>
-                        <p className="font-medium text-white">{career.name}</p>
+                        <p className="font-medium text-white">{career.title}</p>
                         <p className="text-sm text-gray-400">{career.description}</p>
                       </div>
                     )}
-                    searchKey="name"
-                    idtag="careerID"
+                    searchKey="title"
+                    idtag="career_id"
                   />
                 </FieldSet>
               </FieldGroup>

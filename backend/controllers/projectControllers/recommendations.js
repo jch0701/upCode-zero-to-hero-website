@@ -20,8 +20,6 @@ export const getAllRecommendations = async (req, res) => {
   
   const recsWithTitle = await Promise.all(recommendations.map(async (rec) => {
     let title = "";
-    let roadmapID = null;
-    let roadmapTitle = null;
     if (rec.sourceType === 'roadmap' || rec.targetType === 'roadmap') {
       const roadmapId = rec.sourceType === 'roadmap' ? rec.sourceId : rec.targetId;
       const { data: roadmapData, error: roadmapError } = await supabase
@@ -33,7 +31,7 @@ export const getAllRecommendations = async (req, res) => {
         title = roadmapData.title;
       }
       if (roadmapError) {
-        // console.error(`Error fetching roadmap title for roadmapId ${roadmapId}:`, roadmapError);
+        console.error(`Error fetching roadmap title for roadmapId ${roadmapId}:`, roadmapError);
         return;
       }
     } else if(rec.sourceType === 'chapter' || rec.targetType === 'chapter'){
@@ -49,7 +47,7 @@ export const getAllRecommendations = async (req, res) => {
         roadmapTitle = chapterData?.roadmapData?.roadmapTitle;
       }
       if (chapterError) {
-        // console.error(`Error fetching chapter title for chapterId ${chapterId}:`, chapterError);
+        console.error(`Error fetching chapter title for chapterId ${chapterId}:`, chapterError);
         return;
       }
     } else if (rec.sourceType === 'career' || rec.targetType === 'career') {
@@ -57,17 +55,17 @@ export const getAllRecommendations = async (req, res) => {
       const { data: careerData, error: careerError } = await supabase
         .from("Careers")
         .select("title")
-        .eq("careerId", careerId)
+        .eq("career_id", careerId)
         .single();
       if(careerData){
         title = careerData.title;
       }
       if (careerError) {
-        // console.error(`Error fetching career title for careerId ${careerId}:`, careerError);
+        console.error(`Error fetching career title for careerId ${careerId}:`, careerError);
         return;
       }
     }
-    return { ...rec, title, roadmapID, roadmapTitle };
+    return { ...rec, title };
   }));
 
   if (error) {

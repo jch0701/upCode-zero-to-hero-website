@@ -57,13 +57,14 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
       const newItem: ItemType = {
         referenceId: item[idtag],
         referenceType: openFor,
-        title: openFor === "roadmap" ? item.title : item.careerName,
+        title: item.title,
       }
       onSelect([...selectedItems, newItem]);
       setQuery("");
       setIsOpen(false);
     }
   };
+  console.log("Selected Items:", selectedItems);
 
   const handleRemove = (itemId: number) => {
     const remainingItems = selectedItems.filter((item) => item.referenceId !== itemId);
