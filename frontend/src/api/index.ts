@@ -18,4 +18,17 @@ api.interceptors.request.use(async(config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Check if error is 401 (Unauthorized)
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("activeUser");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

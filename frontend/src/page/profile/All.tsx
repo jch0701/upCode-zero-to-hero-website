@@ -95,7 +95,6 @@ export const All: React.FC = () => {
                 ]);
                 const completedRoadmaps = (roadmapRes || [])
                     .filter((r: any) => {
-                        console.log(`Roadmap: ${r.title}, Progress: ${r.progress}`);
                         return r.progress >= 100 || (r.progress >= 0.99 && r.progress <= 1.0);
                     })
                     .map((r: any) => ({
@@ -133,7 +132,6 @@ export const All: React.FC = () => {
     function handleCategoryChange(value: string) {
         setCategory(value);
     }
-console.log("RESUME DATA:", resumeData);
     return (
         <div className="flex">
             {/* Navbar Vertically */}
