@@ -12,7 +12,7 @@ import { useGetAllCareers } from '@/api/careers/careerAPI';
 import { getActiveUserField } from '@/lib/utils';
 
 interface RecommendationProps {
-    mode: "career" | "project"
+    mode: "career" | "project" | "roadmapProject" | "roadmapCareer"
     selectedID: number;
     navigateDetails?: (Id: number) => void;
     creator: string
@@ -34,6 +34,7 @@ const Recommendation: React.FC<RecommendationProps> =
     type ProjectWithCreator = ProjectType & { creatorName: string };
     let filterRecommendedData: RecommendationType[] = [];
     let chapterProjects: ProjectWithCreator[] = [];
+    let roadmapProjects: ProjectWithCreator[] = [];
     let roadmapCareers: CareerItem[] = [];
 
     if(mode === "project"){
@@ -43,9 +44,26 @@ const Recommendation: React.FC<RecommendationProps> =
             uniqueProjectIds.includes(project.projectId)
         );
     }
+
+    if(mode === "roadmapProject"){
+        filterRecommendedData = recommendedData.filter(data => (data.targetId === selectedID && data.targetType === "roadmap"));
+        const uniqueProjectIds = [...new Set(filterRecommendedData.map(data => data.sourceId))];
+        roadmapProjects = projects.filter((project: ProjectType) => 
+            uniqueProjectIds.includes(project.projectId)
+        );
+    }
+
     if(mode === "career"){
         filterRecommendedData = recommendedData.filter(data => (data.sourceId === selectedID && data.sourceType === "roadmap"));
         const uniqueCareerIds = [...new Set(filterRecommendedData.map(data => data.targetId))];
+        roadmapCareers = careers.filter((career: CareerItem) => 
+            uniqueCareerIds.includes(career.career_id)
+        );
+    };
+
+    if(mode === "roadmapCareer"){
+        filterRecommendedData = recommendedData.filter(data => (data.targetId === selectedID && data.targetType === "roadmap"));
+        const uniqueCareerIds = [...new Set(filterRecommendedData.map(data => data.sourceId))];
         roadmapCareers = careers.filter((career: CareerItem) => 
             uniqueCareerIds.includes(career.career_id)
         );
@@ -106,6 +124,46 @@ const Recommendation: React.FC<RecommendationProps> =
                 )
             }
             </div>)}
+
+            {mode === "roadmapProject" && (
+                <>
+                <div className='pl-5 pr-5'>
+                {filterRecommendedData.length > 0 ? (
+                    <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
+                    {roadmapProjects.map((project: ProjectWithCreator ) => (
+                        <div className="flex-shrink-0 w-70" key={project.projectId}>
+                            <ProjectCard 
+                                key={project.projectId}
+                                project={project}
+                            />
+                        </div>
+                    ))}
+                    </div>
+                ) : (
+                <p className="pl-5 text-sm text-gray-400">No suggested projects found.</p>
+                )
+                }
+                </div>
+            </>)}
+
+             {mode === "roadmapCareer" && (
+                <>
+                <div className='pl-5 pr-5'>
+                {filterRecommendedData.length > 0 ? (
+                    <div className="flex flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden space-x-4">
+                    {roadmapCareers.map((career: CareerItem) => (
+                        <div className="flex-shrink-0 w-70" key={career.career_id}>
+                            {/* Roadmap Suggested Career */}
+                            <CareerItemCard key={career.career_id} {...career}/>
+                        </div>
+                    ))}
+                    </div>
+                ) : (
+                <p className="pl-5 text-sm text-gray-400">No suggested projects found.</p>
+                )
+                }
+                </div>
+            </>)}
         </>
     );
 };

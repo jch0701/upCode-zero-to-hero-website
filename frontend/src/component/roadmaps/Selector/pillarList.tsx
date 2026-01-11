@@ -20,6 +20,8 @@ const role = getActiveUserField("role");
 const { roadmapID } = useParams<{ roadmapID: string }>();
 const navigate = useNavigate();
 const [openChapterId, setOpenChapterId] = useState<number | null>(null);
+const [recommendType, setRecommendType] = useState<"project" | "career">("project");
+
 
 
 const { data: roadmapData, isLoading: roadmapLoading} = useGetSingleRoadmap(Number(roadmapID), userID)
@@ -47,6 +49,14 @@ function hasProjects(pillar: PillarType): boolean {
     const filterRecommendedData = recommendedData.filter(data => (data.sourceId === pillar.chapterID && data.sourceType === "chapter"));
     const uniqueChapterIds = [...new Set(filterRecommendedData.map(data => data.sourceId))];
     if(uniqueChapterIds.includes(pillar.chapterID)) return true;
+    return false;
+}
+
+// Helper Helper function to check if a other modules has suggest their project to the roadmap
+function hasSuggestion(): boolean {
+    const filterRecommendedData = recommendedData.filter(data => (data.targetId === selectedRoadmapId && data.targetType === "roadmap"));
+    const uniqueRoadmapIds = [...new Set(filterRecommendedData.map(data => data.targetId))];
+    if(uniqueRoadmapIds.includes(selectedRoadmapId)) return true;
     return false;
 }
 
@@ -112,6 +122,59 @@ function toggleProjectsVisibility(chapterID: number) {
                         />
                     </div>
                 )}
+
+        <>
+            {hasSuggestion() && (
+                <div>
+                    <hr className="border-t border-gray-600 my-4" />
+                    <br></br>
+                    <h3 className='text-3xl font-semibold text-white text-left'>Suggestion From Project and Career Module</h3>
+                    {/* Top-right nav bar */}
+                    <div className="flex justify-end mb-3">
+                        <div className="flex bg-gray-800 rounded-lg overflow-hidden border border-gray-600">
+                            <button
+                                onClick={() => setRecommendType("project")}
+                                className={`px-4 py-2 text-sm font-medium transition
+                                    ${recommendType === "project"
+                                        ? "bg-purple-600 text-white"
+                                        : "text-gray-300 hover:bg-gray-700"}
+                                `}
+                            >
+                                Projects
+                            </button>
+                            <button
+                                onClick={() => setRecommendType("career")}
+                                className={`px-4 py-2 text-sm font-medium transition
+                                    ${recommendType === "career"
+                                        ? "bg-purple-600 text-white"
+                                        : "text-gray-300 hover:bg-gray-700"}
+                                `}
+                            >
+                                Careers
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Content */}
+                    {recommendType === "project" && (
+                        <Recommendation
+                            mode="roadmapProject"
+                            selectedID={selectedRoadmapId}
+                            navigateDetails={navigateToProjectDetails}
+                            creator={creator.toString()}
+                        />
+                    )}
+
+                    {recommendType === "career" && (
+                        <Recommendation
+                            mode="roadmapCareer"
+                            selectedID={selectedRoadmapId}
+                            creator={creator.toString()}
+                        />
+                    )}
+                </div>
+            )}
+        </>
         </div>
     );
 };
