@@ -22,6 +22,7 @@ import { AddRoadmap } from "./page/roadmaps/AddRoadmap";
 import SubmissionDetails from "./page/projects/SubmissionDetails";
 import { AddChapter } from "./page/roadmaps/AddChapter";
 import { AddNode } from "./page/roadmaps/AddNode";
+import { NotFound } from "./component/NotFound";
 import { RecommendedProject } from "./page/roadmaps/Recommendation/Project";
 import { RecommendedCareer } from "./page/roadmaps/Recommendation/Career";
 
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
           { index: true, element: <Project /> },
           { path: ":projectId", element: <ProjectDetails /> },
           { path: "myProjects", element: <MyProjects /> },
-          { path: "submission/:submissionId", element: <SubmissionDetails /> },
+          { path: ":projectId/submission/:submissionId", element: <SubmissionDetails /> },
         ],
       },
       { path: "career", element: <Career /> },
@@ -72,8 +73,7 @@ const router = createBrowserRouter([
       { path: "signup", element: <Signup_Pg /> },
       { path: "forgot-password", element: <ForgotPassword_Pg /> },
       { path: "reset-password", element: <ResetPassword_Pg /> },
-      // fallback route still optional; errorElement will catch unknown paths
-      { path: "*", element: <ErrorBoundary /> },
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);

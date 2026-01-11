@@ -17,6 +17,7 @@ import { ProjectInteractive } from "@/component/projects/projectInteractive";
 import { LoadingIcon } from "@/component/LoadingIcon";
 import { Button } from "@/component/shadcn/button";
 import { NotLoggedIn } from "@/component/NotLoggedIn";
+import { NotFound } from "@/component/NotFound";
 
 import { useGetMyProfile } from "@/api/profile/profileAPI";
 
@@ -34,7 +35,6 @@ export const ProjectDetails: React.FC = () => {
     data: project, 
     isLoading: isLoadingProjectData, 
     isError: isErrorProjectData, 
-    isSuccess: isSuccessProjectData,
     error: projectError 
   } = useGetByIdComplete(projectId, userId);
 
@@ -50,13 +50,15 @@ export const ProjectDetails: React.FC = () => {
 
   if (isLoadingProjectData) {
     return (
-      <div className="mt-2 pt-3 space-y-2 pl-9 bg-gray-800/20 rounded-2xl shadow-2xl w-7xl mx-auto h-[90vh] overflow-hidden">
         <LoadingIcon text="Loading Project Data..." />
-      </div>
     )
   }
-  if (isErrorProjectData) {
-    const errorMessage = (projectError as any).response?.data?.error || projectError.message;
+  if (isErrorProjectData || !project) {
+    const errorCode = (projectError as any).response?.status;
+    if (errorCode === 404) {
+      return <NotFound resource="project" />;
+    }
+    const errorMessage = (projectError as any).response?.data?.error || projectError?.message;
     throw new Error(`Error loading project data: ${errorMessage}`);
   }
   
@@ -74,6 +76,7 @@ export const ProjectDetails: React.FC = () => {
   function handleDisplaySectionChange(value: DisplaySectionType) {
     setDisplaySection(value);
   }
+  console.log(project);
 
   return (
     <div className="text-left mt-2 pt-3 space-y-2 pl-9 bg-gray-800/40 rounded-2xl shadow-2xl w-7xl mx-auto h-fit min-h-[90vh] mb-10">

@@ -12,7 +12,14 @@ import ProjectCard from "../../component/projects/projectCard.tsx";
 import SubmissionCard from "@/component/projects/submissionCard.tsx";
 import { LoadingIcon } from "@/component/LoadingIcon";
 import { NotLoggedIn } from "@/component/NotLoggedIn";
-const selections = ["All", ...categoryList];
+
+const selections = ["All", ...categoryList].map((category) => {
+  return {
+    value: category,
+    label: category,
+  };
+});
+
 const categories = [{
   value: "created",
   label: "Created Projects",
@@ -29,7 +36,7 @@ const categories = [{
 export const MyProjects: React.FC = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState(selections[0]);
+  const [category, setCategory] = useState(selections[0].value);
   const [submissionType, setSubmissionType] = useState<"created" | "tracked" | "done" | "submissions">("created");
   const userId = loadUserInfo()?.userId || null;
 
@@ -119,7 +126,7 @@ export const MyProjects: React.FC = () => {
           selected={category}
           onClick={handleCategoryChange}
           isHorizontal={false}
-          className="w-50"
+          // className="w-[65%] mx-auto mb-5"
         />
         <div className="overflow-y-scroll mt-1 pb-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {submissionType === "submissions" ? (
@@ -163,6 +170,7 @@ export const MyProjects: React.FC = () => {
                     <ProjectCard
                       key={project.projectId}
                       project={project}
+                      className="h-70"
                     />
                   );
                 })}
