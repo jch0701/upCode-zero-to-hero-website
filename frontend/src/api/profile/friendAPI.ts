@@ -36,21 +36,29 @@ export async function getFriendsList(userId: string): Promise<User[]> {
 }
 
 // Send Friend Request 
-export async function sendFriendRequest(fromUserId: string, toEmail: string): Promise<{ success: boolean; message?: string }> {
+export async function sendFriendRequestById(fromUserId: string, toUserId: string) {
   try {
-    await Api.post(`/request`, { fromUserId, email: toEmail });
+    // This sends { fromUserId: "...", toUserId: "..." }
+    // The backend now understands 'toUserId' so this will work!
+    await Api.post(`/request`, { fromUserId, toUserId });
     
-    // Return success object
     return { success: true };
   } catch (error: any) {
-    console.error("Failed to send request:", error);
-    const errorMsg = error.response?.data?.error || "Failed to send request";
-    
-    // Return failure object
-    return { 
-        success: false, 
-        message: errorMsg 
-    };
+    return { success: false, message: error.response?.data?.error || "Failed." };
+  }
+}
+
+// 2. The Helper Function: Send Request by Email (Search & Add)
+export async function sendFriendRequestByEmail(fromUserId: string, email: string) {
+  try {
+    // We send the email directly to the backend, and the backend handles the lookup.
+    await Api.post(`/request`, { fromUserId, email });
+
+    return { success: true };
+
+  } catch (error: any) {
+    // The backend will return specific errors (e.g., "User not found" or "Cannot add yourself")
+    return { success: false, message: error.response?.data?.error || "Failed." };
   }
 }
 

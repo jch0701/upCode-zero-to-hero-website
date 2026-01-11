@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { sendFriendRequest } from "@/api/profile/friendAPI";
+import { sendFriendRequestByEmail } from "@/api/profile/friendAPI";
 
 type Props = {
   currentUserId: string;
@@ -20,7 +20,7 @@ export default function AddFriendBox({ currentUserId }: Props) {
     }
 
     setLoading(true);
-    const result = await sendFriendRequest(currentUserId, targetEmail);
+    const result = await sendFriendRequestByEmail(currentUserId, targetEmail);
     setLoading(false);
 
     if (result.success) {

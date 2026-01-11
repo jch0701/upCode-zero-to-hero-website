@@ -4,25 +4,33 @@ import FriendRequests from "./friendRequest";
 import FriendsList from "./friendList";
 import FriendActionButton from "./friendButton";
 import MutualFriendsList from "./mutualFriend";
-export const FriendsOwnerContent = ({ userId }: { userId: number }) => {
-    const [friendsVersion, setFriendsVersion] = useState(0);
+export const FriendsOwnerContent = ({ 
+  userId, onUpdateBadge }: { 
+  userId: string; // Ensure this matches your ID type (string vs number)
+  onUpdateBadge?: () => void; // <--- ADD THIS
+}) => {
+  const [friendsVersion, setFriendsVersion] = useState(0);
 
-    return (
-        <div className="space-y-8">
-            <AddFriendBox currentUserId={userId} />
+  return (
+    <div className="space-y-8">
+      <AddFriendBox currentUserId={userId} />
 
-            <FriendRequests
-                currentUserId={userId}
-                onChange={() => setFriendsVersion(v => v + 1)}
-            />
+      <FriendRequests
+        currentUserId={userId}
+        onChange={() => {
+          setFriendsVersion((v) => v + 1);
+          // 2. Now this will work because it exists in props
+          if (onUpdateBadge) onUpdateBadge(); 
+        }}
+      />
 
-            <FriendsList
-                profileUserId={userId}
-                viewerUserId={userId}
-                version={friendsVersion}
-            />
-        </div>
-    );
+      <FriendsList
+        profileUserId={userId}
+        viewerUserId={userId}
+        version={friendsVersion}
+      />
+    </div>
+  );
 };
 
 export const FriendsVisitorContent = ({

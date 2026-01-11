@@ -60,17 +60,27 @@ export const getUserActivity = async (req, res) => {
   }
 
   // Fetch Real Names for Chapters
+  // Fetch Real Names for Chapters
   if (topChapters.length > 0) {
-    const chapterIds = topChapters.map((c) => c.id);
+    // ✅ FIX 1: Filter out non-numeric IDs (removes "chapter" so query doesn't crash)
+    const validChapterIds = topChapters
+        .map((c) => c.id)
+        .filter(id => !isNaN(id) && /^\d+$/.test(String(id)));
 
     // Fetch Chapter Title AND the parent 'roadmapID'
+    // Use 'validChapterIds' instead of the raw list
     const { data: chapterData } = await supabase
       .from("Chapters")
       .select("chapterID, title, roadmapID") 
-      .in("chapterID", chapterIds);
+      .in("chapterID", validChapterIds); 
+
     // remove duplicates if multiple chapters belong to the same roadmap
     const parentRoadmapIds = [
-      ...new Set(chapterData?.map((c) => c.roadmapID).filter(Boolean)),
+      ...new Set(chapterData?.map((c) => {
+         // Handle Case Sensitivity for roadmapID
+         const key = Object.keys(c).find(k => k.toLowerCase() === 'roadmapid');
+         return key ? c[key] : null;
+      }).filter(Boolean)),
     ];
 
     // Fetch the Parent Roadmap Titles
@@ -82,24 +92,51 @@ export const getUserActivity = async (req, res) => {
     // Create Lookups
     const chapterMap = {}; 
     const roadmapMap = {}; 
+    const chapterToRoadmapMap = {}; 
 
+    // Smart Mapping for Chapters
     chapterData?.forEach((c) => {
-      chapterMap[c.chapterID] = c.title;
+      const idKey = Object.keys(c).find(k => k.toLowerCase() === 'chapterid');
+      const roadmapKey = Object.keys(c).find(k => k.toLowerCase() === 'roadmapid');
+      
+      const cId = idKey ? c[idKey] : null;
+      const rId = roadmapKey ? c[roadmapKey] : null;
+
+      if (cId) {
+          chapterMap[String(cId)] = c.title;
+          if (rId) chapterToRoadmapMap[String(cId)] = String(rId);
+      }
     });
+
+    // Smart Mapping for Roadmaps
     parentRoadmapData?.forEach((r) => {
-      roadmapMap[r.roadmapID] = r.title;
+      const idKey = Object.keys(r).find(k => k.toLowerCase() === 'roadmapid');
+      const rId = idKey ? r[idKey] : null;
+      
+      if (rId) {
+          roadmapMap[String(rId)] = r.title;
+      }
     });
 
     // 5. Map the final result
     topChapters = topChapters.map((c) => {
-      // Find the specific chapter object to get its parent ID
-      const chapterObj = chapterData?.find((item) => item.chapterID == c.id);
-      // Look up the parent name using that ID
-      const parentName = chapterObj ? roadmapMap[chapterObj.roadmapID] : "Unknown";
+      const cIdString = String(c.id);
+      
+      // If it's the bad "chapter" ID, just give it a default name manually
+      if (cIdString === "chapter") {
+          return {
+             chapterTitle: "Unknown Chapter",
+             topicTitle: "Unknown",
+             count: c.count
+          };
+      }
+      
+      const parentRoadmapId = chapterToRoadmapMap[cIdString];
+      const parentName = parentRoadmapId ? roadmapMap[parentRoadmapId] : "Unknown";
 
       return {
-        chapterTitle: chapterMap[c.id] || `Chapter ${c.id}`,
-        topicTitle: parentName || "Map", 
+        chapterTitle: chapterMap[cIdString] || `Chapter ${c.id}`,
+        topicTitle: parentName, 
         count: c.count,
       };
     });

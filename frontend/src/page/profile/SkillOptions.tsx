@@ -105,13 +105,13 @@ export default function SkillOptions({ userId, editable }: { userId: string, edi
           <div className="flex justify-end gap-2 mt-4">
             <button
               onClick={() => setEditing(false)}
-              className="px-3 py-1 bg-red-500 text-white rounded"
+              className="px-3 py-1 bg-red-500 hover:bg-red-700 text-white rounded"
             >
               Cancel
             </button>
             <button
               onClick={save}
-              className="px-3 py-1 bg-green-500 text-white rounded"
+              className="px-3 py-1 bg-green-500 hover:bg-green-700 text-white rounded"
             >
               Save
             </button>

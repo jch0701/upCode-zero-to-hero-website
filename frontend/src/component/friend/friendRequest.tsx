@@ -30,7 +30,8 @@ export default function FriendRequests({ currentUserId, onChange }: Props) {
       setMessage("Friend request accepted");
       setMessageType("accept");
       await loadRequests(); // Reload list from DB
-      onChange(); // Tell parent to update friend list
+      setRequests((prev) => prev.filter(req => req.id !== id));
+      if (onChange) onChange();   
     }
   };
 
@@ -39,8 +40,9 @@ export default function FriendRequests({ currentUserId, onChange }: Props) {
     if (success) {
       setMessage("Friend request rejected");
       setMessageType("reject");
+      setRequests((prev) => prev.filter(req => req.id !== id));
       await loadRequests();
-      onChange();
+      if (onChange) onChange();
     }
   };
 

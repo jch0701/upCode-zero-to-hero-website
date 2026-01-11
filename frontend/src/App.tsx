@@ -25,6 +25,12 @@ import { AddNode } from "./page/roadmaps/AddNode";
 import { NotFound } from "./component/NotFound";
 import { RecommendedProject } from "./page/roadmaps/Recommendation/Project";
 import { RecommendedCareer } from "./page/roadmaps/Recommendation/Career";
+import AdminLayout from "./page/admin/adminLayout";
+import AdminDashboard from "./page/admin/ad_dashboard";
+import Admin_Users from "./page/admin/ad_user";
+import Admin_Roadmaps from "./page/admin/ad_roadmap";
+import Admin_Projects from "./page/admin/ad_project";
+import VerifyRole from "./page/profile/verifyRole";
 
 const router = createBrowserRouter([
   {
@@ -68,14 +74,36 @@ const router = createBrowserRouter([
           { path: ":projectId/submission/:submissionId", element: <SubmissionDetails /> },
         ],
       },
+
+      {
+        path: "profile",
+        children: [
+          { index: true, element: <All /> },
+          { path: ":userId", element: <All /> },
+        ],
+      },
+
       { path: "career", element: <Career /> },
-      { path: "profile", element: <All /> },
       { path: "signup", element: <Signup_Pg /> },
+      { path: "request-verification", element:<VerifyRole /> },
       { path: "forgot-password", element: <ForgotPassword_Pg /> },
       { path: "reset-password", element: <ResetPassword_Pg /> },
       { path: "*", element: <NotFound /> },
     ],
   },
+
+   //Admin
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+    { index: true, element: <AdminDashboard /> },
+    { path: "users_admin", element: <Admin_Users /> },
+    { path: "roadmaps_admin", element: <Admin_Roadmaps /> },
+    { path: "projects_admin", element: <Admin_Projects /> },
+  ],
+},
+
 ]);
 
 function App() {

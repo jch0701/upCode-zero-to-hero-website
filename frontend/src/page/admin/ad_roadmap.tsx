@@ -33,9 +33,14 @@ export default function Admin_Roadmaps() {
   }
 
   // Render a leaderboard section
-  const renderLeaderboard = (title: string, icon: any, data: TopItem[], colorTheme: "indigo" | "orange") => {
+const renderLeaderboard = (title: string, icon: any, data: TopItem[], colorTheme: "indigo" | "orange") => {
+    // 1. Calculate the Grand Total (for the text label like "27% of total")
     const totalVisits = data.reduce((acc, item) => acc + item.count, 0);
     const safeTotal = totalVisits === 0 ? 1 : totalVisits;
+
+    // 2. Calculate the Max Value (for the Bar Width, so #1 is full width)
+    const maxCount = Math.max(...data.map(d => d.count), 1);
+
     const bgColor = colorTheme === "indigo" ? "bg-indigo-500/20" : "bg-orange-500/20";
     const headerTextColor = colorTheme === "indigo" ? "text-indigo-400" : "text-orange-400";
 

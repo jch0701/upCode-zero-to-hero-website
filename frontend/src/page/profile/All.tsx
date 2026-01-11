@@ -17,6 +17,7 @@ import { getMyProfile } from "@/api/profile/profileAPI";
 import { getRoadmapsWithProgress } from "@/api/roadmaps/roadmapAPI";
 import { getUserSubmissions } from "@/api/projects/submissionsAPI";
 import { getCompletedChapters } from "@/api/roadmaps/chapterAPI";
+import { getIncomingRequests } from "@/api/profile/friendAPI";
 
 export const All: React.FC = () => {
     const { userId } = useParams();
@@ -39,10 +40,20 @@ export const All: React.FC = () => {
     const isOwner = currentUser.userId === viewUserId;
     const isAdmin = currentUser?.role?.toLowerCase() === "admin";
     const isCompany = currentUser?.role?.toLowerCase() === "company"; //for recruiters to check profile
+    const [requestCount, setRequestCount] = useState(0);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     // State for permission checking 
     const [canView, setCanView] = useState(isOwner); // Owners can always view
     const [loadingAuth, setLoadingAuth] = useState(!isOwner); // Only load if visitor
+    useEffect(() => {
+        if (currentUser?.userId) {
+            getIncomingRequests(currentUser.userId).then((data) => {
+                const pending = data.filter((r: any) => r.status === 'pending');
+                setRequestCount(pending.length);
+            }).catch(console.error);
+        }
+    }, [currentUser?.userId, refreshTrigger]);
 
     useEffect(() => {
         // If owner or admin or company (recruiter), allow immediately
@@ -205,6 +216,11 @@ export const All: React.FC = () => {
                             className="fixed bottom-12 right-1 z-50 bg-purple-600 hover:bg-purple-700
                                 text-white font-bold px-6 py-3 rounded-full shadow-2xl  flex items-                                 center gap-2">
                             <span>Users & Friends</span>
+                            {requestCount > 0 && (
+                                <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white border-2 border-gray-900 shadow-md">
+                                    {requestCount}
+                                </span>
+                            )}
                         </button>
 
                         <FriendsDrawer
@@ -212,7 +228,7 @@ export const All: React.FC = () => {
                             onClose={() => setFriendsOpen(false)}
                             title={isOwner ? "Friends" : "Mutual Friends"}>
                             {isOwner ? (
-                                <FriendsOwnerContent userId={currentUser.userId} />
+                                <FriendsOwnerContent userId={currentUser.userId} onUpdateBadge={() => setRefreshTrigger(prev => prev + 1)} />
                             ) : (
                                 <FriendsVisitorContent
                                     key={viewUserId} 

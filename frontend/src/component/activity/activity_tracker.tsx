@@ -10,7 +10,7 @@ let pendingIncrements: any = {
 
 let timer: NodeJS.Timeout | null = null;
 
-// 2. The Save Function
+// Save Function
 // This runs automatically 2 seconds after the user stops clicking.
 const saveToBackend = async () => {
   const userId = getActiveUserField("userId");
@@ -33,7 +33,6 @@ const saveToBackend = async () => {
   };
 
   try {
-    console.log("Syncing Activity Increment:", payload);
     await saveUserActivity(userId, payload);
   } catch (e) {
     console.error("Failed to sync activity", e);

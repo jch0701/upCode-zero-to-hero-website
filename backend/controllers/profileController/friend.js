@@ -56,56 +56,67 @@ export const getFriends = async (req, res) => {
 // Send Friend Request 
 export const sendFriendRequest = async (req, res) => {
   try {
-    const { fromUserId, email } = req.body;
+    const { fromUserId, email, toUserId: directId } = req.body; // Accept toUserId
 
-    // Validate input
-    if (!email) return res.status(400).json({ error: "Email is required" });
+    let targetUserId = directId;
 
-    // Find the user by Email
-    const { data: targetUser, error: userError } = await supabase
-      .from('userProfiles') 
-      .select('user_id')
-      .eq('email', email)
-      .single();
+    // SCENARIO 1: Search by Email (If no ID provided)
+    if (!targetUserId) {
+        if (!email) {
+            return res.status(400).json({ error: "User ID or Email is required" });
+        }
+        
+        // Find user by Email
+        const { data: targetUser, error: userError } = await supabase
+            .from('userProfiles') 
+            .select('user_id')
+            .eq('email', email)
+            .single();
 
-    if (userError || !targetUser) {
-      return res.status(404).json({ error: "User not found with that email" });
+        if (userError || !targetUser) {
+            return res.status(404).json({ error: "User not found with that email" });
+        }
+        targetUserId = targetUser.user_id;
     }
 
-    const toUserId = targetUser.user_id;
+    // SCENARIO 2: Direct Add (We already have targetUserId)
+    // Now continue with standard checks...
 
-    // Prevent adding self
-    if (fromUserId === toUserId) {
+    // 1. Prevent adding self
+    if (fromUserId === targetUserId) {
         return res.status(400).json({ error: "Cannot add yourself" });
     }
 
-    // Check if request already exists 
+    // 2. Check if request already exists 
     const { data: existing } = await supabase
       .from('friend_requests')
       .select('*')
-      .or(`and(from_user_id.eq.${fromUserId},to_user_id.eq.${toUserId}),and(from_user_id.eq.${toUserId},to_user_id.eq.${fromUserId})`)
+      .or(`and(from_user_id.eq.${fromUserId},to_user_id.eq.${targetUserId}),and(from_user_id.eq.${targetUserId},to_user_id.eq.${fromUserId})`)
       .maybeSingle();
 
     if (existing) {
         return res.status(400).json({ error: "Request already sent or you are already friends" });
     }
 
-    // Insert the request
+    // 3. Insert the request
     const { data, error } = await supabase
       .from('friend_requests')
       .insert({ 
         from_user_id: fromUserId, 
-        to_user_id: toUserId, 
+        to_user_id: targetUserId, 
         status: 'pending' 
       });
 
     if (error) throw error;
 
     return res.status(200).json({ message: "Request sent", data });
+
   } catch (err) {
+    console.error("Send Request Error:", err);
     return res.status(500).json({ error: err.message });
   }
 };
+
 
 //Get Incoming Requests 
 export const getIncomingRequests = async (req, res) => {
@@ -164,7 +175,7 @@ export const acceptRequest = async (req, res) => {
 
     if (insertError) throw insertError;
 
-    // 3️⃣ Remove the original request
+    // Remove the original request
     const { error: deleteError } = await supabase
       .from("friend_requests")
       .delete()

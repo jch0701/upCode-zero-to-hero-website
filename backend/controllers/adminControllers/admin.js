@@ -66,22 +66,51 @@ export const getDashboardStats = async (req, res) => {
     let allPopularChapters = getSortedList(chapterCounts); 
     let allPopularProjects = getSortedList(projectCounts);
     
-    // Title fetching
+    // Title fetching helper
     const safeFetchTitles = async (table, idCol, list, defaultLabel) => {
       if (list.length === 0) return [];
       try {
-        const ids = list.map(i => i.id);
-        const { data, error } = await supabase.from(table).select(`${idCol}, title`).in(idCol, ids);
+        // Filter out non-numeric id to prevent DB crash
+        const validIds = list
+            .map(i => i.id)
+            .filter(id => !isNaN(id) && /^\d+$/.test(String(id))); // Keep only numbers
+
+        // If no valid id remain, return early
+        if (validIds.length === 0) {
+             return list.map(i => ({ ...i, title: `${defaultLabel} ${i.id}` }));
+        }
+
+        // Query the table using valid numeric id
+        const { data, error } = await supabase
+            .from(table)
+            .select(`${idCol}, title`)
+            .in(idCol, validIds); 
         
         if (error) {
-            console.warn(`Warning: Could not fetch titles from '${table}'.`);
+            console.warn(`Warning: Could not fetch titles from '${table}'.`, error.message);
             return list.map(i => ({ ...i, title: `${defaultLabel} ${i.id}` }));
         }
 
         const map = {};
-        data?.forEach(item => map[item[idCol]] = item.title);
-        return list.map(i => ({ ...i, title: map[i.id] || `${defaultLabel} ${i.id}` }));
+        
+        data?.forEach(item => {
+            // Smart Key Finder (Case-insensitive)
+            const correctKey = Object.keys(item).find(k => k.toLowerCase() === idCol.toLowerCase());
+            const dbId = correctKey ? item[correctKey] : null;
+
+            if (dbId) {
+                map[String(dbId)] = item.title;
+            }
+        });
+
+        //  Map titles back (Bad IDs will just show "Chapter chapter" without crashing)
+        return list.map(i => ({ 
+            ...i, 
+            title: map[String(i.id)] || `${defaultLabel} ${i.id}` 
+        }));
+
       } catch (err) {
+        console.error("Fetch Title Logic Error:", err);
         return list.map(i => ({ ...i, title: `${defaultLabel} ${i.id}` }));
       }
     };
