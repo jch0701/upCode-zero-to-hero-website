@@ -67,6 +67,8 @@ export const InterModuleRelations: React.FC<InterModuleRelationsProps> = ({ proj
                       <RoadmapItemCard
                         customTitle={`${rec.roadmapTitle} -> ${rec.title}`}
                         selectedRoadmapID={rec.roadmapID}
+                        chapterID={rec.sourceType === "chapter" ? rec.sourceId : rec.targetId}
+                        chapterSlug={rec.title}
                       />
                     </div>
                   ); else

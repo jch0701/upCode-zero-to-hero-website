@@ -29,6 +29,7 @@ const SubmissionDetails: React.FC = () => {
     isError: submissionIsError,
     error: submissionError
   } = useGetSubmissionById(Number(projectId), Number(submissionId));
+  console.log("Submission Data:", submission);
   const {
     data: commitHistory,
     isLoading: commitsIsLoading,

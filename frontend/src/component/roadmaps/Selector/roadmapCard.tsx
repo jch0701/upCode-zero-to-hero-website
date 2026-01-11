@@ -12,6 +12,8 @@ import { getActiveUserField } from '@/lib/utils.ts';
 export interface RoadmapItemCardProps {
   selectedRoadmapID: number;
   customTitle?: string;
+  chapterID?: string;
+  chapterSlug?: string;
   tags?: Tag[];
 }
 
@@ -20,7 +22,7 @@ const MAX_VISIBLE_TAGS = 3;
 // --- Main Card Component ---
 
 export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
-  selectedRoadmapID, customTitle
+  selectedRoadmapID, customTitle, chapterID, chapterSlug
 }) => {
   const userID = getActiveUserField("userId");
   // Compute tags from pillarsData when not provided
@@ -36,7 +38,7 @@ export const RoadmapItemCard: React.FC<RoadmapItemCardProps> = ({
   const displayImage = IMAGE_MAP[roadmapItem.imageSrc] || roadmapItem.imageSrc;
 
   return (
-    <Link to={`/roadmap/${roadmapItem.roadmapID}/${roadmapItem.roadmapSlug}`}>
+    <Link to={`/roadmap/${roadmapItem.roadmapID}/${roadmapItem.roadmapSlug}${chapterID ? `/${chapterID}` : ''}${chapterSlug ? `/${chapterSlug}` : ''}`}>
     <div className="min-w-72 max-w-82 bg-gray-800 p-4 rounded-lg shadow-xl border border-gray-700 flex flex-col h-full hover:scale-105 transform transition duration-300">
       {/* 1. Image Placeholder/Container */}
       <div className="w-full h-32 bg-gray-700 rounded-md mb-3 overflow-hidden">

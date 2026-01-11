@@ -8,17 +8,18 @@ import { useNavigate } from "react-router";
 
 type ProjectCardProps = {
   project: any;
+  className?: string;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project}) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, className}) => {
   const navigate = useNavigate();
   const {projectId=null, title, shortDescription, difficulty, category, trackCount, submissionCount, creatorName} = project;
   const customIconStyles = `${commonIconStyles} inline-block mr-1`;
   return (
     <Card
       key={projectId}
-      className="p-5 h-58 cursor-pointer border-none bg-gray-800 block pl-3 rounded-lg shadow-md 
-    hover:shadow-lg hover:scale-102 transform transition duration-300"
+      className={`p-5 h-58 cursor-pointer border-none bg-gray-800 block pl-3 rounded-lg shadow-md 
+    hover:shadow-lg hover:scale-102 transform transition duration-300 ${className || ""}`}
       onClick={() => navigate(`/project/${projectId}`)}
     >
       <CardTitle className="text-[1.2rem] text-white text-left mb-0.5">

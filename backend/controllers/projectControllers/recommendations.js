@@ -20,6 +20,8 @@ export const getAllRecommendations = async (req, res) => {
   
   const recsWithTitle = await Promise.all(recommendations.map(async (rec) => {
     let title = "";
+    let roadmapID = null;
+    let roadmapTitle = null;
     if (rec.sourceType === 'roadmap' || rec.targetType === 'roadmap') {
       const roadmapId = rec.sourceType === 'roadmap' ? rec.sourceId : rec.targetId;
       const { data: roadmapData, error: roadmapError } = await supabase
@@ -43,8 +45,8 @@ export const getAllRecommendations = async (req, res) => {
         .single();
       if(chapterData){
         title = chapterData.title;
-        roadmapID = chapterData?.roadmapData?.roadmapID;
-        roadmapTitle = chapterData?.roadmapData?.roadmapTitle;
+        roadmapID = chapterData.roadmapData.roadmapID;
+        roadmapTitle = chapterData.roadmapData.roadmapTitle;
       }
       if (chapterError) {
         console.error(`Error fetching chapter title for chapterId ${chapterId}:`, chapterError);
@@ -65,7 +67,7 @@ export const getAllRecommendations = async (req, res) => {
         return;
       }
     }
-    return { ...rec, title };
+    return { ...rec, title, roadmapID, roadmapTitle };
   }));
 
   if (error) {
