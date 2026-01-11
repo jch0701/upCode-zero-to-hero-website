@@ -39,6 +39,7 @@ const router = createBrowserRouter([
           { index: true, element: <Roadmap /> },
           { path: "add-roadmap", element: <AddRoadmap /> },
           { path: ":roadmapID/:roadmapSlug", element: <RoadmapDetails /> },
+          { path: ":roadmapID/:roadmapSlug/recommend-career", element: <RecommendedCareer /> },
           { path: ":roadmapID/:roadmapSlug/edit", element: <EditRoadmap /> },
           {
             path: ":roadmapID/:roadmapSlug/add-chapter",

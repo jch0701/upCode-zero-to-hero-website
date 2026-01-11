@@ -20,16 +20,16 @@ const RecommendationCard: React.FC<RecommendProps> =({
     const [localCheckedRecommendation, setLocalCheckedRecommendation] = useState(false);
 
     const { data: recommendedData = [], isLoading: recommendedLoading } = useGetRoadmapRecommendation();
-    const { data: projects , isLoading: projectLoading } = useGetByIdComplete(selectedId, userID!)
-    const { data: careers, isLoading: careerLoading } = useGetSingleCareer(selectedId);
-
+    const { data: projects } = useGetByIdComplete(mode === "project" ? selectedId : 0, userID!)
+    const { data: careers } = useGetSingleCareer(mode === "career" ? selectedId : 0);
+``
     const recommendMutation = useCreateRoadmapRecommendation();
     const unrecommendMutation = useDeleteRoadmapRecommendation();
 
     const title =
-    mode === "project"
+    mode === "project" 
       ? projects?.title ?? "Unknown Title"
-      : careers?.title || "Unknown Title";
+      : careers?.title ?? "Unknown Title";
 
     const isRecommended = recommendedData.some(data => {
     return (
@@ -46,7 +46,7 @@ const RecommendationCard: React.FC<RecommendProps> =({
         }
     }, [isRecommended]);
 
-    if ( recommendedLoading || projectLoading || careerLoading ) return null;
+    if ( recommendedLoading ) return null;
     if ( !recommendedData ) return <p className="text-white text-center mt-10">Recomendation data not found</p>;;
     
     const recommendedID =

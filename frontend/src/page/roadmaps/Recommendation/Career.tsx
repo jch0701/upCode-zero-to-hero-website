@@ -16,9 +16,8 @@ export const RecommendedCareer: React.FC = () => {
             { id: "not-recommended", title: "Not Recommended"},
         ]
     return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
-            <div className="bg-gray-700/70 w-full max-w-2xl rounded-xl shadow-2xl p-6">
-                <div className="flex justify-end">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 pb-5">
+            <div className="bg-gray-700/70 w-full max-w-2xl rounded-xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">                <div className="flex justify-end">
                     <button
                         className="text-white hover:text-gray-400 p-1"
                         aria-label="Close Chapter Description"

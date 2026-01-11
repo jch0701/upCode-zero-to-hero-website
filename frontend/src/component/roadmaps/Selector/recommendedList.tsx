@@ -101,8 +101,8 @@ const RecommendedList: React.FC<recommendationListProps> = ({mode, selectedID, s
             const difficultyMatch = (careers.level ?? '').toLowerCase().includes(normalizedQuery);
             return titleMatch || prerequisiteMatch || categoryMatch || difficultyMatch ;
         });
-        // Map the final filtered list to project IDs for rendering
-        finalIds = filteredCandidates.map(c => c.id);
+        // Map the final filtered list to career IDs for rendering
+        finalIds = filteredCandidates.map(c => c.career_id);
     }
 
     return (

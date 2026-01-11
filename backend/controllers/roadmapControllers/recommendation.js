@@ -10,7 +10,7 @@ export const getAllRoadmapRecommendation = async(req, res) => {
         const { data: recommendations, error: recommendationError } = await supabase
             .from("Recommendations")
             .select('*')
-            .in("sourceType", ["roadmap", "chapter"]);
+            .or(`sourceType.in.("roadmap","chapter"),targetType.eq.roadmap`);
             
         if (recommendationError) {
             console.error('Recommendations Fetch Error:', recommendationError);
