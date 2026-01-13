@@ -117,11 +117,20 @@ Output: None
 export const updateProject = async (req, res) => {
   const { projectId } = req.params;
   const { recommendations, ...updateData } = req.body;
+  
+  // Ensure updateData is not empty
+  if (!updateData || Object.keys(updateData).length === 0) {
+    if (!recommendations || recommendations.length === 0) {
+      return res.status(400).json({ error: "No fields to update" });
+    }
+    // Continue if only recommendations are being updated
+  }
+  
   // Supabase trigger will handle lastUpdated field
   const { error: updateError } = await supabase
     .from("Projects")
     .update(updateData)
-    .eq("projectId", projectId);
+    .eq("projectId", parseInt(projectId));
   if (updateError) return res.status(500).json({ error: updateError.message || "Failed to update project" });
 
   // Update recommendations if provided

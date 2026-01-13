@@ -43,7 +43,7 @@ export const getAllSubmissions = async (req, res) => {
     postedOn: submission.postedOn,
     title: submission.title,
     repoLink: submission.repoLink,
-    creatorName: submission.Users ? `${submission.Users.username}` : null,
+    creatorName: submission.userProfiles ? `${submission.userProfiles.username}` : null,
   }));
 
   return res.json({ submissions: enrichedData });

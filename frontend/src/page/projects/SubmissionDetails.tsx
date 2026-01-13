@@ -75,18 +75,21 @@ const SubmissionDetails: React.FC = () => {
   return (
     <div className="text-left mt-2 pt-3 space-y-2 pl-9 bg-gray-800/40 rounded-2xl shadow-2xl w-7xl mx-auto h-full">
       <h1 className="text-left mt-2 text-4xl font-extralight text-white">{submission?.title}</h1>
-      <p className="text-white text-[1.5rem] font-light">Submission by: {submission.creatorName}</p>
+
+      <p className="text-white text-[1.5rem] font-light">Submission by:
+        <span onClick={() => navigate(`/profile/${submission.creatorId}`)}
+          className="text-blue-400 hover:underline cursor-pointer ml-1">
+          {submission.creatorName}
+        </span>
+      </p>
       <p className="text-white text-[1.2rem]">
         Project:
         <span
           onClick={() => navigate(`/project/${submission.projectId}`)}
           className="text-blue-400 hover:underline cursor-pointer ml-1"
         >{submission.projectTitle} </span>
-        | Created By: 
-        <span onClick={() => navigate(`/profile/${submission.creatorId}`)} 
-        className="text-blue-400 hover:underline cursor-pointer ml-1">
-          {submission.creatorName}
-          </span>
+        | Created By:
+          <span> {submission.creatorName}</span>
       </p>
       <p className="text-white text-[1rem]">
         <span>Submitted On: {submission?.postedOn && formatDate(new Date(submission.postedOn))} </span>

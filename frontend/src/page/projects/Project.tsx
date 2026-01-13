@@ -15,6 +15,7 @@ import { useNavigate } from "react-router";
 import ProjectCard from "../../component/projects/projectCard.tsx";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { ProjectForm } from "./projectForm.tsx";
+import { NoProjectsFound } from "@/component/NoProjectsFound.tsx";
 import {
   DialogContent,
   DialogDescription,
@@ -120,7 +121,8 @@ export const Project: React.FC = () => {
                 );
               })}
             </div> :
-            <p className="text-white font-light text-4xl text-center mt-10">No {category === "All" ? "" : category} projects found</p>
+            // <p className="text-white font-light text-4xl text-center mt-10">No {category === "All" ? "" : category} projects found</p>
+            <NoProjectsFound category={category === "All" ? "" : category} openType="projects" />
         }
       </div>
     </div>

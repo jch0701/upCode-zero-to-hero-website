@@ -54,7 +54,6 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
 
   async function handleTrackingToggle(aspect: "tracking" | "done") {
     let response;
-    console.log("Toggling:", aspect);
     if(aspect === "tracking"){
       setIsTracking(!isTracking);
       response = await putTrackingData({
@@ -68,7 +67,6 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
         isMarkedAsDone: !isMarkedAsDone,
       });
     }
-    console.log("Tracking toggle response:", response);
     if (response.message === "SUCCESS") {
       if(aspect === "tracking"){
         toast.success(`${!isTracking ? "Started" : "Stopped"} tracking this project.`);
@@ -87,7 +85,7 @@ export const ProjectInteractive: React.FC<ProjectInteractiveProps> = ({ userId, 
               <Button
                 variant="outline"
                 className="cursor-pointer rounded-none rounded-l-2xl hover:bg-green-600 hover:border-green-600 hover:text-white"
-              >! Edit Project</Button>
+              >Edit Project</Button>
             </DialogTrigger>
             <DialogContent className={commonBackgroundClass}>
               <DialogHeader>

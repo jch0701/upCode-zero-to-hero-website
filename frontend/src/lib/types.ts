@@ -3,7 +3,7 @@ import type { SelectorOption } from "@/component/formBox";
 export type Difficulty = "Beginner" | "Intermediate" | "Advanced";
 
 export type Category = "Web Development" | "Mobile Apps" | "Machine Learning" | "Game Development" | "Data Science";
-export const categoryList: any[] = ["Web Development", "Mobile Apps", "Machine Learning", "Game Development", "Data Science", "DevOps", "Cloud Computing", "Cybersecurity", "Embedded Systems", "AR/VR", "Blockchain", "IoT", "NLP", "Data Engineering", "Database Management", "Frontend", "Backend", "Fullstack"];
+export const categoryList: any[] = ["Web Development", "Mobile Apps", "Machine Learning", "Game Development", "Data Science", "DevOps", "Cloud Computing", "Cybersecurity", "Embedded Systems", "AR/VR", "Blockchain", "IoT", "NLP"];
 
 export type Dashboard = "Profile" | "Activity" | "Skill" | "Setting";
 export const dashboardList: Dashboard[] = ["Profile", "Skill", "Activity", "Setting"];

@@ -77,7 +77,6 @@ export const ProjectDetails: React.FC = () => {
   function handleDisplaySectionChange(value: DisplaySectionType) {
     setDisplaySection(value);
   }
-  console.log(project);
 
   return (
     <div className="text-left mt-2 pt-3 space-y-2 pl-9 bg-gray-800/40 rounded-2xl shadow-2xl w-7xl mx-auto h-fit min-h-[90vh] mb-10">
@@ -181,7 +180,7 @@ export const ProjectDetails: React.FC = () => {
                       communitySubmissions.map((submission: any) => (
                         <SubmissionCard
                           key={submission.submissionId}
-                          creator={submission.creator}
+                          creator={submission.creatorName}
                           date={new Date(submission.postedOn)}
                           title={submission.title}
                           repoLink={submission.repoLink}

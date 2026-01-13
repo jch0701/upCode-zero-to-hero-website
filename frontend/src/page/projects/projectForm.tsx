@@ -108,6 +108,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
           delete finalFormData[key as keyof ExtendedProjectType];
         }
       }
+      console.log("Final data for update:", finalFormData);
       response = await updateProject(finalFormData);
     } else {
       response = await createProject(finalFormData);
@@ -115,7 +116,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
 
     if (response.message === "SUCCESS") {
       toast.success(`Project ${initialData ? "updated" : "created"} successfully!`);
-      navigate(`/project/${response.projectId}`);
+      navigate(`/project/${initialData ? projectId : response.projectId}`);
       close();
     } else {
       toast.error(`Failed to ${initialData ? "update" : "create"} the project. ${response.message}`);
@@ -311,7 +312,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ initialData, projectId
                     }
                     renderItem={(career) => (
                       <div>
-                        <p className="font-medium text-white">{career.title}</p>
                         <p className="font-medium text-white">{career.title}</p>
                         <p className="text-sm text-gray-400">{career.description}</p>
                       </div>

@@ -64,7 +64,6 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
       setIsOpen(false);
     }
   };
-  console.log("Selected Items:", selectedItems);
 
   const handleRemove = (itemId: number) => {
     const remainingItems = selectedItems.filter((item) => item.referenceId !== itemId);

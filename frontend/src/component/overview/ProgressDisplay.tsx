@@ -125,7 +125,7 @@ export const ProgressDisplay: React.FC = () => {
                             <tr>
                               <td>
                                 <h2 className="text-left text-[1.2rem] ml-4 my-4 font-bold text-white">
-                                  Other projects</h2>
+                                  Projects you're tracking</h2>
                               </td>
                             </tr>
                             {
