@@ -82,7 +82,11 @@ const SubmissionDetails: React.FC = () => {
           onClick={() => navigate(`/project/${submission.projectId}`)}
           className="text-blue-400 hover:underline cursor-pointer ml-1"
         >{submission.projectTitle} </span>
-        | Created By: {submission.creatorName}
+        | Created By: 
+        <span onClick={() => navigate(`/profile/${submission.creatorId}`)} 
+        className="text-blue-400 hover:underline cursor-pointer ml-1">
+          {submission.creatorName}
+          </span>
       </p>
       <p className="text-white text-[1rem]">
         <span>Submitted On: {submission?.postedOn && formatDate(new Date(submission.postedOn))} </span>

@@ -84,7 +84,9 @@ export const ProjectDetails: React.FC = () => {
       <h1 className="text-left mt-2 text-4xl font-extralight text-white">{project?.title}</h1>
       <p className="text-white text-[1.5rem] font-light">{project?.shortDescription}</p>
       <div className="text-white text-[1.2rem]">
-        <span>Created By: {project!.creatorName} </span> |
+        Created By: <span className="text-blue-400 hover:underline cursor-pointer ml-1"
+        onClick={() => navigate(`/profile/${project!.creatorId}`)}>{project!.creatorName} 
+        </span> |
         <span> Last Update: {project?.lastUpdated && formatDate(new Date(project.lastUpdated))}</span>
         <span className="space-x-2 ml-4">
           <TagPill tag={{ type: "Difficulty", label: project!.difficulty, className: "text-black h-7 w-auto text-2xl" }} />
@@ -147,7 +149,7 @@ export const ProjectDetails: React.FC = () => {
 
             case "communitySubmissions":
               return (
-                <div className="grid grid-cols-1 gap-3.5">
+                <div className="grid grid-cols-1 gap-3.5 mr-15">
                   {
                     isLoadingSubmissions ? (
                       <LoadingIcon text="Loading Submissions..." />
@@ -195,7 +197,7 @@ export const ProjectDetails: React.FC = () => {
 
             case "mySubmissions":
               return (
-                <div className="grid grid-cols-1 gap-3.5">
+                <div className="grid grid-cols-1 gap-3.5 mr-15">
                   { 
                     userId === null ? (
                       <NotLoggedIn />

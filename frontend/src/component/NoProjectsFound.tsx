@@ -21,7 +21,7 @@ export const NoProjectsFound: React.FC<{ category: string, openType: "projects" 
         iconSrc={empty_icon}
         title={`There are no ${category} ${openType === "projects" ? "projects" : "project submissions"} found.`}
         description="Why don't you check out a new project instead?"
-        classes="h-fit !py-0"
+        classes="h-fit !py-2"
       >
         <Button variant="outline" size="lg" className={commonButtonStyles} onClick={navigateToRandomProject}>
           <img src={dice_icon} alt="" className={commonIconStyles} />

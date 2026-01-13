@@ -40,13 +40,14 @@ export const MyProjects: React.FC = () => {
   const [category, setCategory] = useState(selections[0].value);
   const [submissionType, setSubmissionType] = useState<"created" | "tracked" | "done" | "submissions">("created");
   const userId = loadUserInfo()?.userId || null;
+  const submissionSorted: { [key: string]: { [key: string]: any[] } } = {};
 
   const { data: createdProjects = [], isLoading: isLoadingCreatedProjects,
     isError: isErrorCreatedProjects, isSuccess: isSuccessCreatedProjects } = useGetAllBasicDetailsOnly(userId);
   const { data: submissions = [], isLoading: isLoadingSubmissions,
     isError: isErrorSubmissions, isSuccess: isSuccessSubmissions } = useGetAllSubmissionsByCreator(userId);
-    
-  if(!userId){
+
+  if (!userId) {
     return <NotLoggedIn />;
   }
   function handleCategoryChange(value: string) {
@@ -69,13 +70,13 @@ export const MyProjects: React.FC = () => {
   }
   let filteredProjects = [];
 
-  if(isSuccessCreatedProjects){
+  if (isSuccessCreatedProjects) {
     filteredProjects = createdProjects.filter((project: any) => project.creatorId === userId);
   }
 
   let hasContentToShow = false;
   let targetArr = [];
-  if (isSuccessCreatedProjects && isSuccessSubmissions) {
+  if (isSuccessCreatedProjects) {
     switch (submissionType) {
       case "created":
         targetArr = filteredProjects;
@@ -87,15 +88,25 @@ export const MyProjects: React.FC = () => {
         targetArr = createdProjects.filter((project: ProjectType & { isMarkedAsDone: boolean }) =>
           project.isMarkedAsDone);
         break;
-      case "submissions":
-        targetArr = submissions;
-        break;
       default:
         hasContentToShow = false;
     }
     hasContentToShow = targetArr.length > 0 && (category === "All" ||
       targetArr.some((record: any) => record.category === category));
   }
+  if (isSuccessSubmissions && submissionType === "submissions") {
+    submissions.map((sub: any) => {
+      if (!submissionSorted[sub.category]) {
+        submissionSorted[sub.category] = {};
+      }
+      if (!submissionSorted[sub.category][sub.projectId]) {
+        submissionSorted[sub.category][sub.projectId] = [];
+      }
+      submissionSorted[sub.category][sub.projectId].push(sub);
+    });
+    hasContentToShow = submissions.length > 0 && (category === "All" || !!submissionSorted[category]);
+  }
+  console.log("submissionSorted:", submissionSorted);
 
   return (
     <div className="pt-6 px-3 w-full mx-auto flex flex-col">
@@ -127,28 +138,46 @@ export const MyProjects: React.FC = () => {
           selected={category}
           onClick={handleCategoryChange}
           isHorizontal={false}
-          // className="w-[65%] mx-auto mb-5"
         />
-        <div className="overflow-y-scroll mt-1 pb-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="bg-gray-800/40 rounded-2xl shadow-2xl overflow-y-scroll mt-1 pb-20 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {submissionType === "submissions" ? (
             hasContentToShow ? (
-              <div className="pt-5 flex flex-col gap-2">
-                {targetArr.map((submission: any) => {
-                  if (category !== "All" && submission.category !== category) return null;
-                  if (query && !submission.title.toLowerCase().includes(query.toLowerCase()) &&
-                    !submission.projectTitle.toLowerCase().includes(query.toLowerCase())) {
-                    return null;
-                  }
-                  return (
-                    <SubmissionCard key={submission.submissionId}
-                      creator={submission.creator}
-                      date={submission.postedOn}
-                      title={submission.title}
-                      repoLink={submission.repoLink}
-                      onClick={() => navigate(`/project/${submission.projectId}/submission/${submission.submissionId}`)}
-                    />
-                  );
-                })}
+              <div className="pt-5 flex flex-col gap-4">
+                {
+                  Object.entries(submissionSorted).map(([categoryKey, projectSubmissions]) => {
+                    if (category !== "All" && categoryKey !== category) return null;
+                    return (
+                      <div key={categoryKey}>
+                        {
+                          categoryKey === "All" &&
+                          <h2 className="text-xl font-semibold text-white mb-3">{categoryKey}</h2>
+                        }
+                        {Object.entries(projectSubmissions).map(([projectId, submissions]: [string, any]) => {
+                          return (
+                            <div key={projectId} className="mb-4 px-4">
+                              <h3 className="text-lg text-left pl-2 font-medium text-white mb-2">{submissions[0].projectTitle}</h3>
+                              <div className="flex flex-col gap-2">
+                                {
+                                  submissions.map((submission: any) => {
+                                    return (
+                                      <SubmissionCard key={submission.submissionId}
+                                        creator={submission.creator}
+                                        date={submission.postedOn}
+                                        title={submission.title}
+                                        repoLink={submission.repoLink}
+                                        onClick={() => navigate(`/project/${submission.projectId}/submission/${submission.submissionId}`)}
+                                      />
+                                    );
+                                  })
+                                }
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })
+                }
               </div>
             ) : (
               <NoProjectsFound category={category === "All" ? "" : category} openType="submissions" />
