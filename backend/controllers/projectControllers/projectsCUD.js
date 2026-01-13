@@ -80,6 +80,14 @@ Input:
 
 export const putTrackingData = async (req, res) => {
   const { projectId, userId } = req.params;
+  
+  // Validate and convert params
+  const parsedProjectId = parseInt(projectId, 10);
+  const parsedUserId = parseInt(userId, 10);
+  if (isNaN(parsedProjectId) || isNaN(parsedUserId)) {
+    return res.status(400).json({ error: "Invalid projectId or userId" });
+  }
+  
   // Guard against missing/invalid JSON body
   const trackingData = (req.body && typeof req.body === "object") ? req.body : null;
   if (!trackingData) {
@@ -90,8 +98,8 @@ export const putTrackingData = async (req, res) => {
   const { error: trackingError } = await supabase
     .from("Project_Tracking")
     .upsert({
-      projectId,
-      userId,
+      projectId: parsedProjectId,
+      userId: parsedUserId,
       ...trackingData
     });
   if (trackingError) return res.status(500).json({ error: trackingError.message || "Failed to update tracking data" });
@@ -116,6 +124,13 @@ Output: None
 
 export const updateProject = async (req, res) => {
   const { projectId } = req.params;
+  
+  // Validate and convert projectId
+  const parsedProjectId = parseInt(projectId, 10);
+  if (isNaN(parsedProjectId)) {
+    return res.status(400).json({ error: "Invalid projectId" });
+  }
+  
   const { recommendations, ...updateData } = req.body;
   
   // Ensure updateData is not empty
@@ -130,7 +145,7 @@ export const updateProject = async (req, res) => {
   const { error: updateError } = await supabase
     .from("Projects")
     .update(updateData)
-    .eq("projectId", projectId);
+    .eq("projectId", parsedProjectId);
   if (updateError) return res.status(500).json({ error: updateError.message || "Failed to update project" });
 
   // Update recommendations if provided
@@ -139,7 +154,7 @@ export const updateProject = async (req, res) => {
     const { error: deleteError } = await supabase
       .from("Recommendations")
       .delete()
-      .eq("sourceId", projectId)
+      .eq("sourceId", parsedProjectId)
       .eq("sourceType", "project");
     
     if (deleteError) return res.status(500).json({ error: deleteError.message || "Failed to delete old recommendations" });
@@ -149,7 +164,7 @@ export const updateProject = async (req, res) => {
       delete rec.existing; // Remove the existing flag before inserting
       return {
         ...rec,
-        sourceId: projectId,
+        sourceId: parsedProjectId,
         sourceType: 'project',
         createdAt: new Date().toISOString()
       }
@@ -174,11 +189,18 @@ Output: None
 
 export const deleteProject = async (req, res) => {
   const { projectId } = req.params;
+  
+  // Validate and convert projectId
+  const parsedProjectId = parseInt(projectId, 10);
+  if (isNaN(parsedProjectId)) {
+    return res.status(400).json({ error: "Invalid projectId" });
+  }
+  
   // Cannot delete if there are submissions
   const { data: submissions, error: submissionError } = await supabase
     .from("Submissions")
     .select("submissionId")
-    .eq("projectId", projectId)
+    .eq("projectId", parsedProjectId)
     .limit(1);
   if (submissionError) return res.status(500).json({ error: submissionError.message || "Failed to check submissions" });
   if (submissions && submissions.length > 0) return res.status(400).json({ error: "Cannot delete project with existing submissions" });
@@ -187,7 +209,7 @@ export const deleteProject = async (req, res) => {
   const { error: deleteError } = await supabase
     .from("Projects")
     .delete()
-    .eq("projectId", projectId);
+    .eq("projectId", parsedProjectId);
   if (deleteError) return res.status(500).json({ error: deleteError.message || "Failed to delete project" });
 
   return res.status(200).json({ message: "SUCCESS" });
