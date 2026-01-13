@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllBasicDetailsOnly, getByTitleComplete, getByIdComplete, getAllRelatedToUser } from '../controllers/projectControllers/projectsGet.js';
+import { getAllBasicDetailsOnly, getByTitleComplete, getByIdComplete, getAllRelatedToUser, getRandomProject } from '../controllers/projectControllers/projectsGet.js';
 import { createProject, putTrackingData, updateProject, deleteProject } from '../controllers/projectControllers/projectsCUD.js';
 import { getAllSubmissions, getAllSubmissionsByUser, getSubmissionById } from '../controllers/projectControllers/submissionsGet.js';
 import { submitToProject, updateSubmission, deleteSubmission } from '../controllers/projectControllers/submissionsCUD.js';
@@ -24,6 +24,8 @@ router.get('/projects/getByTitleComplete/:title/:userId', getByTitleComplete);
 // Get project by projectId including recommendations, tracking data (user) and submissions (surface data)
 router.get('/projects/getByIdComplete/:projectId', getByIdComplete);
 router.get('/projects/getByIdComplete/:projectId/:userId', getByIdComplete);
+// Get random project including recommendations, tracking data (user) and submissions (surface data)
+router.get('/projects/getRandomProject/:userId', getRandomProject);
 
 // Create, Update, Delete project
 router.post('/projects/create', createProject);

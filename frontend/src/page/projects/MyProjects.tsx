@@ -4,6 +4,7 @@ import { useState } from "react";
 import RadioGroup from "../../component/projects/radioGroup.tsx";
 import type { ProjectType } from "../../lib/projectModuleTypes.ts";
 import { useGetAllBasicDetailsOnly } from "@/api/projects/projectsAPI.ts";
+import { NoProjectsFound } from "@/component/NoProjectsFound.tsx";
 import { useGetAllSubmissionsByCreator } from "@/api/projects/submissionsAPI.ts";
 import { loadUserInfo } from "@/lib/utils.ts";
 import { categoryList } from "@/lib/types.ts";
@@ -133,12 +134,9 @@ export const MyProjects: React.FC = () => {
             hasContentToShow ? (
               <div className="pt-5 flex flex-col gap-2">
                 {targetArr.map((submission: any) => {
-                  const project = createdProjects.find((proj: ProjectType) => proj.projectId === submission.projectId);
-                  if (!project) return null;
-                  if (category !== "All" && project.category !== category) return null;
+                  if (category !== "All" && submission.category !== category) return null;
                   if (query && !submission.title.toLowerCase().includes(query.toLowerCase()) &&
-                    !project.title.toLowerCase().includes(query.toLowerCase()) &&
-                    !project.shortDescription.toLowerCase().includes(query.toLowerCase())) {
+                    !submission.projectTitle.toLowerCase().includes(query.toLowerCase())) {
                     return null;
                   }
                   return (
@@ -153,9 +151,7 @@ export const MyProjects: React.FC = () => {
                 })}
               </div>
             ) : (
-              <p className="text-white font-light text-4xl text-center mt-10">
-                No {category === "All" ? "" : category} submissions found
-              </p>
+              <NoProjectsFound category={category === "All" ? "" : category} openType="submissions" />
             )
           ) : (
             hasContentToShow ? (
@@ -176,9 +172,7 @@ export const MyProjects: React.FC = () => {
                 })}
               </div>
             ) : (
-              <p className="text-white font-light text-4xl text-center mt-10">
-                No {category === "All" ? "" : category} projects found
-              </p>
+              <NoProjectsFound category={category === "All" ? "" : category} openType="projects" />
             )
           )}
         </div>

@@ -70,7 +70,7 @@ export const getAllSubmissionsByUser = async (req, res) => {
       title,
       repoLink,
       Projects!projectId!inner (
-        title
+        title, category
       )
     `)
     .eq("creatorId", userId);
@@ -85,7 +85,8 @@ export const getAllSubmissionsByUser = async (req, res) => {
     postedOn: submission.postedOn,
     title: submission.title,
     repoLink: submission.repoLink,
-    projectTitle: submission.Projects?.title ?? "Title not found"
+    projectTitle: submission.Projects?.title ?? "Title not found",
+    category: submission.Projects?.category ?? "Category not found"
   }));
 
   return res.json({ submissions: enrichedData });

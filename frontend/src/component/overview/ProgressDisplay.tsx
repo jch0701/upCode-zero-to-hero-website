@@ -30,7 +30,7 @@ export const ProgressDisplay: React.FC = () => {
 
   let radios = [
     { label: 'Roadmaps', value: 'roadmaps' },
-    { label: 'Tracked Projects', value: 'trackedProjects' },
+    { label: 'Projects', value: 'trackedProjects' },
     { label: 'Completions', value: 'submissions' },
   ];
 

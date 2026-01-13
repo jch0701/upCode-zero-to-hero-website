@@ -21,11 +21,11 @@ export function WhatsNew() {
   if (projectsData && roadmapsData) {
     latestProjects = (projectsData || [])
       .slice()
-      .sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      .sort((a: any, b: any) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime())
       .slice(0, 3);
     latestRoadmaps = (roadmapsData || [])
       .slice()
-      .sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      .sort((a: any, b: any) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime())
       .slice(0, 3);
   }
 

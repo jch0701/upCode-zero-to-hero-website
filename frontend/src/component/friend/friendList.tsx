@@ -70,6 +70,8 @@ export default function FriendsList({ profileUserId, viewerUserId, version }: Pr
 
           {isOwner && (
             <button
+              type="button"
+              title="Remove Friend"
               onClick={(e) => { e.stopPropagation(); deleteFriend(user.userId); }}
               className="text-red-500 hover:text-red-700"
             >

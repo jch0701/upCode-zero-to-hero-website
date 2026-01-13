@@ -11,6 +11,17 @@ interface TableOfContentsProps {
   markdownContent: string;
 }
 
+// Helper function to slugify text the same way rehypeSlug does
+const generateSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
 export const TableOfContents: React.FC<TableOfContentsProps> = ({ markdownContent }) => {
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
@@ -24,7 +35,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ markdownConten
     while ((match = headerRegex.exec(markdownContent)) !== null) {
       const level = match[1].length;
       const text = match[2];
-      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const id = generateSlug(text);
       items.push({ id, text, level });
     }
 
@@ -64,7 +75,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ markdownConten
   if (tocItems.length === 0) return null;
 
   return (
-    <div className="w-64 sticky mr-5 top-4 self-start bg-gray-900/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700">
+    <div className="w-64 h-[80vh] overflow-y-scroll [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sticky mr-5 top-17 self-start bg-gray-900/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700">
       <nav>
         <ul className="space-y-2">
           {tocItems.map(({ id, text, level }) => (

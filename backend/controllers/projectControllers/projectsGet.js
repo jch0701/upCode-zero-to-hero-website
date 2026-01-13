@@ -271,3 +271,22 @@ export const getAllRelatedToUser = async (req, res) => {
 
   return res.json(allProjects);
 }
+
+export const getRandomProject = async (req, res) => {
+  const { userId } = req.params;
+  // Fetch a random project
+  const { data: projectIds, error: fetchError } = await supabase
+    .from('Projects')
+    .select('projectId');
+  if (fetchError) {
+    console.log(fetchError);
+    return res.status(500).json({ error: fetchError.message || "Failed to fetch projects" });
+  }
+  const randomIndex = Math.floor(Math.random() * projectIds.length);
+  const randomProjectId = projectIds[randomIndex].projectId;
+
+  // Reuse existing getByIdComplete logic to get full project details
+  req.params.projectId = randomProjectId;
+  req.params.userId = userId;
+  return getByIdComplete(req, res);
+}

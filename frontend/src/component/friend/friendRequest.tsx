@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { acceptFriendRequest, rejectFriendRequest,getIncomingRequests } from "@/api/profile/friendAPI";
-import type { FriendRequest } from "./friendsService";
+import type { FriendRequest } from "../../api/profile/friendAPI";
+// Alternate path is import type { FriendRequest } from "./friendsService";
+
 type Props = {
   currentUserId: string;
   onChange: () => void;

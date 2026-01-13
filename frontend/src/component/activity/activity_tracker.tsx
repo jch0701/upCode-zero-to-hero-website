@@ -8,7 +8,7 @@ let pendingIncrements: any = {
   history: []
 };
 
-let timer: NodeJS.Timeout | null = null;
+let timer: ReturnType<typeof setTimeout> | null = null;
 
 // Save Function
 // This runs automatically 2 seconds after the user stops clicking.

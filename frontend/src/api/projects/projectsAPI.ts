@@ -121,3 +121,16 @@ export function useDeleteProject(projectId: number) {
     }
   });
 }
+
+export function useGetRandomProject(userId: number) {
+  return useQuery({
+    queryKey: ['projects', 'randomProject', userId],
+    queryFn: async () => {
+      // function calls with userId null or undefined will fetch projects without tracking data
+      // this is handled by the backend
+      const url = userId ? `/projects/getRandomProject/${userId}` : '/projects/getRandomProject';
+      const response = await Api.get(url);
+      return response.data;
+    }
+  })
+}

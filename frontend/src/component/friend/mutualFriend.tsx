@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getFriendsList } from "@/api/profile/friendAPI"; 
-import type { User } from "./friendsService";
+import type { User } from "../../api/profile/friendAPI";
+// Alternate path is import type { User } from "./friendsService";
 type Props = {
   viewerUserId: string;   
   profileUserId: string;  

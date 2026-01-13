@@ -43,8 +43,8 @@ export const FriendsVisitorContent = ({
     return (
         <div className="space-y-6">
             <FriendActionButton
-                viewerId={viewerId}
-                profileUserId={profileUserId}
+                viewerId={String(viewerId)}
+                profileUserId={String(profileUserId)}
             />
 
             <div className="bg-purple-300/40 rounded-3xl p-4">
@@ -53,8 +53,8 @@ export const FriendsVisitorContent = ({
               </h4>
 
               <MutualFriendsList
-                viewerUserId={viewerId}
-                profileUserId={profileUserId}
+                viewerUserId={String(viewerId)}
+                profileUserId={String(profileUserId)}
               />
             </div>
         </div>
