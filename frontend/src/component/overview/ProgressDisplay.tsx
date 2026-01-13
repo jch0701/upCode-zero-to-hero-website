@@ -79,7 +79,7 @@ export const ProgressDisplay: React.FC = () => {
                         )
                       }
                       {
-                        roadmapsWithProgress?.map((roadmap, idx) => (
+                        roadmapsWithProgress?.slice().sort((a,b)=>b.progress -a.progress).map((roadmap, idx) => (
                           <MiniCard
                             key={roadmap.roadmapID}
                             title={roadmap.title}

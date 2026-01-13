@@ -29,19 +29,14 @@ export const createCareer = async(req, res) => {
         if (error) {
             console.error('SERVER ERROR - INSERT FAILED');
             // Write to file for debugging
-            import('fs').then(fs => {
-                const log = `\n[${new Date().toISOString()}] ERROR:\nPayload: ${JSON.stringify(careerData)}\nError: ${JSON.stringify(error)}\n`;
-                fs.appendFile('debug_error.log', log, () => {});
-            });
+
             
             return res.status(500).json({ message: 'Failed to create career.', details: error });
         }
 
         return res.status(201).json(data[0]);
     } catch (error) {
-        import('fs').then(fs => {
-             fs.appendFile('debug_error.log', `\n[CRITICAL]: ${error}\n`, () => {});
-        });
+
         console.error('Internal Server Error in createCareer:', error);
         return res.status(500).json({ message: 'Internal Server Error.' });
     }

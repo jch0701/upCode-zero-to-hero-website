@@ -5,5 +5,6 @@ export const careerCategories = [
   { id: "software-developer", title: "Software Developer" },
   { id: "rnd", title: "R&D" },
   { id: "cybersecurity", title: "Cybersecurity" },
-  { id: "official", title: "Official" },
+  { id: "network-engineer", title: "Network Engineer" },
+  { id: "cloud-architect", title: "Cloud Architect" },
 ];

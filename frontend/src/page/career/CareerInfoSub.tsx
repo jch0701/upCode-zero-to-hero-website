@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import type { CareerItem, CareerApplication } from "@/store/careerSlice";
 import type { Tag } from "@/component/tag";
@@ -72,33 +72,45 @@ const CareerInfoSub: React.FC<CareerItem> = ({
 
   const roleLower = userRole?.toLowerCase();
   const isLearner = roleLower === "student" || roleLower === "learner" || roleLower === "mentor";
-  const isCompany = roleLower === "company";
+  const isCompany = roleLower === "company" || roleLower === "admin";
 
   return (
     <div className="flex justify-center mt-20">
       <div className="bg-gray-900 rounded-lg p-6 w-full max-w-2xl shadow-2xl relative">
         <div className="absolute top-4 right-4 flex gap-2">
             {/* Edit/Delete for Owner */}
-            {isCompany && activeUser.username === postedBy && (
-              <>
-                 <button 
-                    onClick={() => navigate(`/career/edit/${career_id}`)}
-                    className="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white rounded text-sm"
-                 >
-                    Edit
-                 </button>
-                 <button 
-                    onClick={() => {
-                        if(window.confirm("Are you sure you want to delete this career?")) {
-                            dispatch(deleteCareerAsync(career_id) as any).then(() => navigate('/career'));
-                        }
-                    }}
-                    className="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white rounded text-sm"
-                 >
-                    Delete
-                 </button>
-              </>
-            )}
+            {/* Edit/Delete Buttons */}
+            {(() => {
+                const isAdmin = userRole?.toLowerCase() === "admin";
+                const isOwnCareer = activeUser.username === postedBy;
+                const canEdit = isOwnCareer; 
+                const canDelete = isOwnCareer || isAdmin;
+
+                return (
+                    <>
+                        {canEdit && (
+                            <button 
+                                onClick={() => navigate(`/career/edit/${career_id}`)}
+                                className="px-3 py-1 bg-blue-600/80 hover:bg-blue-500 text-white rounded text-sm"
+                            >
+                                Edit
+                            </button>
+                        )}
+                        {canDelete && (
+                            <button 
+                                onClick={() => {
+                                    if(window.confirm("Are you sure you want to delete this career?")) {
+                                        dispatch(deleteCareerAsync(career_id) as any).then(() => navigate('/career'));
+                                    }
+                                }}
+                                className="px-3 py-1 bg-red-600/80 hover:bg-red-500 text-white rounded text-sm"
+                            >
+                                Delete
+                            </button>
+                        )}
+                    </>
+                );
+            })()}
             <button
               onClick={() => navigate(-1)}
               className="text-white hover:text-gray-300 ml-2 text-xl font-bold"
@@ -250,12 +262,12 @@ const CareerInfoSub: React.FC<CareerItem> = ({
                     className="flex items-center justify-between bg-gray-800 rounded-lg p-3 shadow"
                   >
                     {/* Left side: username link */}
-                    <a
-                      href={`/profile/${app.userId}`}
+                    <Link
+                      to={`/profile/${app.user_id}`}
                       className="text-white font-semibold hover:text-blue-400"
                     >
-                      {app.user?.username || `User ${app.userId}`}
-                    </a>
+                      {app.user?.username || `User ${app.user_id}`}
+                    </Link>
 
                     {/* Right side: buttons */}
                     <div className="flex gap-2">
@@ -278,24 +290,28 @@ const CareerInfoSub: React.FC<CareerItem> = ({
                               {app.status}
                           </span>
                           
-                          {/* Allow changing status */}
-                          {app.status !== "Accepted" && (
-                            <button
-                              onClick={() => dispatch(updateApplicationStatusAsync({ applicationId: app.aplc_id, status: "Accepted" }) as any).then(() => dispatch(fetchCareers() as any))}
-                              className="px-2 py-1 bg-green-600/50 hover:bg-green-500 text-white rounded text-xs"
-                              title="Set to Accepted"
-                            >
-                              ✅
-                            </button>
-                          )}
-                          {app.status !== "Rejected" && (
-                            <button
-                              onClick={() => dispatch(updateApplicationStatusAsync({ applicationId: app.aplc_id, status: "Rejected" }) as any).then(() => dispatch(fetchCareers() as any))}
-                              className="px-2 py-1 bg-red-600/50 hover:bg-red-500 text-white rounded text-xs"
-                              title="Set to Rejected"
-                            >
-                              ❌
-                            </button>
+                          {/* Allow changing status ONLY if owner */}
+                          {activeUser.username === postedBy && (
+                              <>
+                                  {app.status !== "Accepted" && (
+                                    <button
+                                      onClick={() => dispatch(updateApplicationStatusAsync({ applicationId: app.aplc_id, status: "Accepted" }) as any).then(() => dispatch(fetchCareers() as any))}
+                                      className="px-2 py-1 bg-green-600/50 hover:bg-green-500 text-white rounded text-xs"
+                                      title="Set to Accepted"
+                                    >
+                                      ✅
+                                    </button>
+                                  )}
+                                  {app.status !== "Rejected" && (
+                                    <button
+                                      onClick={() => dispatch(updateApplicationStatusAsync({ applicationId: app.aplc_id, status: "Rejected" }) as any).then(() => dispatch(fetchCareers() as any))}
+                                      className="px-2 py-1 bg-red-600/50 hover:bg-red-500 text-white rounded text-xs"
+                                      title="Set to Rejected"
+                                    >
+                                      ❌
+                                    </button>
+                                  )}
+                              </>
                           )}
                       </div>
                     </div>

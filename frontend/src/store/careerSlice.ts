@@ -4,7 +4,7 @@ import Api from "../api/index";
 
 export interface CareerApplication {
   aplc_id: number;
-  userId: string;
+  user_id: number;
   career_id: number;
   status: "Pending" | "Accepted" | "Rejected";
   resume_link?: string;
