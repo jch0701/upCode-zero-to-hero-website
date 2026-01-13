@@ -221,7 +221,12 @@ const CareerDetailForm: React.FC<CareerDetailFormProps> = ({
               placeholder="Enter career description..."
             />
 
-            <h3 className="text-xl font-bold mb-2 text-left">Map Link</h3>
+            <h3 className="text-xl font-bold mb-2 text-left">
+              Map Link
+              <span className="ml-2 text-xs font-normal text-gray-400">
+                (Google Maps: Share &rarr; Embed a map &rarr; Copy HTML)
+              </span>
+            </h3>
             <FormBar
               query={queryMapLink}
               setQuery={(val) => {

@@ -111,7 +111,7 @@ export const CareerRecommendations: React.FC<CareerRecommendationsProps> = ({ ca
             </span>
             <div className="mt-2">
                  {recommendedRoadmaps.length === 0 ? <p>No related roadmaps found.</p> :
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mt-4">
                         {recommendedRoadmaps.map((roadmap: any) => (
                             <RoadmapItemCard 
                                 key={roadmap.roadmapID} 

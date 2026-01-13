@@ -52,7 +52,7 @@ export const CareerItemCard: React.FC<CareerItemCardProps> = ({
 
   // Company users can only edit/delete their own careers
   // Admin can delete ANY career
-  const isOwnCareer = userRole?.toLowerCase() === "company" && postedBy === activeUser.username;
+  const isOwnCareer = postedBy === activeUser.username;
   const isAdmin = userRole?.toLowerCase() === "admin";
   const canDelete = isOwnCareer || isAdmin;
   const canEdit = isOwnCareer; // Only owner should edit (?) or maybe Admin too? defaulting to owner for edit
