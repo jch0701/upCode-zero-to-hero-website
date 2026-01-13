@@ -6,6 +6,7 @@ import type { Tag } from "@/component/tag";
 import { TagPill } from "@/component/tag";
 import { submitApplicationAsync, updateApplicationStatusAsync, rescindApplicationAsync, updateApplicationDetailsAsync, fetchUserApplications } from "@/store/applicationSlice";
 import { fetchCareers, deleteCareerAsync } from "@/store/careerSlice";
+import { CareerRecommendations } from "@/component/career/CareerRecommendations";
 
 
 const CareerInfoSub: React.FC<CareerItem> = ({
@@ -43,6 +44,10 @@ const CareerInfoSub: React.FC<CareerItem> = ({
   const handleApply = async () => {
     if (!activeUser.userId) {
         setSubmitError("You must be logged in to apply.");
+        return;
+    }
+    if (!linkInput.trim()) {
+        setSubmitError("Please provide a link to your resume or portfolio.");
         return;
     }
     setIsSubmitting(true);
@@ -246,10 +251,10 @@ const CareerInfoSub: React.FC<CareerItem> = ({
                   >
                     {/* Left side: username link */}
                     <a
-                      href={`/profile/${app.user_id}`}
+                      href={`/profile/${app.userId}`}
                       className="text-white font-semibold hover:text-blue-400"
                     >
-                      {app.user?.username || `User ${app.user_id}`}
+                      {app.user?.username || `User ${app.userId}`}
                     </a>
 
                     {/* Right side: buttons */}
@@ -304,6 +309,13 @@ const CareerInfoSub: React.FC<CareerItem> = ({
             )}
           </>
         ) : null}
+
+        {/* Recommendations Section */}
+        <div className="mt-8 border-t border-gray-700 pt-6">
+            <CareerRecommendations career={{
+                  career_id, title, company, postedBy, createdDate, mapLink, level, category, prerequisites, description, applications
+            }} />
+        </div>
       </div>
     </div>
   );

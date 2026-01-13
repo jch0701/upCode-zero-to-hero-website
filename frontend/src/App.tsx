@@ -31,6 +31,9 @@ import Admin_Users from "./page/admin/ad_user";
 import Admin_Roadmaps from "./page/admin/ad_roadmap";
 import Admin_Projects from "./page/admin/ad_project";
 import VerifyRole from "./page/profile/verifyRole";
+import { AddCareer } from "./page/career/AddCareer";
+import { EditCareer } from "./page/career/EditCareer";
+import CareerDetails from "./page/career/CareerDetail";
 
 const router = createBrowserRouter([
   {
@@ -82,8 +85,15 @@ const router = createBrowserRouter([
           { path: ":userId", element: <All /> },
         ],
       },
-
-      { path: "career", element: <Career /> },
+      { 
+        path: "career",
+        children: [
+            { index: true, element: <Career /> },
+            { path: "addCareer", element: <AddCareer /> },
+            { path: "edit/:id", element: <EditCareer /> },
+            { path: ":id/:slug?", element: <CareerDetails /> },
+        ]
+      },
       { path: "signup", element: <Signup_Pg /> },
       { path: "request-verification", element:<VerifyRole /> },
       { path: "forgot-password", element: <ForgotPassword_Pg /> },

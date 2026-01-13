@@ -23,7 +23,7 @@ export const CareerDetails: React.FC = () => {
   ) as CareerItem[];
 
   const careerItem = careerList.find(
-    (c) => c.id === Number(id) || (slug && c.slug === slug)
+    (c) => String(c.career_id) === String(id) || (slug && c.slug === slug)
   );
 
   if (careerStatus === "loading") {
