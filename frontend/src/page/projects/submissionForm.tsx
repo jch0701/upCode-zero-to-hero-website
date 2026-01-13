@@ -5,7 +5,7 @@ import {
   FieldLabel
 } from "@/component/shadcn/field";
 import { toast } from "sonner";
-
+import { useUpdateSubmission } from "@/api/projects/submissionsAPI";
 import { Input } from "@/component/shadcn/input";
 import { Button } from "@/component/shadcn/button";
 import { Form } from "@/component/form";
@@ -30,8 +30,7 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
   const [fileInput, setFileInput] = useState<File | null>(null);
   const creatorId = loadUserInfo()?.userId || null;
   const { mutateAsync: createSubmission, status: createSubmissionStatus, error: createSubmissionError } = useCreateSubmission(creatorId, projectId);
-  // Currently creatorId is bugged
-  // const creatorId = useSelector((state: any) => state.profile.userId); 
+  const { mutateAsync: updateSubmission, status: updateSubmissionStatus, error: updateSubmissionError } = useUpdateSubmission(projectId, initialData?.submissionId || 0);
   const submissionCounted = useRef(false);
  
   const handleSubmit = useCallback(async (fd: FormData) => {
@@ -52,12 +51,19 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
       delete payload.rationaleFile;
     }
 
-    const response = await createSubmission(payload);
+    let response; 
+    if(!openAsCreateForm) {
+      // Update existing submission
+      response = await updateSubmission(payload);
+    } else {
+      // Create new submission
+      response = await createSubmission(payload);
+    }
     if(response.message !== "SUCCESS") {
-      toast.error(`Failed to create submission. ${response.message}`);
+      toast.error(`Failed to ${openAsCreateForm ? "create" : "update"} submission. ${response.message}`);
       return;
     }
-    toast.success("Your submission has been uploaded and shared with the wider community.");
+    toast.success(`Your submission has been ${openAsCreateForm ? "created" : "updated"} and shared with the wider community.`);
     if(afterEffect)
       afterEffect();
     
@@ -67,15 +73,17 @@ export const SubmissionForm: React.FC<SubmissionFormProps> = ({ openAsCreateForm
       submissionCounted.current = true;
     }
     close();
-    navigate(`/project/${projectId}/submission/${response.submissionId}`);
+    if(openAsCreateForm)
+      navigate(`/project/${projectId}/submission/${response.submissionId}`);
   }, [createSubmission, creatorId, close, openAsCreateForm, projectId]);
 
-  switch (createSubmissionStatus) {
+  switch (createSubmissionStatus || updateSubmissionStatus) {
     case "pending":
       return <div><LoadingIcon /> Creating submission...</div>;
     case "error":
       return <div className="text-red-500 text-center mt-4">Error creating submission. 
-        {(createSubmissionError as any).response.data.error}
+        {openAsCreateForm ? (createSubmissionError as any).response.data.error : 
+        (updateSubmissionError as any).response.data.error}
       </div>;
   }
 

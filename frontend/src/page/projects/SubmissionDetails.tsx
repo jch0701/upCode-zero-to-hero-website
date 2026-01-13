@@ -17,6 +17,7 @@ import { GitHubLink } from "@/component/projects/gitHubLink";
 import { LoadingIcon } from "@/component/LoadingIcon";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { TableOfContents } from "@/component/RenderMD/TableOfContents";
 
 const SubmissionDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ const SubmissionDetails: React.FC = () => {
           className="text-blue-400 hover:underline cursor-pointer ml-1"
         >{submission.projectTitle} </span>
         | Created By:
-          <span> {submission.creatorName}</span>
+        <span> {submission.creatorName}</span>
       </p>
       <p className="text-white text-[1rem]">
         <span>Submitted On: {submission?.postedOn && formatDate(new Date(submission.postedOn))} </span>
@@ -110,9 +111,9 @@ const SubmissionDetails: React.FC = () => {
             </DialogTrigger>
             <DialogContent className={commonBackgroundClass}>
               <DialogHeader>
-                <DialogTitle>Contribute your solution to this project</DialogTitle>
+                <DialogTitle>Edit Submission</DialogTitle>
                 <DialogDescription>
-                  Share your solution with others by filling out the form below.
+                  Modify the details of your submission below.
                 </DialogDescription>
               </DialogHeader>
               <FieldGroup className={commonBackgroundClass}>
@@ -213,10 +214,13 @@ const SubmissionDetails: React.FC = () => {
           </div>
         )}
         {displaySection === "rationale" && (
-          <div className={`prose prose-invert max-w-none mt-4 text-white text-left ${commonMarkDownClass}`}>
-            <RenderMD>
-              {submission?.rationaleFile || "No project details available."}
-            </RenderMD>
+          <div className="flex gap-6">
+            <div className={`prose prose-invert max-w-none w-[80%] text-white text-left ${commonMarkDownClass} ml-0`}>
+              <RenderMD>
+                {submission?.rationaleFile || "No project details available."}
+              </RenderMD>
+            </div>
+            <TableOfContents markdownContent={submission?.rationaleFile || ""} />
           </div>
         )}
       </div>

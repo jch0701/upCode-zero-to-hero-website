@@ -18,7 +18,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, className}) => {
   return (
     <Card
       key={projectId}
-      className={`p-5 h-58 cursor-pointer border-none bg-gray-800 block pl-3 rounded-lg shadow-md 
+      className={`p-5 h-63 cursor-pointer border-none bg-gray-800 block pl-3 rounded-lg shadow-md 
     hover:shadow-lg hover:scale-102 transform transition duration-300 ${className || ""}`}
       onClick={() => navigate(`/project/${projectId}`)}
     >

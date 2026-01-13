@@ -58,7 +58,7 @@ export function useGetAllSubmissionsByCreator(creatorId: number) {
 export function useUpdateSubmission(projectId: number, submissionId: number) {
   return useMutation({
     mutationFn: async (updatedSubmissionData: Partial<InitialSubmissionType>) => {
-      const response = await Api.put(`/projects/${projectId}/submissions/${submissionId}/update`, {
+      const response = await Api.patch(`/projects/${projectId}/submissions/${submissionId}/update`, {
         ...updatedSubmissionData
       });
       return response.data;

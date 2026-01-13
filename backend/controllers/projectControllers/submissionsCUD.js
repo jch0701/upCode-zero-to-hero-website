@@ -25,7 +25,6 @@ export const submitToProject = async (req, res) => {
     .single();
 
   if (error) return res.status(500).json({ error: error.message });
-  console.log("Submission created:", data);
   const submissionId = data.submissionId;
   return res.status(201).json({ message: "SUCCESS", submissionId });
 }
@@ -42,14 +41,22 @@ Input:
 Output: None
 */
 
-export const updateSubmission= async (req, res) => {
+export const updateSubmission = async (req, res) => {
   const { submissionId } = req.params;
+  
+  // Validate and convert
+  const id = parseInt(submissionId, 10);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "Invalid submissionId" });
+  }
+
   const updateData = req.body;
 
   const { error } = await supabase
     .from("Submissions")
     .update(updateData)
-    .eq("submissionId", submissionId);
+    .eq("submissionId", id);
+    
   if (error) return res.status(500).json({ error });
   return res.status(200).json({ message: "SUCCESS" });
 }
@@ -64,10 +71,17 @@ Output: None
 
 export const deleteSubmission = async (req, res) => {
   const { submissionId } = req.params;
+  
+  const id = parseInt(submissionId, 10);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "Invalid submissionId" });
+  }
+
   const { error } = await supabase
     .from("Submissions")
     .delete()
-    .eq("submissionId", submissionId);
+    .eq("submissionId", id);
+    
   if (error) return res.status(500).json({ error });
   return res.status(200).json({ message: "SUCCESS" });
 }

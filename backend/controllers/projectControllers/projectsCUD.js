@@ -130,7 +130,7 @@ export const updateProject = async (req, res) => {
   const { error: updateError } = await supabase
     .from("Projects")
     .update(updateData)
-    .eq("projectId", parseInt(projectId));
+    .eq("projectId", projectId);
   if (updateError) return res.status(500).json({ error: updateError.message || "Failed to update project" });
 
   // Update recommendations if provided
